@@ -8,6 +8,9 @@ export const ContentCadastro = styled.div`
 export const InfoCadastro = styled.div`
   display: flex;
   flex-direction: column;
+  margin:0 auto;
+  justify-content:center;
+  align-items:center;
 `;
 
 export const ImgLogo = styled.img`

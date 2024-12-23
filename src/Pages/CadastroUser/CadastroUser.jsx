@@ -1,33 +1,96 @@
-import { ContentCadastro, FormCadastro, ImgLogo, InfoCadastro, TituloCadastro } from './CadastroUserStyled'
-import Logo from '../..Img/Logo.webp';
-import InputField from '../../Components/Inputs/Inputs';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Logo from "../../Img/Logo.webp";
+import InputField from "../../Components/Inputs/Inputs";
+import { ContentCadastro, FormCadastro, ImgLogo, InfoCadastro, TituloCadastro } from "./CadastroUserStyled";
+import Button from "../../Components/Button/Button";
+import axios from "axios";
+
 const CadastroUser = () => {
-  return (
-    <>
-    <ContentCadastro>
-    <InfoCadastro>
-        <ImgLogo 
-        src={Logo}
-        />
-    <TituloCadastro>
-        Cadastra-se
-    </TituloCadastro>
-    <FormCadastro>
-        {/* Campos do formulário */}
-        {/*... */}
-        <InputField
-        />
-    </FormCadastro>
-    
-        
-    </InfoCadastro>
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-        
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
   
+    if (!formData.username || !formData.email || !formData.password || formData.password !== formData.confirmPassword) {
+      setError("Todos os campos são obrigatórios e as senhas devem ser iguais");
+      return;
+    }
+  
+    setError("");
+  
+    try {
+      const response = await axios.post("http://localhost:8000/createUser", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (response.status === 201) {
+        navigate("/login"); // Redireciona após sucesso
+      } else {
+        throw new Error(response.data.message || "Erro ao cadastrar usuário");
+      }
+    } catch (err) {
+      console.error("Cadastro falhou:", err);
+      setError(err.response?.data?.message || "Erro ao cadastrar usuário");
+    }
+  };
+  return (
+    <ContentCadastro>
+      <InfoCadastro>
+        <ImgLogo src={Logo} />
+        <TituloCadastro>Cadastra-se</TituloCadastro>
+        <FormCadastro onSubmit={handleSubmit}>
+          <InputField
+            type="text"
+            placeholder="Digite seu nome"
+            id="username"
+            value={formData.username}
+            onChange={handleChange}
+          />
+          <InputField
+            type="email"
+            placeholder="Digite seu e-mail"
+            id="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <InputField
+            type="password"
+            placeholder="Digite sua senha"
+            id="password"
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <InputField
+            type="password"
+            placeholder="Confirme sua senha"
+            id="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <Button type="submit">Cadastrar</Button>
+        </FormCadastro>
+      </InfoCadastro>
     </ContentCadastro>
+  );
+};
 
-    </>
-  )
-}
-
-export default CadastroUser
+export default CadastroUser;

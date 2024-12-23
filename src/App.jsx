@@ -6,6 +6,7 @@ import Login from "./Pages/Login/Login";
 import TiposDeProcesso from "./Pages/TiposDeProcesso/TiposDeProcesso";
 import Prioridades from "./Pages/Prioridades/Prioridades";
 import Dashboard from "./Pages/Dashboard/Darshboard";
+import CadastroUser from "./Pages/CadastroUser/CadastroUser";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/cadastrarUser" element={<CadastroUser />} />
           <Route element={<PrivateRoute />}>
             <Route element={<DashboardLayout />}>
               <Route path="/" element={<Dashboard />} />

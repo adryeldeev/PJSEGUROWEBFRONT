@@ -12,6 +12,7 @@ import {
 import Logo from '../../Img/Logo.webp';
 import { useState } from 'react';
 import { useAuth } from '../../Context/AuthProvider';
+import { NavLink } from 'react-router-dom';
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -76,6 +77,7 @@ const Login = () => {
           <ButtonLogin type="submit">Entrar</ButtonLogin>
         </FormLogin>
         {error && <p style={{ color: 'red' }}>{error}</p>} {/* Exibe o erro, se houver */}
+        <LinkPassword>Não é cadastrado? <NavLink to="/cadastrarUser">Cadastrar-se aqui</NavLink></LinkPassword>
         <LinkPassword>Esqueceu a senha?</LinkPassword>
       </InfoContentLogin>
     </ContentLogin>

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ButtonField = styled.input`
+export const ButtonField = styled.button`
      width: 100%;
     border: 1px solid #ccc;
   padding: 10px 20px;
