@@ -6,7 +6,7 @@ const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState('')
+  const [error, setError] = useState('');
   const [token, setToken] = useState(localStorage.getItem("site") || "");
   const navigate = useNavigate();
 
@@ -17,23 +17,25 @@ const AuthProvider = ({ children }) => {
           "Content-Type": "application/json",
         },
       });
-  
+
       const res = response.data;
-  
+
       if (res.token) {
-        // Armazena o token retornado pela API
         setToken(res.token);
         localStorage.setItem("site", res.token);
-        navigate("/");  // Ou para o dashboard, se for o caso
+
+        // Update user data directly from the login response
+        setUser(res.userData); // Set user data from login response
+
+        navigate("/"); // Redirects after successful login
       } else {
         throw new Error(res.message || "Login failed");
       }
     } catch (err) {
-      console.error("Login failed:", error);
-      setError(err.message);  // Exibe o erro no formulário
+      console.error("Login failed:", err.message);
+      setError(err.message); // Display error in the form
     }
   };
-  
 
   const logOut = () => {
     setUser(null);

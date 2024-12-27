@@ -54,7 +54,7 @@ export const TitleLogin = styled.h1`
 `;
 
 export const FormLogin = styled.form`
-  width: 100%;
+  max-width: 100%;
   height: 40%;
   display: flex;
   flex-direction:column;
@@ -68,15 +68,29 @@ export const FormLogin = styled.form`
 `
 
 export const DivInputsLogin = styled.div`
-  width: 100%;
+ 
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin-top: 10px;
+    position: relative;
+  width: 100%;
+  max-width: 400px; /* Tamanho máximo para o input */
+  margin-bottom: 15px;
+
+  svg {
+    position: absolute;
+    left: 10px;
+    top: 40%;
+    transform: translateY(-50%);
+    color: #ccc;
+    pointer-events: none; /* Garante que o clique não atinge o ícone */
+  }
+
 `;
 
 export const InputLogin = styled.input`
-  width: 100%;
+ max-width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
@@ -84,6 +98,7 @@ export const InputLogin = styled.input`
   outline:none;
   &::placeholder {
       color: #000;
+      padding: 10px 40px 20px 20px;
     }
     
     `;
@@ -105,8 +120,20 @@ export const LinkRegister = styled.a`
   text-decoration: underline;
 `;
 export const LinkPassword = styled.a`
-  margin-left:160px;
-  text-decoration: underline;
+  margin-left:0px;
+  text-decoration: none;
+  cursor:pointer;
+  margin-top:20px;
+
 `;
+
+export const DivLinks = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  margin-top: 10px;
+ max-width: 100%;
+  
+  `
 
 

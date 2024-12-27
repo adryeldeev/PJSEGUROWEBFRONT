@@ -11,7 +11,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("http://localhost:8000/processos");  // Fetch de dados protegidos
+        const response = await api.get(`/user/${auth.user.id}`);  // Fetch de dados protegidos
         setData(response);
       } catch (err) {
         setError("Falha ao carregar dados" + err);

@@ -2,6 +2,7 @@ import {
   ButtonLogin,
   ContentLogin,
   DivInputsLogin,
+  DivLinks,
   FormLogin,
   ImgLogo,
   InfoContentLogin,
@@ -9,6 +10,8 @@ import {
   LinkPassword,
   TitleLogin,
 } from './LoginStyled';
+import { AiOutlineMail } from "react-icons/ai";
+import { TbLockPassword } from "react-icons/tb";
 import Logo from '../../Img/Logo.webp';
 import { useState } from 'react';
 import { useAuth } from '../../Context/AuthProvider';
@@ -64,6 +67,7 @@ const Login = () => {
               value={input.email}
               onChange={handleInputChange}  // Atualiza o estado quando o usuário digita
             />
+              <AiOutlineMail />
           </DivInputsLogin>
           <DivInputsLogin>
             <InputLogin
@@ -73,12 +77,15 @@ const Login = () => {
               value={input.password}
               onChange={handleInputChange}  // Atualiza o estado quando o usuário digita
             />
+             <TbLockPassword />
           </DivInputsLogin>
           <ButtonLogin type="submit">Entrar</ButtonLogin>
         </FormLogin>
         {error && <p style={{ color: 'red' }}>{error}</p>} {/* Exibe o erro, se houver */}
-        <LinkPassword>Não é cadastrado? <NavLink to="/cadastrarUser">Cadastrar-se aqui</NavLink></LinkPassword>
+        <DivLinks>
+        <LinkPassword>Não é cadastrado? <NavLink to="/cadastrarUser" style={{color:'#000'}}>Cadastrar-se aqui</NavLink></LinkPassword>
         <LinkPassword>Esqueceu a senha?</LinkPassword>
+        </DivLinks>
       </InfoContentLogin>
     </ContentLogin>
   );
