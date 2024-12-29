@@ -13,19 +13,11 @@ position: relative;
   justify-content:space-between;
   max-width:100%;
 
-    svg {
-    position: absolute;
-    left: 265px;
-    top: 70%;
-    transform: translateY(-50%);
-    color: #000;
-    pointer-events: none; /* Garante que o clique não atinge o ícone */
-  }
+   
 `
 
 export const TituloText = styled.h2`
-
-font-size:10px;
+font-size:15px;
 
 `
 export const ImgLogo = styled.img`
