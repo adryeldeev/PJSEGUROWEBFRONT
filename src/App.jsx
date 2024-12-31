@@ -8,6 +8,7 @@ import TiposDeProcesso from "./Pages/TiposDeProcesso/TiposDeProcesso";
 import Prioridades from "./Pages/Prioridades/Prioridades";
 import Dashboard from "./Pages/Dashboard/Darshboard";
 import CadastroUser from "./Pages/CadastroUser/CadastroUser";
+import CadastroTipoDeProcesso from './Pages/CadastroTipoDeProcesso/CadastroTipoDeProcesso';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<Dashboard />} />
               <Route path="/tipos-de-processo" element={<TiposDeProcesso />} />
               <Route path="/prioridades" element={<Prioridades />} />
+              <Route path="/cadastrar-tipo-de-processo" element={<CadastroTipoDeProcesso />} />
             </Route>
           </Route>
         </Routes>

@@ -4,27 +4,29 @@ export const DivContentTable = styled.div`
   max-width: 100%;
   height: 100%;
   overflow-y: auto;
-`
+  `
 
 export const TableContent = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`
-export const Title = styled.h2`
-font-size:12px;
+width: 100%;
+border-collapse: collapse;
+overflow-y: scroll;
+  `
+  export const Title = styled.h2`
+  font-size:12px;
   color: #333;
-`
-
-export const Thead = styled.thead`
+  `
+  
+  export const Thead = styled.thead`
   background-color: #f2f2f2;
- text-align:center;  
- `
- export const Tbody = styled.tbody`
+  text-align:center;  
+  `
+  export const Tbody = styled.tbody`
   text-align:center;
  `
 
 export const Th = styled.th`
   padding: 8px;
+   min-width: 50px;
 `
 
 
@@ -38,6 +40,7 @@ export const Tr = styled.tr`
 
 export const Td = styled.td`
   padding: 8px;
+   min-width: 50px;
 `
 
 
@@ -49,6 +52,7 @@ export const ButtonDelete = styled.button`
   cursor: pointer;
   padding: 10px 20px;
   border-radius: 4px;
+  margin-top:10px;
 `
 
 export const ButtonEdit = styled.button`
