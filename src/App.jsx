@@ -9,23 +9,26 @@ import Prioridades from "./Pages/Prioridades/Prioridades";
 import Dashboard from "./Pages/Dashboard/Darshboard";
 import CadastroUser from "./Pages/CadastroUser/CadastroUser";
 import CadastroTipoDeProcesso from './Pages/CadastroTipoDeProcesso/CadastroTipoDeProcesso';
+import { UIProvider } from './Context/UiContext'; // Importe o UIProvider
 
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/cadastrarUser" element={<CadastroUser />} />
-          <Route element={<PrivateRoute />}>
-            <Route element={<DashboardLayout />}>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/tipos-de-processo" element={<TiposDeProcesso />} />
-              <Route path="/prioridades" element={<Prioridades />} />
-              <Route path="/cadastrar-tipo-de-processo" element={<CadastroTipoDeProcesso />} />
+        <UIProvider>  {/* Envolva tudo com o UIProvider */}
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/cadastrarUser" element={<CadastroUser />} />
+            <Route element={<PrivateRoute />}>
+              <Route element={<DashboardLayout />}>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/tipos-de-processo" element={<TiposDeProcesso />} />
+                <Route path="/prioridades" element={<Prioridades />} />
+                <Route path="/cadastrar-tipo-de-processo" element={<CadastroTipoDeProcesso />} />
+              </Route>
             </Route>
-          </Route>
-        </Routes>
+          </Routes>
+        </UIProvider>  {/* Fim do UIProvider */}
       </AuthProvider>
     </Router>
   );

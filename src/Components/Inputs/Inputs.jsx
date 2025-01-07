@@ -1,21 +1,25 @@
 import PropTypes from 'prop-types';
 import { InputFieldStyle } from './InputStyled';
+import  { forwardRef } from 'react';
 
-const InputField = ({ type, value, onChange, placeholder, id, label, ref }) => {
+const InputField = forwardRef(({ type, value, onChange, placeholder, id, label }, ref) => {
   return (
     <div>
       {label && <label htmlFor={id}>{label}</label>}
       <InputFieldStyle
         id={id}
         type={type}
-        value={value} 
+        value={value}
         onChange={onChange}
         placeholder={placeholder}
-        ref={ref}
+        ref={ref} // Encaminha o ref para o elemento DOM
       />
     </div>
   );
-};
+});
+
+// Adicionando um nome de exibição para depuração
+InputField.displayName = 'InputField';
 
 // Adicionando validações de props
 InputField.propTypes = {
@@ -25,20 +29,14 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
-  ref: PropTypes.oneOfType([
-    PropTypes.func,
-    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-  ]), 
 };
-
 
 InputField.defaultProps = {
   type: 'text',
-  value: undefined, 
-  onChange: null, 
+  value: undefined,
+  onChange: null,
   placeholder: '',
   label: null,
-  inputRef: null, 
 };
 
 export default InputField;

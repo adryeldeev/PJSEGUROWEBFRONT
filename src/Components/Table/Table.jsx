@@ -1,4 +1,8 @@
 import PropTypes from "prop-types";
+import { CiCircleCheck } from "react-icons/ci";
+import { GrChapterNext } from "react-icons/gr";
+import { BsSkipBackward } from "react-icons/bs";
+import { MdBlock } from "react-icons/md";
 import {
   DivContentTable,
   TableContent,
@@ -10,9 +14,11 @@ import {
   ButtonDelete,
   ButtonEdit,
   Title,
+  ButtonsDiv,
+  ButtonAdd,
 } from "./TableStyled"; // Certifique-se de ajustar o caminho para o arquivo styled
 
-const Table = ({ columns, data, onEdit, onDelete }) => {
+const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
   return (
     <DivContentTable>
         <Title>Resultados</Title>
@@ -29,7 +35,7 @@ const Table = ({ columns, data, onEdit, onDelete }) => {
           {data.map((row, rowIndex) => (
             <Tr key={rowIndex}>
               {columns.map((column) => (
-                <Td key={column.accessor}>{row[column.accessor]}</Td>
+                <Td key={column.accessor}>{column.accessor === 'activo' ? (row[column.accessor] ? <CiCircleCheck /> : <MdBlock />) : row[column.accessor]}</Td>
               ))}
               {(onEdit || onDelete) && (
                 <Td>
@@ -46,6 +52,14 @@ const Table = ({ columns, data, onEdit, onDelete }) => {
             </Tr>
           ))}
         </Tbody>
+          <ButtonsDiv>
+            <ButtonAdd>
+            <BsSkipBackward onClick={back} />
+            </ButtonAdd>
+            <ButtonAdd>
+              <GrChapterNext onClick={next} />
+            </ButtonAdd>
+          </ButtonsDiv>
       </TableContent>
     </DivContentTable>
   );
@@ -61,6 +75,8 @@ Table.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
+  back: PropTypes.func,
+  next: PropTypes.func,
 };
 
 export default Table;

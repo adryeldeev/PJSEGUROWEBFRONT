@@ -7,7 +7,7 @@ const Toggle = ({  onChange, id, label, checked, onClick, ref }) => {
     <div>
       <LabelSwitch htmlFor={id}>{label}</LabelSwitch>
       <ToggleSwitch>
-      <Switch {...label} defaultChecked onChange={onChange} onClick={onClick} checked={checked} ref={ref}/>
+      <Switch {...label} onChange={onChange} onClick={onClick} checked={checked} ref={ref}/>
       </ToggleSwitch>
     </div>
   );

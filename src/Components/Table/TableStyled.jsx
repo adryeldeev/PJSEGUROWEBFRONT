@@ -63,6 +63,26 @@ export const ButtonEdit = styled.button`
   padding: 10px 20px;
   border-radius: 4px;
 `
+export const ButtonsDiv = styled.div`
+  display: flex;
+  justify-content: flex-and;
+  margin-top: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  
+`
+
+
+
+export const ButtonAdd = styled.button`
+
+  border: none;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 4px;
+  margin-top:10px;
+`
+
 
 
 

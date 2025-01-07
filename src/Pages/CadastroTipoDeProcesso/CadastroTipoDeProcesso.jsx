@@ -4,27 +4,44 @@ import ButtonPlus from '../../Components/ButtonPlus/ButtonPlus';
 import Toggle from '../../Components/Toggle/Toggle';
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useRef, useState } from 'react';
+import useApi from '../../Api/Api';
+import { useNavigate } from 'react-router-dom'; // Importa o hook para navegação
 
 const CadastroTipoDeProcesso = () => {
-  const nameRef = useRef(); // Referência para o nome
-  const [isChecked, setIsChecked] = useState(false); // Estado para o toggle
+  const api = useApi();
+  const navigate = useNavigate(); // Inicializa o hook de navegação
+  const nomeRef = useRef();
+  const [isChecked, setIsChecked] = useState(false); 
 
-  // Função para alternar o valor de checked
   const handleToggle = () => {
     setIsChecked((prev) => !prev);
   };
 
-  // Função para enviar os dados para a API
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const data = {
-      name: nameRef.current.value, // Obtém o valor do campo de texto
-      active: isChecked, // Envia true se ativo, false se inativo
+      nome: nomeRef.current?.value.trim(),
+      activo: isChecked,
     };
 
-    console.log('Dados enviados para a API:', data);
+    if (data.nome === "" ) {
+      alert('Preencha o nome do tipo de processo.');
+      return;
+    }
 
-    // Aqui você pode usar fetch ou axios para enviar os dados:
-    // fetch('/api/endpoint', { method: 'POST', body: JSON.stringify(data) });
+      console.log(data)
+    try {
+      const response = await api.post('/createTipoProcesso', data); 
+      if (response.status === 200 || response.status === 201) { 
+        alert('Cadastro realizado com sucesso!');
+        navigate('/tipos-de-processo'); 
+      } else {
+        alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao enviar os dados:', error);
+      alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+    }
   };
 
   return (
@@ -37,7 +54,7 @@ const CadastroTipoDeProcesso = () => {
               id="nome"
               type="text"
               placeholder="Digite o nome do tipo de processo"
-              ref={nameRef} // Referência para o input
+              ref={nomeRef} // Referência para o input
             />
           </DivInputs>
           <DivInputs>
