@@ -9,20 +9,22 @@ import InputField from "../../Components/Inputs/Inputs";
 import Toggle from "../../Components/Toggle/Toggle";
 import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
-import { ContentPrioridades, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./PrioridadesStyled";
+import { ContentFaseProcessos, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./FaseDoProcessoStyled";
 
-const Prioridades = () => {
+const FaseDoProcesso = () => {
   const api = useApi();
   const navigate = useNavigate();
   const { isOpen, openModal, closeModal } = useUI();
 
-  const [prioridades, setPrioridades] = useState([]);
+  const [processos, setProcessos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [nome, setNome] = useState("");
   const [activo, setActivo] = useState(false);
+  const [pendencia, setPendencia] = useState(false);
+  const [mudaFase, setMudaFase] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(0); // Página atual
   const itemsPerPage = 4; // Número de itens por página
@@ -32,19 +34,19 @@ const Prioridades = () => {
         setLoading(true);
 
         // Faz a requisição para a API
-        const response = await api.get("/prioridades");
+        const response = await api.get("/processos");
 
-        // Acessa a propriedade "prioridades" no objeto retornado
-        const { prioridades } = response.data;
+        // Acessa a propriedade "processos" no objeto retornado
+        const { processos } = response.data;
 
         // Verifica se é uma lista válida
-        if (Array.isArray(prioridades)) {
-            setPrioridades(prioridades);
+        if (Array.isArray(processos)) {
+            setProcessos(processos);
         } else {
-            throw new Error("A resposta da API não contém uma lista de prioridades válida.");
+            throw new Error("A resposta da API não contém uma lista de processos válida.");
         }
     } catch (err) {
-        console.error("Erro ao buscar prioridades:", err);
+        console.error("Erro ao buscar processos:", err);
         setError("Falha ao carregar os dados.");
     } finally {
         setLoading(false);
@@ -58,6 +60,8 @@ const Prioridades = () => {
   const columns = [
     { header: "ID", accessor: "id" },
     { header: "Nome", accessor: "nome" },
+    { header: "Pedencia", accessor: "pedencia" },
+    { header: "Muda Fase", accessor: "mudaFase" },
     { header: "Ativo", accessor: "activo" },
   ];
 
@@ -65,21 +69,25 @@ const Prioridades = () => {
     setSelectedItem(row);
     setNome(row.nome);
     setActivo(row.activo);
+    setPendencia(row.pendencia);
+    setMudaFase(row.mudaFase);
     openModal();
   };
 
   const handleSave = async () => {
     try {
-      const response = await api.put(`/updatePrioridade/${selectedItem.id}`, {
+      const response = await api.put(`/updateProcesso/${selectedItem.id}`, {
         nome: nome,
         activo: activo,
+        pendencia: pendencia,
+        muda_fase: mudaFase,
       });
       if (response.status === 200 || response.status === 201) {
         alert("Tipo de processo atualizado com sucesso!");
-        const updatedData = prioridades.map((item) =>
-          item.id === selectedItem.id ? { ...item, nome, activo } : item
+        const updatedData = processos.map((item) =>
+          item.id === selectedItem.id ? { ...item, nome, activo, pendencia, muda_fase:mudaFase } : item
         );
-        setPrioridades(updatedData);
+        setProcessos(updatedData);
         closeModal();
       } else {
         alert("Erro ao atualizar tipo de processo.");
@@ -96,13 +104,13 @@ const Prioridades = () => {
     );
     if (confirmDelete) {
       try {
-        const response = await api.delete(`/deletePrioridade/${row.id}`);
+        const response = await api.delete(`/deleteProcesso/${row.id}`);
         if (response.status === 200 || response.status === 201) {
           alert("Prioridade deletado com sucesso!");
-          const filteredData = prioridades.filter(
+          const filteredData = processos.filter(
             (item) => item.id !== row.id
           );
-          setPrioridades(filteredData);
+          setProcessos(filteredData);
         } else {
           alert("Erro ao deletar tipo de processo.");
         }
@@ -114,12 +122,12 @@ const Prioridades = () => {
   };
 
   const handleNavigate = () => {
-    navigate("/cadastrar-prioridade");
+    navigate("/cadastrar-fase-de-processo");
   };
 
   // Funções para paginação
   const handleNextPage = () => {
-    if ((currentPage + 1) * itemsPerPage < prioridades.length) {
+    if ((currentPage + 1) * itemsPerPage < processos.length) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -131,8 +139,8 @@ const Prioridades = () => {
   };
 
   // Dados da página atual
-  const paginatedData = Array.isArray(prioridades)
-  ? prioridades.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+  const paginatedData = Array.isArray(processos)
+  ? processos.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
   : [];
   if (loading) {
     return <p>Carregando...</p>;
@@ -143,9 +151,9 @@ const Prioridades = () => {
   }
 
   return (
-    <ContentPrioridades>
+    <ContentFaseProcessos>
       <DivInfo>
-        <TituloText>Lista de Prioridades</TituloText>
+        <TituloText>Lista de Fase Do Processo</TituloText>
         <ButtonPlus
           text="Novo"
           backgroundColor="blue"
@@ -196,6 +204,24 @@ const Prioridades = () => {
                     onClick={() => setActivo((prev) => !prev)}
                   />
                 </DivInputs>
+                <DivInputs>
+                  <Toggle
+                    id="toggle-2"
+                    type="checkbox"
+                    checked={pendencia}
+                    label="Pendência"
+                    onClick={() => setPendencia((prev) => !prev)}
+                  />
+                </DivInputs>
+                <DivInputs>
+                  <Toggle
+                    id="toggle-3"
+                    type="checkbox"
+                    checked={mudaFase}
+                    label="Muda Fase"
+                    onClick={() => setMudaFase((prev) => !prev)}
+                  />
+                </DivInputs>
                 <button type="submit">Salvar</button>
                 <button type="button" onClick={closeModal}>
                   Cancelar
@@ -205,8 +231,8 @@ const Prioridades = () => {
           </ModalCadastroContainer>
         </ModalBackDro>
       )}
-    </ContentPrioridades>
+    </ContentFaseProcessos>
   );
 };
 
-export default Prioridades;
+export default FaseDoProcesso;

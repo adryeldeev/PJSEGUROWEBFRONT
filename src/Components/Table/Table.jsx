@@ -21,7 +21,7 @@ import {
 const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
   return (
     <DivContentTable>
-        <Title>Resultados</Title>
+      <Title>Resultados</Title>
       <TableContent>
         <Thead>
           <Tr>
@@ -35,32 +35,47 @@ const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
           {data.map((row, rowIndex) => (
             <Tr key={rowIndex}>
               {columns.map((column) => (
-                <Td key={column.accessor}>{column.accessor === 'activo' ? (row[column.accessor] ? <CiCircleCheck /> : <MdBlock />) : row[column.accessor]}</Td>
+                <Td key={column.accessor}>
+                  {column.accessor === 'activo' ? (
+                    row[column.accessor] ? (
+                      <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                    ) : (
+                      <MdBlock style={{ color: 'red' }} />
+                    )
+                  ) : column.accessor === 'pedencia' ? (
+                    row[column.accessor] ?  
+                    <MdBlock style={{ color: 'red' }} />  // Exibe "Pendente" ou "Concluído"
+                    : 
+                    <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                  ) : column.accessor === 'mudaFase' ? (
+                    row[column.accessor] ? (
+                      <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />  // Ícone vermelho para false
+                    ) : (
+                      <MdBlock style={{ color: 'red', fontSize: '15px' }} />  // Ícone verde para true
+                    )
+                  ) : (
+                    row[column.accessor]  // Para outras colunas, apenas exibe o valor
+                  )}
+                </Td>
               ))}
               {(onEdit || onDelete) && (
                 <Td>
-                  {onEdit && (
-                    <ButtonEdit onClick={() => onEdit(row)}>Editar</ButtonEdit>
-                  )}
-                  {onDelete && (
-                    <ButtonDelete onClick={() => onDelete(row)}>
-                      Deletar
-                    </ButtonDelete>
-                  )}
+                  {onEdit && <ButtonEdit onClick={() => onEdit(row)}>Editar</ButtonEdit>}
+                  {onDelete && <ButtonDelete onClick={() => onDelete(row)}>Deletar</ButtonDelete>}
                 </Td>
               )}
             </Tr>
           ))}
         </Tbody>
-          <ButtonsDiv>
-            <ButtonAdd>
-            <BsSkipBackward onClick={back} />
-            </ButtonAdd>
-            <ButtonAdd>
-              <GrChapterNext onClick={next} />
-            </ButtonAdd>
-          </ButtonsDiv>
       </TableContent>
+      <ButtonsDiv>
+        <ButtonAdd>
+          <BsSkipBackward onClick={back} />
+        </ButtonAdd>
+        <ButtonAdd>
+          <GrChapterNext onClick={next} />
+        </ButtonAdd>
+      </ButtonsDiv>
     </DivContentTable>
   );
 };

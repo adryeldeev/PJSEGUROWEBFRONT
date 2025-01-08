@@ -3,25 +3,25 @@ import styled from 'styled-components'
 export const DivContentTable = styled.div`
   max-width: 100%;
   height: 100%;
-  overflow-y: auto;
   `
 
 export const TableContent = styled.table`
 width: 100%;
 border-collapse: collapse;
-overflow-y: scroll;
-  `
-  export const Title = styled.h2`
-  font-size:12px;
-  color: #333;
-  `
-  
-  export const Thead = styled.thead`
-  background-color: #f2f2f2;
-  text-align:center;  
-  `
-  export const Tbody = styled.tbody`
-  text-align:center;
+overflow-x: scroll;
+`
+export const Title = styled.h2`
+font-size:12px;
+color: #333;
+`
+
+export const Thead = styled.thead`
+background-color: #f2f2f2;
+text-align:center;  
+`
+export const Tbody = styled.tbody`
+text-align:center;
+overflow-x: scroll;
  `
 
 export const Th = styled.th`
@@ -65,7 +65,7 @@ export const ButtonEdit = styled.button`
 `
 export const ButtonsDiv = styled.div`
   display: flex;
-  justify-content: flex-and;
+  justify-content: flex-start;
   margin-top: 10px;
   width: 100%;
   margin-bottom: 10px;

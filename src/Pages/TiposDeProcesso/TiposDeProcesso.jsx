@@ -149,16 +149,20 @@ const TiposDeProcesso = () => {
           onClick={handleNavigate}
         />
       </DivInfo>
-
-      <Table
-        columns={columns}
-        data={paginatedData} // Dados da página atual
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        back={handleBackPage} // Função de voltar
-        next={handleNextPage} // Função de avançar
-      />
-
+     {loading ? (
+      <p>Carregando...</p>
+     ): error ? (
+      <p>{error}</p>
+     ) :(
+       <Table
+       columns={columns}
+       data={paginatedData} // Dados da página atual
+       onEdit={handleEdit}
+       onDelete={handleDelete}
+       back={handleBackPage} // Função de voltar
+       next={handleNextPage} // Função de avançar
+       />
+      )}
       {isOpen && (
         <ModalBackDro onClick={closeModal}>
           <ModalCadastroContainer onClick={(e) => e.stopPropagation()}>
