@@ -5,9 +5,10 @@ import { StyledNavLink } from "./SidebarStyled";
 const Sidebar = ({ isOpen, isDesktop }) => {
   const menuItems = [
     { path: "/", label: "Início" },
+    { path: "/processos", label: "Fase dos processos"},
     { path: "/tipos-de-processo", label: "Tipos de Processos" },
     { path: "/prioridades", label: "Prioridades" },
-    { path: "/processos", label: "Processos" },
+    { path:"/tipos-de-veiculo", label:"Tipos de veículo"}
   ];
 
   return (

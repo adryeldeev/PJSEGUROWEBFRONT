@@ -13,6 +13,7 @@ import { UIProvider } from './Context/UiContext'; // Importe o UIProvider
 import CadastrarPrioridades from './Pages/CadastrarPrioridades/CadastrarPrioridades';
 import FaseDoProcesso from './Pages/FaseDoProcesso/FaseDoProcesso';
 import CadastrarFaseDoProcesso from './Pages/CadastrarFaseDoProcesso/CadastrarFaseDoProcesso';
+import TiposDeVeiculo from './Pages/TiposDeVeiculo/TiposDeVeiculo';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/tipos-de-processo" element={<TiposDeProcesso />} />
                 <Route path="/prioridades" element={<Prioridades />} />
                 <Route path="/processos" element={<FaseDoProcesso />} />
+                <Route path="/tipos-de-veiculo" element={<TiposDeVeiculo/>}/>
                 <Route path="/cadastrar-tipo-de-processo" element={<CadastroTipoDeProcesso />} />
                 <Route path="/cadastrar-prioridade" element={<CadastrarPrioridades />} />
                 <Route path="/cadastrar-fase-de-processo" element={<CadastrarFaseDoProcesso />} />

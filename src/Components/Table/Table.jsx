@@ -36,27 +36,28 @@ const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
             <Tr key={rowIndex}>
               {columns.map((column) => (
                 <Td key={column.accessor}>
-                  {column.accessor === 'activo' ? (
-                    row[column.accessor] ? (
-                      <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
-                    ) : (
-                      <MdBlock style={{ color: 'red' }} />
-                    )
-                  ) : column.accessor === 'pedencia' ? (
-                    row[column.accessor] ?  
-                    <MdBlock style={{ color: 'red' }} />  // Exibe "Pendente" ou "Concluído"
-                    : 
+                {column.accessor === 'activo' ? (
+                  row[column.accessor] ? (
                     <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
-                  ) : column.accessor === 'mudaFase' ? (
-                    row[column.accessor] ? (
-                      <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />  // Ícone vermelho para false
-                    ) : (
-                      <MdBlock style={{ color: 'red', fontSize: '15px' }} />  // Ícone verde para true
-                    )
                   ) : (
-                    row[column.accessor]  // Para outras colunas, apenas exibe o valor
-                  )}
-                </Td>
+                    <MdBlock style={{ color: 'red' }} />
+                  )
+                ) : column.accessor === 'pendencia' ? (
+                  row[column.accessor] ? (
+                    <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                  ) : (
+                    <MdBlock style={{ color: 'red' }} />
+                  )
+                ) : column.accessor === 'muda_fase'?(
+                  row[column.accessor] ? (
+                    <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                  ) : (
+                    <MdBlock style={{ color: 'red', fontSize: '15px' }} />
+                  )
+                ) : (
+                  row[column.accessor]
+                )}
+              </Td>
               ))}
               {(onEdit || onDelete) && (
                 <Td>

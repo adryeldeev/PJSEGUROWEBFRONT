@@ -87,7 +87,6 @@ const CadastrarPrioridades = () => {
           <DivInputs>
             <Toggle
               id="toggle-1"
-              type="checkbox"
               checked={isChecked} 
               label="Ativo"
               onClick={handleToggle} 

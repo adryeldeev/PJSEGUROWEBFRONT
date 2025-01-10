@@ -92,26 +92,25 @@ const Prioridades = () => {
 
   const handleDelete = async (row) => {
     const confirmDelete = window.confirm(
-      `Tem certeza que deseja excluir ${row.nome}?`
+        `Tem certeza que deseja excluir ${row.nome}?`
     );
     if (confirmDelete) {
-      try {
-        const response = await api.delete(`/deletePrioridade/${row.id}`);
-        if (response.status === 200 || response.status === 201) {
-          alert("Prioridade deletado com sucesso!");
-          const filteredData = prioridades.filter(
-            (item) => item.id !== row.id
-          );
-          setPrioridades(filteredData);
-        } else {
-          alert("Erro ao deletar tipo de processo.");
+        try {
+            const response = await api.delete(`/deletePrioridade/${row.id}`);
+            if (response.status === 200){
+              alert(response.data.message)
+              
+                await fetchData(); // Recarrega a lista após a exclusão
+            } else {
+                alert("Erro ao deletar prioridade.");
+            }
+        } catch (error) {
+            console.error("Erro ao excluir prioridade:", error);
+            alert("Erro ao excluir prioridade.");
         }
-      } catch (error) {
-        console.error("Erro ao excluir tipo de processo:", error);
-        alert("Erro ao excluir tipo de processo.");
-      }
     }
-  };
+};
+
 
   const handleNavigate = () => {
     navigate("/cadastrar-prioridade");

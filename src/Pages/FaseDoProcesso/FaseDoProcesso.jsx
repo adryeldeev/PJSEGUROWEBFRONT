@@ -31,27 +31,29 @@ const FaseDoProcesso = () => {
 
   const fetchData = async () => {
     try {
-        setLoading(true);
+      setLoading(true);
 
-        // Faz a requisição para a API
-        const response = await api.get("/processos");
+      const response = await api.get("/processos");
+      const { processos } = response.data;
 
-        // Acessa a propriedade "processos" no objeto retornado
-        const { processos } = response.data;
+      if (Array.isArray(processos)) {
+        // Normaliza os dados para evitar undefined
+        const normalizedData = processos.map((item) => ({
+          ...item,
+          muda_fase: item.muda_fase ?? false,
+        }));
 
-        // Verifica se é uma lista válida
-        if (Array.isArray(processos)) {
-            setProcessos(processos);
-        } else {
-            throw new Error("A resposta da API não contém uma lista de processos válida.");
-        }
+        setProcessos(normalizedData);
+      } else {
+        throw new Error("A resposta da API não contém uma lista de processos válida.");
+      }
     } catch (err) {
-        console.error("Erro ao buscar processos:", err);
-        setError("Falha ao carregar os dados.");
+      console.error("Erro ao buscar processos:", err);
+      setError("Falha ao carregar os dados.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   useEffect(() => {
     fetchData();
@@ -60,33 +62,38 @@ const FaseDoProcesso = () => {
   const columns = [
     { header: "ID", accessor: "id" },
     { header: "Nome", accessor: "nome" },
-    { header: "Pedencia", accessor: "pedencia" },
-    { header: "Muda Fase", accessor: "mudaFase" },
+    { header: "Pendência", accessor: "pendencia" },
+    { header: "Muda Fase", accessor: "muda_fase" },
     { header: "Ativo", accessor: "activo" },
   ];
 
-  const handleEdit = async (row) => {
+  const handleEdit = (row) => {
     setSelectedItem(row);
     setNome(row.nome);
     setActivo(row.activo);
     setPendencia(row.pendencia);
-    setMudaFase(row.mudaFase);
+    setMudaFase(row.muda_fase); // Corrigido para usar "muda_fase"
     openModal();
   };
 
   const handleSave = async () => {
     try {
       const response = await api.put(`/updateProcesso/${selectedItem.id}`, {
-        nome: nome,
-        activo: activo,
-        pendencia: pendencia,
-        muda_fase: mudaFase,
+        nome,
+        activo,
+        pendencia,
+        muda_fase: mudaFase, // Certifica-se de enviar o valor correto
       });
+
       if (response.status === 200 || response.status === 201) {
         alert("Tipo de processo atualizado com sucesso!");
+
         const updatedData = processos.map((item) =>
-          item.id === selectedItem.id ? { ...item, nome, activo, pendencia, muda_fase:mudaFase } : item
+          item.id === selectedItem.id
+            ? { ...item, nome, activo, pendencia, muda_fase: mudaFase }
+            : item
         );
+
         setProcessos(updatedData);
         closeModal();
       } else {
@@ -106,17 +113,15 @@ const FaseDoProcesso = () => {
       try {
         const response = await api.delete(`/deleteProcesso/${row.id}`);
         if (response.status === 200 || response.status === 201) {
-          alert("Prioridade deletado com sucesso!");
-          const filteredData = processos.filter(
-            (item) => item.id !== row.id
-          );
+          alert("Fase do processo deletada com sucesso!");
+          const filteredData = processos.filter((item) => item.id !== row.id);
           setProcessos(filteredData);
         } else {
-          alert("Erro ao deletar tipo de processo.");
+          alert("Erro ao deletar fase do processo.");
         }
       } catch (error) {
-        console.error("Erro ao excluir tipo de processo:", error);
-        alert("Erro ao excluir tipo de processo.");
+        console.error("Erro ao excluir fase do processo:", error);
+        alert("Erro ao excluir fase do processo.");
       }
     }
   };
@@ -125,7 +130,6 @@ const FaseDoProcesso = () => {
     navigate("/cadastrar-fase-de-processo");
   };
 
-  // Funções para paginação
   const handleNextPage = () => {
     if ((currentPage + 1) * itemsPerPage < processos.length) {
       setCurrentPage(currentPage + 1);
@@ -138,10 +142,10 @@ const FaseDoProcesso = () => {
     }
   };
 
-  // Dados da página atual
   const paginatedData = Array.isArray(processos)
-  ? processos.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-  : [];
+    ? processos.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+    : [];
+
   if (loading) {
     return <p>Carregando...</p>;
   }
@@ -161,19 +165,19 @@ const FaseDoProcesso = () => {
           onClick={handleNavigate}
         />
       </DivInfo>
-     {loading ? (
-      <p>Carregando...</p>
-     ): error ? (
-      <p>{error}</p>
-     ) :(
-       <Table
-       columns={columns}
-       data={paginatedData} // Dados da página atual
-       onEdit={handleEdit}
-       onDelete={handleDelete}
-       back={handleBackPage} // Função de voltar
-       next={handleNextPage} // Função de avançar
-       />
+      {loading ? (
+        <p>Carregando...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <Table
+          columns={columns}
+          data={paginatedData}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          back={handleBackPage}
+          next={handleNextPage}
+        />
       )}
       {isOpen && (
         <ModalBackDro onClick={closeModal}>
@@ -198,7 +202,6 @@ const FaseDoProcesso = () => {
                 <DivInputs>
                   <Toggle
                     id="toggle-1"
-                    type="checkbox"
                     checked={activo}
                     label="Ativo"
                     onClick={() => setActivo((prev) => !prev)}
@@ -207,7 +210,6 @@ const FaseDoProcesso = () => {
                 <DivInputs>
                   <Toggle
                     id="toggle-2"
-                    type="checkbox"
                     checked={pendencia}
                     label="Pendência"
                     onClick={() => setPendencia((prev) => !prev)}
@@ -216,7 +218,6 @@ const FaseDoProcesso = () => {
                 <DivInputs>
                   <Toggle
                     id="toggle-3"
-                    type="checkbox"
                     checked={mudaFase}
                     label="Muda Fase"
                     onClick={() => setMudaFase((prev) => !prev)}
