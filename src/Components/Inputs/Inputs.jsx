@@ -2,13 +2,14 @@ import PropTypes from 'prop-types';
 import { InputFieldStyle } from './InputStyled';
 import  { forwardRef } from 'react';
 
-const InputField = forwardRef(({ type, value, onChange, placeholder, id, label }, ref) => {
+const InputField = forwardRef(({ type, value, onChange, placeholder, id, label,name }, ref) => {
   return (
     <div>
       {label && <label htmlFor={id}>{label}</label>}
       <InputFieldStyle
         id={id}
         type={type}
+        name={name}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
@@ -29,6 +30,8 @@ InputField.propTypes = {
   placeholder: PropTypes.string,
   id: PropTypes.string.isRequired,
   label: PropTypes.string,
+  name: PropTypes.string, 
+
 };
 
 InputField.defaultProps = {

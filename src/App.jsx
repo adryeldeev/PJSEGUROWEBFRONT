@@ -14,6 +14,7 @@ import CadastrarPrioridades from './Pages/CadastrarPrioridades/CadastrarPriorida
 import FaseDoProcesso from './Pages/FaseDoProcesso/FaseDoProcesso';
 import CadastrarFaseDoProcesso from './Pages/CadastrarFaseDoProcesso/CadastrarFaseDoProcesso';
 import TiposDeVeiculo from './Pages/TiposDeVeiculo/TiposDeVeiculo';
+import CadastrarTiposDeVeiculo from './Pages/CadastrarTiposDeVeiculo/CadastrarTiposDeVeiculo';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/cadastrar-tipo-de-processo" element={<CadastroTipoDeProcesso />} />
                 <Route path="/cadastrar-prioridade" element={<CadastrarPrioridades />} />
                 <Route path="/cadastrar-fase-de-processo" element={<CadastrarFaseDoProcesso />} />
+                <Route path="/cadastrar-tipo-de-veiculo" element={<CadastrarTiposDeVeiculo />} />
               </Route>
             </Route>
           </Routes>
