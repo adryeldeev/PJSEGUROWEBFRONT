@@ -8,7 +8,11 @@ const Sidebar = ({ isOpen, isDesktop }) => {
     { path: "/processos", label: "Fase dos processos"},
     { path: "/tipos-de-processo", label: "Tipos de Processos" },
     { path: "/prioridades", label: "Prioridades" },
-    { path:"/tipos-de-veiculo", label:"Tipos de veículo"}
+    { path:"/tipos-de-veiculo", label:"Tipos de veículo"},
+    { path:"/documentos", label:"Tipos de documentos"},
+    { path:"/clientes", label:"Clientes"},
+    { path:"/bancos", label:"Bancos"},
+    { path:"/seguradoras", label:"Seguradoras"}
   ];
 
   return (

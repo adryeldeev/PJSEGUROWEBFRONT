@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ContentTiposDeVeiculos, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./TiposDeVeiculoStyled";
 import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import Table from "../../Components/Table/Table";

@@ -8,22 +8,21 @@ import { useUI } from "../../Context/UiContext";
 import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
 import InputField from "../../Components/Inputs/Inputs";
-import { ContentBanco, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./BancoStyled";
+import { ContentSeguradora, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./SeguradoraStyled";
 
-const Bancos = () => {
+const Seguradora = () => {
   const api = useApi();
   const navigate = useNavigate();
   const { isOpen, openModal, closeModal } = useUI();
 
-  const [bancos, setBancos] = useState([]);
+  const [seguradora, setSeguradora] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState(null);
 const [dados, setDados] = useState({
   nome:'',
-  agencia:'',
-  conta:'',
+ 
 })
  
   const [currentPage, setCurrentPage] = useState(0); // Página atual
@@ -34,19 +33,21 @@ const [dados, setDados] = useState({
         setLoading(true);
   
         // Faz a requisição para a API
-        const response = await api.get("/bancos");
+        const response = await api.get("/seguradoras");
   
-        
-        const { bancos } = response.data;
+       
+  
+        // Acessa a propriedade "tipoVeiculos" no objeto retornado
+        const { seguradoras } = response.data;
   
         // Verifica se é uma lista válida
-        if (Array.isArray(bancos)) {
-            setBancos(bancos);
+        if (Array.isArray(seguradoras)) {
+            setSeguradora(seguradoras);
         } else {
-            throw new Error("A resposta da API não contém uma lista de clientes válida.");
+            throw new Error("A resposta da API não contém uma lista de seguradora válida.");
         }
     } catch (err) {
-        console.error("Erro ao buscar clientes:", err);
+        console.error("Erro ao buscar seguradora:", err);
         setError("Falha ao carregar os dados.");
     } finally {
         setLoading(false);
@@ -60,8 +61,7 @@ const [dados, setDados] = useState({
   const columns = [
     { header: "ID", accessor: "id" },
     { header: "Nome", accessor: "nome" },
-    { header: "Agencia", accessor: "agencia" },
-    { header: "Conta", accessor: "conta" },
+ 
   ];
 const handleChange = (e) =>{
   const { name , value} = e.target
@@ -72,8 +72,7 @@ const handleChange = (e) =>{
     setSelectedItem(row);
     setDados({
       nome: row.nome || "",
-      agencia: row.agencia || "",
-    conta: row.conta || "",
+     
     })
 
     
@@ -85,24 +84,24 @@ const handleChange = (e) =>{
   
     try {
       // Envia os dados atualizados para a API
-      const response = await api.put(`/updateBanco/${selectedItem.id}`, dados);
+      const response = await api.put(`/updateSeguradora/${selectedItem.id}`, dados);
   
       if (response.status === 200 || response.status === 201) {
         alert("Tipo de veículo atualizado com sucesso!");
   
         // Atualiza a lista local com os novos dados
-        const updatedData = bancos.map((item) =>
+        const updatedData = seguradora.map((item) =>
           item.id === selectedItem.id ? { ...item, ...dados } : item
         );
-        setBancos(updatedData);
+        setSeguradora(updatedData);
   
         closeModal(); 
       } else {
-        alert("Erro ao atualizar banco.");
+        alert("Erro ao atualizar tipo de veículo.");
       }
     } catch (error) {
-      console.error("Erro ao atualizar banco:", error);
-      alert("Erro ao atualizar banco.");
+      console.error("Erro ao atualizar tipo de veículo:", error);
+      alert("Erro ao atualizar tipo de veículo.");
     }
   };
 
@@ -112,16 +111,16 @@ const handleChange = (e) =>{
     );
     if (confirmDelete) {
         try {
-            const response = await api.delete(`/deleteBanco/${row.id}`);
+            const response = await api.delete(`/deleteSeguradora/${row.id}`);
             if (response.status === 200){
               alert(response.data.message)
               
                 await fetchData(); // Recarrega a lista após a exclusão
             } else {
-                alert("Erro ao deletar banco.");
+                alert("Erro ao deletar cliente.");
             }
         } catch (error) {
-            console.error("Erro ao excluir banco:", error);
+            console.error("Erro ao excluir cliente:", error);
             alert("Erro ao excluircliente.");
         }
     }
@@ -129,12 +128,12 @@ const handleChange = (e) =>{
 
 
   const handleNavigate = () => {
-    navigate("/cadastrar-banco");
+    navigate("/cadastrar-seguradora");
   };
 
   // Funções para paginação
   const handleNextPage = () => {
-    if ((currentPage + 1) * itemsPerPage < bancos.length) {
+    if ((currentPage + 1) * itemsPerPage < seguradora.length) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -146,8 +145,8 @@ const handleChange = (e) =>{
   };
 
   // Dados da página atual
-  const paginatedData = Array.isArray(bancos)
-  ? bancos.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
+  const paginatedData = Array.isArray(seguradora)
+  ? seguradora.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
   : [];
   if (loading) {
     return <p>Carregando...</p>;
@@ -158,9 +157,9 @@ const handleChange = (e) =>{
   }
 
   return (
-    <ContentBanco>
+    <ContentSeguradora>
       <DivInfo>
-        <TituloText>Lista de Bancos</TituloText>
+        <TituloText>Lista de Seguradora</TituloText>
         <ButtonPlus
           text="Novo"
           backgroundColor="blue"
@@ -193,35 +192,13 @@ const handleChange = (e) =>{
       id="nome"
       name="nome"
       type="text"
-      placeholder="Digite o nome do banco"
+      placeholder="Digite o nome da seguradora"
       value={dados.nome} // Controlado pelo estado
       onChange={handleChange} // Atualiza o estado
     />
   </DivInputs>
 
-  <DivInputs>
-    <label htmlFor="agencia">Agencia *</label>
-    <InputField
-      id="agencia"
-      name="agencia"
-      type="text"
-      placeholder="Digite a agencia do banco"
-      value={dados.agencia}
-      onChange={handleChange}
-    />
-  </DivInputs>
-
-  <DivInputs>
-    <label htmlFor="conta">Conta *</label>
-    <InputField
-      id="conta"
-      name="conta"
-      type="text"
-      placeholder="Digite a conta do banco"
-      value={dados.conta}
-      onChange={handleChange}
-    />
-  </DivInputs>
+ 
 
   <button type="submit">Salvar</button>
   <button type="button" onClick={closeModal}>
@@ -232,8 +209,8 @@ const handleChange = (e) =>{
           </ModalCadastroContainer>
         </ModalBackDro>
       )}
-    </ContentBanco>
+    </ContentSeguradora>
   );
 };
 
-export default Bancos;
+export default Seguradora;

@@ -15,6 +15,14 @@ import FaseDoProcesso from './Pages/FaseDoProcesso/FaseDoProcesso';
 import CadastrarFaseDoProcesso from './Pages/CadastrarFaseDoProcesso/CadastrarFaseDoProcesso';
 import TiposDeVeiculo from './Pages/TiposDeVeiculo/TiposDeVeiculo';
 import CadastrarTiposDeVeiculo from './Pages/CadastrarTiposDeVeiculo/CadastrarTiposDeVeiculo';
+import Clientes from './Pages/Clientes/Clientes';
+import CadastrarCliente from './Pages/CadastrarClientes/CadastrarCliente';
+import CadastrarBancos from './Pages/CadastrarBancos/CadastrarBancos';
+import Bancos from './Pages/Bancos/Bancos';
+import CadastrarSeguradora from './Pages/CadastrarSeguradora/CadastrarSeguradora';
+import Seguradora from './Pages/Seguradora/Seguradora';
+import TiposDeDocumento from './Pages/TiposDeDocumento/TiposDeDocumento';
+import CadastrarDocumento from './Pages/CadastroDeDocumento/CadastroDeDocumento';
 
 function App() {
   return (
@@ -30,11 +38,19 @@ function App() {
                 <Route path="/tipos-de-processo" element={<TiposDeProcesso />} />
                 <Route path="/prioridades" element={<Prioridades />} />
                 <Route path="/processos" element={<FaseDoProcesso />} />
+                <Route path="/clientes" element={<Clientes />} />
+                <Route path="/bancos" element={<Bancos />} />
+                <Route path="/seguradoras" element={<Seguradora />} />
+                <Route path="/documentos" element={<TiposDeDocumento />} />
                 <Route path="/tipos-de-veiculo" element={<TiposDeVeiculo/>}/>
                 <Route path="/cadastrar-tipo-de-processo" element={<CadastroTipoDeProcesso />} />
                 <Route path="/cadastrar-prioridade" element={<CadastrarPrioridades />} />
                 <Route path="/cadastrar-fase-de-processo" element={<CadastrarFaseDoProcesso />} />
                 <Route path="/cadastrar-tipo-de-veiculo" element={<CadastrarTiposDeVeiculo />} />
+                <Route path="/cadastrar-cliente" element={<CadastrarCliente />} />
+                <Route path="/cadastrar-banco" element={<CadastrarBancos />} />
+                <Route path="/cadastrar-seguradora" element={<CadastrarSeguradora />} />
+                <Route path="/cadastrar-documento" element={<CadastrarDocumento />} />
               </Route>
             </Route>
           </Routes>

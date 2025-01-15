@@ -6,6 +6,7 @@ import { MdBlock } from "react-icons/md";
 import {
   DivContentTable,
   TableContent,
+  TableWrapper,
   Thead,
   Tbody,
   Tr,
@@ -16,59 +17,68 @@ import {
   Title,
   ButtonsDiv,
   ButtonAdd,
-} from "./TableStyled"; // Certifique-se de ajustar o caminho para o arquivo styled
+} from "./TableStyled";
 
 const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
   return (
     <DivContentTable>
       <Title>Resultados</Title>
-      <TableContent>
-        <Thead>
-          <Tr>
-            {columns.map((column) => (
-              <Th key={column.accessor}>{column.header}</Th>
-            ))}
-            {(onEdit || onDelete) && <Th>Ações</Th>}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((row, rowIndex) => (
-            <Tr key={rowIndex}>
+      <TableWrapper>
+        <TableContent>
+          <Thead>
+            <Tr>
               {columns.map((column) => (
-                <Td key={column.accessor}>
-                {column.accessor === 'activo' ? (
-                  row[column.accessor] ? (
-                    <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
-                  ) : (
-                    <MdBlock style={{ color: 'red' }} />
-                  )
-                ) : column.accessor === 'pendencia' ? (
-                  row[column.accessor] ? (
-                    <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
-                  ) : (
-                    <MdBlock style={{ color: 'red' }} />
-                  )
-                ) : column.accessor === 'muda_fase'?(
-                  row[column.accessor] ? (
-                    <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
-                  ) : (
-                    <MdBlock style={{ color: 'red', fontSize: '15px' }} />
-                  )
-                ) : (
-                  row[column.accessor]
-                )}
-              </Td>
+                <Th key={column.accessor}>{column.header}</Th>
               ))}
-              {(onEdit || onDelete) && (
-                <Td>
-                  {onEdit && <ButtonEdit onClick={() => onEdit(row)}>Editar</ButtonEdit>}
-                  {onDelete && <ButtonDelete onClick={() => onDelete(row)}>Deletar</ButtonDelete>}
-                </Td>
-              )}
+              {(onEdit || onDelete) && <Th>Ações</Th>}
             </Tr>
-          ))}
-        </Tbody>
-      </TableContent>
+          </Thead>
+          <Tbody>
+            {data.map((row, rowIndex) => (
+              <Tr key={rowIndex}>
+                {columns.map((column) => (
+                  <Td key={column.accessor}>
+                    {column.accessor === 'activo' ? (
+                      row[column.accessor] ? (
+                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                      ) : (
+                        <MdBlock style={{ color: 'red' }} />
+                      )
+                    ) : column.accessor === 'pendencia' ? (
+                      row[column.accessor] ? (
+                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                      ) : (
+                        <MdBlock style={{ color: 'red' }} />
+                      )
+                    ) : column.accessor === 'muda_fase'?(
+                      row[column.accessor] ? (
+                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                      ) : (
+                        <MdBlock style={{ color: 'red', fontSize: '15px' }} />
+                      )
+                    ) : column.accessor === 'arquivoUrl' && row[column.accessor] ? (
+                      // Verifica se o campo é uma URL de imagem
+                      <img
+                        src={row[column.accessor]}
+                        alt="Documento"
+                        style={{ width: '100px', height: 'auto' }}
+                      />
+                    ) : (
+                      row[column.accessor]
+                    )}
+                  </Td>
+                ))}
+                {(onEdit || onDelete) && (
+                  <Td>
+                    {onEdit && <ButtonEdit onClick={() => onEdit(row)}>Editar</ButtonEdit>}
+                    {onDelete && <ButtonDelete onClick={() => onDelete(row)}>Deletar</ButtonDelete>}
+                  </Td>
+                )}
+              </Tr>
+            ))}
+          </Tbody>
+        </TableContent>
+      </TableWrapper>
       <ButtonsDiv>
         <ButtonAdd>
           <BsSkipBackward onClick={back} />
