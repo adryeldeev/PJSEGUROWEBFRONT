@@ -23,12 +23,16 @@ import CadastrarSeguradora from './Pages/CadastrarSeguradora/CadastrarSeguradora
 import Seguradora from './Pages/Seguradora/Seguradora';
 import TiposDeDocumento from './Pages/TiposDeDocumento/TiposDeDocumento';
 import CadastrarDocumento from './Pages/CadastroDeDocumento/CadastroDeDocumento';
+import { ApiUrlProvider } from './Context/ApiUrlProvider';
+import Profile from './Pages/Profile/Profile';
 
 function App() {
   return (
     <Router>
       <AuthProvider>
         <UIProvider>  {/* Envolva tudo com o UIProvider */}
+          <ApiUrlProvider>
+
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/cadastrarUser" element={<CadastroUser />} />
@@ -51,9 +55,11 @@ function App() {
                 <Route path="/cadastrar-banco" element={<CadastrarBancos />} />
                 <Route path="/cadastrar-seguradora" element={<CadastrarSeguradora />} />
                 <Route path="/cadastrar-documento" element={<CadastrarDocumento />} />
+                <Route path="/conta" element={<Profile />} />
               </Route>
             </Route>
           </Routes>
+          </ApiUrlProvider>
         </UIProvider>  {/* Fim do UIProvider */}
       </AuthProvider>
     </Router>

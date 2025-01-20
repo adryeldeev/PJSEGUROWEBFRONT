@@ -109,6 +109,7 @@ export const InputLogin = styled.input`
   padding: 10px 20px;
   outline:none;
   background-color: yellow;
+  cursor:pointer;
 `
 
 export const ErrorMessage = styled.p`

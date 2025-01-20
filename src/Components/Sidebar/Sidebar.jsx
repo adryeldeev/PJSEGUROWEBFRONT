@@ -12,7 +12,8 @@ const Sidebar = ({ isOpen, isDesktop }) => {
     { path:"/documentos", label:"Tipos de documentos"},
     { path:"/clientes", label:"Clientes"},
     { path:"/bancos", label:"Bancos"},
-    { path:"/seguradoras", label:"Seguradoras"}
+    { path:"/seguradoras", label:"Seguradoras"},
+    { path:"/conta", label:"Conta"},
   ];
 
   return (

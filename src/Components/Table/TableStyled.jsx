@@ -85,3 +85,9 @@ export const ButtonAdd = styled.button`
   border-radius: 4px;
   margin-top: 10px;
 `;
+export const Link = styled.a`
+  text-decoration: none;
+  color: #007bff;
+`;
+
+

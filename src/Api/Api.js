@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useAuth } from '../Context/AuthProvider';
+import { useAuth } from '../Context/AuthProvider.jsx';
 
 export const urlApi = 'http://localhost:8000/';
 

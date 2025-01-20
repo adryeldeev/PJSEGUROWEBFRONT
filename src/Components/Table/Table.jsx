@@ -17,9 +17,13 @@ import {
   Title,
   ButtonsDiv,
   ButtonAdd,
+  Link,
 } from "./TableStyled";
-
+import { useContext } from "react";
+import { ApiUrlContext } from '../../Context/ApiUrlProvider';
 const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
+  const baseUrl = useContext(ApiUrlContext);
+
   return (
     <DivContentTable>
       <Title>Resultados</Title>
@@ -56,13 +60,15 @@ const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
                       ) : (
                         <MdBlock style={{ color: 'red', fontSize: '15px' }} />
                       )
-                    ) : column.accessor === 'arquivoUrl' && row[column.accessor] ? (
-                      // Verifica se o campo é uma URL de imagem
-                      <img
-                        src={row[column.accessor]}
-                        alt="Documento"
-                        style={{ width: '100px', height: 'auto' }}
-                      />
+                    ) : column.accessor === 'arquivoUrl' ? (
+                      row[column.accessor] ? (
+                        <Link href={`${baseUrl}${row[column.accessor]}`} target="_blank" rel="noopener noreferrer">
+                          Visualizar
+                        </Link>
+                       
+                      ) : (
+                        <MdBlock style={{ color: 'red', fontSize: '15px' }} />
+                    )
                     ) : (
                       row[column.accessor]
                     )}
@@ -103,6 +109,7 @@ Table.propTypes = {
   onDelete: PropTypes.func,
   back: PropTypes.func,
   next: PropTypes.func,
+
 };
 
 export default Table;
