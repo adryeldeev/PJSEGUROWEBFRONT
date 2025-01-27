@@ -5,6 +5,7 @@ import { StyledNavLink } from "./SidebarStyled";
 const Sidebar = ({ isOpen, isDesktop }) => {
   const menuItems = [
     { path: "/", label: "Início" },
+    {path:'/criarProcesso', label: 'Processo'},
     { path: "/processos", label: "Fase dos processos"},
     { path: "/tipos-de-processo", label: "Tipos de Processos" },
     { path: "/prioridades", label: "Prioridades" },

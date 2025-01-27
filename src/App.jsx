@@ -23,6 +23,7 @@ import CadastrarSeguradora from './Pages/CadastrarSeguradora/CadastrarSeguradora
 import Seguradora from './Pages/Seguradora/Seguradora';
 import TiposDeDocumento from './Pages/TiposDeDocumento/TiposDeDocumento';
 import CadastrarDocumento from './Pages/CadastroDeDocumento/CadastroDeDocumento';
+import CriarProcesso from './Pages/CriarProcesso/CriarProcesso';
 import { ApiUrlProvider } from './Context/ApiUrlProvider';
 import Profile from './Pages/Profile/Profile';
 
@@ -55,6 +56,7 @@ function App() {
                 <Route path="/cadastrar-banco" element={<CadastrarBancos />} />
                 <Route path="/cadastrar-seguradora" element={<CadastrarSeguradora />} />
                 <Route path="/cadastrar-documento" element={<CadastrarDocumento />} />
+                <Route path="/criarProcesso" element={<CriarProcesso />} />
                 <Route path="/conta" element={<Profile />} />
               </Route>
             </Route>
