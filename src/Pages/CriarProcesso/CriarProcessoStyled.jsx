@@ -18,6 +18,7 @@ export const DivHeader = styled.div`
 
 `;
 
+
 export const DivContentInputs = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -28,3 +29,106 @@ export const DivInputs = styled.div`
   display: flex;
   flex-direction: column;
 `;
+export const DivInputsModal = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+` 
+
+
+export const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  label {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+`;
+
+export const Input = styled.input`
+width:20%;
+outline:none;
+border: 1px solid #ccc;
+
+`
+
+export const ModalBackDro = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+   
+`;
+
+export const ModalCadastroContainer = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  max-width: 100%;
+`;
+
+export const ModalCadastroContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    div {
+      margin-bottom: 10px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+      }
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:nth-child(2) {
+        background: #6c757d;
+      }
+    }
+  }
+`

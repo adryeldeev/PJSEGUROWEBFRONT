@@ -37,6 +37,7 @@ const DynamicVitma = ({ onNavigate, onClick }) => {
         </span>
       </DivSpans>
     </DivVitma>
+    
   );
 };
 
