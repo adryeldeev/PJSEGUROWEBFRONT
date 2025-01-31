@@ -26,6 +26,7 @@ import CadastrarDocumento from './Pages/CadastroDeDocumento/CadastroDeDocumento'
 import CriarProcesso from './Pages/CriarProcesso/CriarProcesso';
 import { ApiUrlProvider } from './Context/ApiUrlProvider';
 import Profile from './Pages/Profile/Profile';
+import Vítimas from './Pages/Vítimas/Vítimas';
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/bancos" element={<Bancos />} />
                 <Route path="/seguradoras" element={<Seguradora />} />
                 <Route path="/documentos" element={<TiposDeDocumento />} />
+                <Route path="/vitimas" element={<Vítimas />} />
                 <Route path="/tipos-de-veiculo" element={<TiposDeVeiculo/>}/>
                 <Route path="/cadastrar-tipo-de-processo" element={<CadastroTipoDeProcesso />} />
                 <Route path="/cadastrar-prioridade" element={<CadastrarPrioridades />} />

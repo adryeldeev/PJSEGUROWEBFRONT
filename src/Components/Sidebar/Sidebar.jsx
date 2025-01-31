@@ -6,15 +6,16 @@ const Sidebar = ({ isOpen, isDesktop }) => {
   const menuItems = [
     { path: "/", label: "Início" },
     {path:'/criarProcesso', label: 'Processo'},
-    { path: "/processos", label: "Fase dos processos"},
-    { path: "/tipos-de-processo", label: "Tipos de Processos" },
-    { path: "/prioridades", label: "Prioridades" },
-    { path:"/tipos-de-veiculo", label:"Tipos de veículo"},
-    { path:"/documentos", label:"Tipos de documentos"},
-    { path:"/clientes", label:"Clientes"},
+    { path: "/processos", label: "Fases dos processos"},
     { path:"/bancos", label:"Bancos"},
+    { path:"/clientes", label:"Clientes"},
+    { path: "/prioridades", label: "Prioridades" },
     { path:"/seguradoras", label:"Seguradoras"},
-    { path:"/conta", label:"Conta"},
+    { path:"/documentos", label:"Tipos de documentos"},
+    { path: "/tipos-de-processo", label: "Tipos de Processos" },
+    { path:"/tipos-de-veiculo", label:"Tipos de veículo"},
+    { path:"/vitimas", label:"Vitimas"},
+    { path:"/conta", label:"Conta"}
   ];
 
   return (

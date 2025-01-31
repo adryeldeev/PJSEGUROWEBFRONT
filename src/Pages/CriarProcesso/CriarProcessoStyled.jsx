@@ -30,29 +30,39 @@ export const DivInputs = styled.div`
   flex-direction: column;
 `;
 export const DivInputsModal = styled.div`
-  display: flex;
+   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
 
   label {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
   }
 
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
 ` 
 
 
 export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
   gap: 20px;
+  max-height: 400px; /* Define a altura máxima */
+  overflow-y: auto; /* Adiciona scroll se necessário */
+  padding-right: 10px; /* Para evitar que o conteúdo fique colado na borda do scroll */
 
   label {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
   }
 
   button {
+    grid-column: span 3; /* Ocupa as 3 colunas */
     background-color: #007bff;
     color: white;
     border: none;
@@ -67,9 +77,17 @@ export const Form = styled.form`
 `;
 
 export const Input = styled.input`
-width:20%;
+width:80%;
+max-heigth:100%;
 outline:none;
 border: 1px solid #ccc;
+&:placeholder{
+  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block; /* Garante que funcione */
+    max-width: 100%; /* Garante que o placeholder respeite o tamanho do input */
+}
 
 `
 
@@ -90,7 +108,7 @@ export const ModalCadastroContainer = styled.div`
   background: white;
   padding: 20px;
   border-radius: 8px;
-  width: 500px;
+  width: 700px; /* Ajuste a largura do modal */
   max-width: 100%;
 `;
 
@@ -98,10 +116,7 @@ export const ModalCadastroContent = styled.div`
   display: flex;
   flex-direction: column;
 
-  form {
-    display: flex;
-    flex-direction: column;
-
+  
     div {
       margin-bottom: 10px;
 
@@ -110,11 +125,6 @@ export const ModalCadastroContent = styled.div`
         margin-bottom: 5px;
       }
 
-      input {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-      }
     }
 
     button {
@@ -130,5 +140,5 @@ export const ModalCadastroContent = styled.div`
         background: #6c757d;
       }
     }
-  }
+  
 `

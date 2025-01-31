@@ -69,7 +69,24 @@ const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
                       ) : (
                         <MdBlock style={{ color: 'red', fontSize: '15px' }} />
                     )
-                    ) : (
+                    ) :
+                    column.accessor === 'concedido'?(
+                      row[column.accessor] ? (
+                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                      ) : (
+                        <MdBlock style={{ color: 'red', fontSize: '15px' }} />
+                      )
+                    ):
+
+                    column.accessor === 'activo'?(
+                      row[column.accessor] ? (
+                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                      ) : (
+                        <MdBlock style={{ color: 'red', fontSize: '15px' }} />
+                      )
+                    ):
+                    
+                    (
                       row[column.accessor]
                     )}
                   </Td>
