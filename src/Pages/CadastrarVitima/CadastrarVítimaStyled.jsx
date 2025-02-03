@@ -21,17 +21,23 @@ export const Form = styled.form`
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 3 colunas */
   gap: 20px;
-  max-height: 400px; /* Define a altura máxima */
-  overflow-y: auto; /* Adiciona scroll se necessário */
-  padding-right: 10px; /* Para evitar que o conteúdo fique colado na borda do scroll */
+  margin-top:20px;
 
   label {
     font-size: 14px;
     font-weight: bold;
   }
+  input{
+  height: 30px;
+  padding: 0 10px; 
+ 
+  &:placeholder{
+    padding: 0 10px; 
+    }
+  }
 
   button {
-    grid-column: span 3; /* Ocupa as 3 colunas */
+    grid-column: span 1; /* Ocupa as 3 colunas */
     background-color: #007bff;
     color: white;
     border: none;

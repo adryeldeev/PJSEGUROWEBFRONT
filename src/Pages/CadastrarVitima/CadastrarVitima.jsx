@@ -11,16 +11,21 @@ const CadastrarVitima = () => {
     nome: '',
     cpf: '',
     rg: '',
-    dataNascimento: '',
+    data_nascimento: null,
+    renda_mensal:null,
+    data_emissao:null,
+    orgao_expedidor:'',
     sexo: '',
-    estadoCivil: '',
     endereco: '',
-    numero: '',
+    numero: null,
     bairro: '',
     cidade: '',
     estado: '',
-    pais: '',
-    telefone: '',
+    profissao:null,
+    cep:null,
+    uf:null,
+    telefone01:null,
+    telefone02: null,
     email: '',
     })
     
@@ -65,20 +70,22 @@ const CadastrarVitima = () => {
                         alert('Vítima cadastrada com sucesso!');
                         navigate("/vitimas");
                         setDadosVitima({
-                            nome: '',
-                            cpf: '',
-                            rg: '',
-                            dataNascimento: '',
-                            sexo: '',
-                            estadoCivil: '',
-                            endereco: '',
-                            numero: '',
-                            bairro: '',
-                            cidade: '',
-                            estado: '',
-                            pais: '',
-                            telefone: '',
-                            email: '',
+                          nome: '',
+                          cpf: '',
+                          rg: '',
+                          data_nascimento: '',
+                          renda_mensal:'',
+                          data_emissao:'',
+                          orgao_expedidor:'',
+                          sexo: '',
+                          endereco: '',
+                          numero: '',
+                          bairro: '',
+                          cidade: '',
+                          estado: '',
+                          pais: '',
+                          telefone: '',
+                          email: '',
                         });
                     } else {
                         alert('Erro ao cadastrar vítima.');
@@ -112,6 +119,9 @@ const CadastrarVitima = () => {
         }));
       };
       
+      const handleCancelar =() =>{
+        navigate('/vitimas')
+      }
   return (
 
    <ContentCadastrarVitima>
@@ -152,7 +162,7 @@ const CadastrarVitima = () => {
                           <Input
                             id="dataNascimento"
                             type="text"
-                            value={dadosVitima.dataNascimento}
+                            value={dadosVitima.data_nascimento}
                             onChange={handleInputChange}
                           />
                         </DivInputs>
@@ -161,7 +171,7 @@ const CadastrarVitima = () => {
                           <Input
                             id="dataEmissao"
                             type="text"
-                            value={dadosVitima.dataEmissao}
+                            value={dadosVitima.data_emissao}
                             onChange={handleInputChange}
                             
                           />
@@ -171,7 +181,7 @@ const CadastrarVitima = () => {
                           <Input
                             id="orgaoExpedidor"
                             type="text"
-                            value={dadosVitima.orgaoExpedidor}
+                            value={dadosVitima.orgao_expedidor}
                             onChange={handleInputChange}
                           />
                         </DivInputs>
@@ -189,7 +199,7 @@ const CadastrarVitima = () => {
                           <Input
                             id="rendaMensal"
                             type="text"
-                            value={dadosVitima.rendaMensal}
+                            value={dadosVitima.renda_mensal}
                             onChange={handleInputChange}
                           />
                         </DivInputs>
@@ -309,7 +319,7 @@ const CadastrarVitima = () => {
                          onClick={handleSubmit}
                         
                         >Salvar</button>
-                        <button type="button" onClick={closeModal}>
+                        <button type="button" onClick={handleCancelar}>
                           Cancelar
                         </button>
                       </Form>

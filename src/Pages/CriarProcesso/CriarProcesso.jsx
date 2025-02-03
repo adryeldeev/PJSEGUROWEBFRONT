@@ -36,11 +36,11 @@ const CriarProcesso = () => {
     nome: "",
     cpf: "",
     rg: "",
-    dataNascimento: "",
-    dataEmissao: "",
-    orgaoExpedidor: "",
+    data_nascimento: "",
+    data_emissao: "",
+    orgao_expedidor: "",
+    renda_mensal:"",
     profissao: "",
-    rendaMensal: "",
     cep: "",
     uf: "",
     endereco: "",
@@ -69,12 +69,7 @@ const CriarProcesso = () => {
     }));
   };
 
-  const handleToggleChange = () => {
-    setDadosModal((prevState) => ({
-      ...prevState,
-      activo: !prevState.activo
-    }));
-  };
+ 
   // Função para buscar Fases do Processo
   const fetchFasesProcesso = async () => {
     try {
@@ -130,6 +125,18 @@ const CriarProcesso = () => {
   const handleCriarProcesso = async (e) => {
     e.preventDefault();
   
+    // Valida CPF
+    if (dadosModal.nome === '' || dadosModal.cpf === '') {
+      alert('Preencha todos os campos obrigatórios.');
+      return;
+  }
+
+  if (!isValidCpf(dadosModal.cpf)) {
+      alert('CPF inválido. Formato correto: 999.999.999-99.');
+      return;
+  }
+    
+    
     const processoData = {
       faseSelecionada,
       tipoSelecionado,
@@ -140,8 +147,32 @@ const CriarProcesso = () => {
     console.log("Enviando processo:", processoData);
     try {
       const response = await api.post("/criarProcesso", processoData);
-      console.log("Processo criado com sucesso:", response.data);
-      closeModal();
+      if(response.status === 200 || response.status === 201){
+        alert('Processo criado com sucesso!');
+        setDadosModal({
+          nome: '',
+          cpf: '',
+          rg: '',
+          data_nascimento: '',
+          data_emissao:'',
+          orgao_expedidor:'',
+          renda_mensal:'',
+          sexo: '',
+          estadoCivil: '',
+          endereco: '',
+          numero: '',
+          bairro: '',
+          cidade: '',
+          estado: '',
+          pais: '',
+          telefone: '',
+          email: '',
+      })
+        closeModal(); // Fecha o modal
+      }else{
+        alert('Erro ao tentar criar o processo. Tente novamente.');
+      }
+ 
     } catch (error) {
       console.error("Erro ao criar processo:", error);
     }
@@ -152,6 +183,37 @@ const CriarProcesso = () => {
     fetchTiposProcesso();
     fetchPrioridades();
   }, []);
+
+  const formatCpf = (cpf) => {
+    return cpf.replace(/\D/g, '') // Remove tudo que não for número
+              .replace(/(\d{3})(\d)/, '$1.$2')
+              .replace(/(\d{3})(\d)/, '$1.$2')
+              .replace(/(\d{3})(\d{2})$/, '$1-$2');
+  };
+  
+  const isValidCpf = (cpf) => {
+    return /^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(cpf);
+  };
+
+ const handleCpfChange = (e) => {
+  const formattedCpf = formatCpf(e.target.value);
+  setDadosModal((prevState) => ({
+    ...prevState,
+    cpf: formattedCpf
+  }));
+ }
+  const handleToggleChange = () => {
+    setDadosModal((prevState) => ({
+      ...prevState,
+      activo: !prevState.activo
+    }));
+  };
+  const handleSexoChange = (e) => {
+    setDadosModal((prevState) => ({
+      ...prevState,
+      sexo: e.target.value
+    }));
+  };
 
   if (loading) {
     return <p>Carregando...</p>;
@@ -199,219 +261,191 @@ const CriarProcesso = () => {
         <ModalBackDro onClick={closeModal}>
           <ModalCadastroContainer onClick={(e) => e.stopPropagation()}>
             <ModalCadastroContent>
-              <Form
-               
+              <Form  
               >
                 <DivInputs>
-                  <label htmlFor="nome">Nome *</label>
-                  <Input
-                  id="nome"
-                  type="text"
-                  placeholder="Digite o nome do tipo de processo"
-                  value={dadosModal.nome}
-                  onChange={handleInputChange}
-/>
-                </DivInputs>
-                <DivInputs>
+                    <label htmlFor="nome">Nome *</label>
+                    <Input
+                      id="nome"
+                      type="text"
+                      value={dadosModal.nome}
+                       onChange={handleInputChange}
+                        />
+                 </DivInputs>
+                 <DivInputs>
                   <label htmlFor="cpf">Cpf *</label>
                   <Input
-                    id="cpf"
-                    type="text"
-                    placeholder="Digite o cpf"
-                    value={dadosModal.cpf}
-                    onChange={handleInputChange}
+                  id="cpf"
+                  type="text"
+                  placeholder="999.999.999-99"
+                  value={dadosModal.cpf}
+                  onChange={handleCpfChange}
                   />
-                </DivInputs>
-                <DivInputs>
+                  </DivInputs>
+                  <DivInputs>
                   <label htmlFor="rg">Rg*</label>
-                  <Input
-                    id="rg"
-                    type="text"
-                    placeholder="Digite o RG"
+                   <Input
+                   id="rg"
+                   type="text"
                     value={dadosModal.rg}
                     onChange={handleInputChange}
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="dataNascimento">Data de nascimento *</label>
-                  <Input
+                    />
+                    </DivInputs>
+                    <DivInputs>
+                    <label htmlFor="dataNascimento">Data de nascimento *</label>
+                    <Input
                     id="dataNascimento"
                     type="text"
-                    placeholder="Digite a data de nascimento"
-                    value={dadosModal.dataNascimento}
+                    value={dadosModal.data_nascimento}
                     onChange={handleInputChange}
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="dataEmissao">Data de emissão </label>
-                  <Input
-                    id="dataEmissao"
-                    type="text"
-                    placeholder="Digite a data de emissão"
-                    value={dadosModal.dataEmissao}
-                    onChange={handleInputChange}
-                    
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="orgaoExpedidor">Orgão expedidor </label>
-                  <Input
+                     />
+                    </DivInputs>
+                    <DivInputs>
+                     <label htmlFor="dataEmissao">Data de emissão </label>
+                      <Input
+                      id="dataEmissao"
+                      type="text"
+                      value={dadosModal.data_emissao}
+                      onChange={handleInputChange}
+                      />
+                    </DivInputs>
+                    <DivInputs>
+                    <label htmlFor="orgaoExpedidor">Orgão expedidor </label>
+                    <Input
                     id="orgaoExpedidor"
                     type="text"
-                    placeholder="Digite o orgão expedidor"
-                    value={dadosModal.orgaoExpedidor}
+                    value={dadosModal.orgao_expedidor}
+                     onChange={handleInputChange}
+                     />
+                     </DivInputs>
+                     <DivInputs>
+                     <label htmlFor="profissao">Profissão *</label>
+                     <Input
+                      id="profissao"
+                      type="text"
+                      value={dadosModal.profissao}
+                      onChange={handleInputChange}
+                       />
+                     </DivInputs>
+                    <DivInputs>
+                     <label htmlFor="rendaMensal">Renda mensal</label>
+                     <Input
+                     id="rendaMensal"
+                     type="text"
+                    value={dadosModal.renda_mensal}
                     onChange={handleInputChange}
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="profissao">Profissão *</label>
-                  <Input
-                    id="profissao"
-                    type="text"
-                    placeholder="Digite a profissão"
-                    value={dadosModal.profissao}
-                    onChange={handleInputChange}
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="rendaMensal">Renda mensal</label>
-                  <Input
-                    id="rendaMensal"
-                    type="text"
-                    placeholder="Digite a renda mensal"
-                    value={dadosModal.rendaMensal}
-                    onChange={handleInputChange}
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="cep">Cep</label>
-                  <Input
-                    id="cep"
-                    type="text"
-                    placeholder="Digite o  cep"
-                    value={dadosModal.cep}
-                    onChange={handleInputChange}
-                    
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="uf">Uf</label>
-                  <Input
-                    id="uf"
-                    type="text"
-                    placeholder="Digite a uf"
-                    value={dadosModal.uf}
-                    onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="endereco">Endereço</label>
-                  <Input
-                    id="endereco"
-                    type="text"
-                    placeholder="Digite o endereço"
-                    value={dadosModal.endereco}
-                    onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="numero">Numero</label>
-                  <Input
-                    id="numero"
-                    type="text"
-                    placeholder="Digite o numero da residência"
-                    value={dadosModal.numero}
-                    onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="sexo">Sexo</label>
-                  <select name="sexo" id="sexo"
-                   value={dadosModal.sexo}
-                   onChange={handleInputChange}
-                   >
-                    <option value="">Selecione</option>
-                    <option value="MASCULINO">Masculino</option>
-                    <option value="FEMININO">Feminino</option>
-                  </select>
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="complemento">Complemento</label>
-                  <Input
-                    id="complemento"
-                    type="text"
-                    placeholder="Digite o complemento"
-                    value={dadosModal.complemento}
-                   onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="bairro">Bairro</label>
-                  <Input
-                    id="bairro"
-                    type="text"
-                    placeholder="Digite o bairro"
-                    value={dadosModal.bairro}
-                   onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="cidade">Cidade</label>
-                  <Input
-                    id="cidade"
-                    type="text"
-                    placeholder="Digite a cidade"
-                    value={dadosModal.cidade}
-                   onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="email">E-mail</label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Digite o e-mail"
-                    value={dadosModal.email}
-                   onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="telefone01">Telefone 01</label>
-                  <Input
-                    id="telefone01"
-                    type="number"
-                    placeholder="Digite o numero do telefone"
-                    value={dadosModal.telefone01}
-                   onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                  <label htmlFor="telefone02">Telefone 02</label>
-                  <Input
-                    id="telefone02"
-                    type="number"
-                    placeholder="Digite o numero do telefone"
-                    value={dadosModal.telefone02}
-                   onChange={handleInputChange}
-                 
-                  />
-                </DivInputs>
-                <DivInputs>
-                 <Toggle
-                  id="toggle-1"
-                  checked={dadosModal.activo}
-                  label="Ativo"
-                  onClick={handleToggleChange}
-                 />
-                </DivInputs>
+                    />
+                    </DivInputs>
+                    <DivInputs>
+                    <label htmlFor="cep">Cep</label>
+                    <Input
+                     id="cep"
+                     type="text"
+                     value={dadosModal.cep}
+                     onChange={handleInputChange}
+                     />
+                     </DivInputs>
+                    <DivInputs>
+                     <label htmlFor="uf">Uf</label>
+                     <Input
+                      id="uf"
+                      type="text"
+                      value={dadosModal.uf}
+                      onChange={handleInputChange}
+                      />
+                      </DivInputs>
+                      <DivInputs>
+                      <label htmlFor="endereco">Endereço</label>
+                     <Input
+                      id="endereco"
+                      type="text"
+                      placeholder="Digite o endereço"
+                      value={dadosModal.endereco}
+                      onChange={handleInputChange}
+                      />
+                      </DivInputs>
+                      <DivInputs>
+                      <label htmlFor="numero">Numero</label>
+                       <Input
+                      id="numero"
+                      type="text"
+                      value={dadosModal.numero}
+                       onChange={handleInputChange}
+                      />
+                      </DivInputs>
+                      <DivInputs>
+                      <label htmlFor="sexo">Sexo</label>
+                      <select name="sexo" id="sexo"
+                      value={dadosModal.sexo}
+                      onChange={ handleSexoChange}
+                      >
+                      <option value="">Selecione</option>
+                      <option value="MASCULINO">Masculino</option>
+                      <option value="FEMININO">Feminino</option>
+                      </select>
+                       </DivInputs>
+                       <DivInputs>
+                       <label htmlFor="complemento">Complemento</label>
+                        <Input
+                      id="complemento"
+                      type="text"
+                      value={dadosModal.complemento}
+                     onChange={handleInputChange}
+                      />
+                     </DivInputs>
+                     <DivInputs>
+                      <label htmlFor="bairro">Bairro</label>
+                     <Input
+                      id="bairro"
+                      type="text"
+                      value={dadosModal.bairro}
+                      onChange={handleInputChange}
+                      />
+                       </DivInputs>
+                       <DivInputs>
+                      <label htmlFor="cidade">Cidade</label>
+                      <Input
+                       id="cidade"
+                       type="text"
+                       value={dadosModal.cidade}
+                       onChange={handleInputChange}
+                        />
+                      </DivInputs>
+                      <DivInputs>
+                      <label htmlFor="email">E-mail</label>
+                       <Input
+                       id="email"
+                       type="email"
+                       value={dadosModal.email}
+                       onChange={handleInputChange}
+                        />
+                       </DivInputs>
+                       <DivInputs>
+                      <label htmlFor="telefone01">Telefone 01</label>
+                      <Input
+                      id="telefone01"
+                      type="number"
+                      value={dadosModal.telefone01}
+                      onChange={handleInputChange}
+                      />
+                      </DivInputs>
+                       <DivInputs>
+                       <label htmlFor="telefone02">Telefone 02</label>
+                       <Input
+                       id="telefone02"
+                       type="number"
+                       value={dadosModal.telefone02}
+                       onChange={handleInputChange}
+                       />
+                      </DivInputs>
+                      <DivInputs>
+                       <Toggle
+                       id="toggle-1"
+                      checked={dadosModal.activo}
+                      label="Ativo"
+                      onClick={handleToggleChange}
+                      />
+                      </DivInputs>
 
                 <button type="submit">Salvar</button>
                 <button type="button" onClick={closeModal}>

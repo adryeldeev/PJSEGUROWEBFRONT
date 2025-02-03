@@ -60,6 +60,13 @@ export const Form = styled.form`
     font-size: 14px;
     font-weight: bold;
   }
+    input{
+  height: 30px;
+  padding: 0 10px; 
+ 
+  &:placeholder{
+    padding: 0 10px; 
+    }
 
   button {
     grid-column: span 3; /* Ocupa as 3 colunas */

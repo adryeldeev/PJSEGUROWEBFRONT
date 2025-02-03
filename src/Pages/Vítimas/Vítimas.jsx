@@ -86,7 +86,7 @@ const Vítimas = () => {
   };
 
   const handleNavigate = () => {
-    navigate("/cadastrar-vitima");
+    navigate("/cadastrarVitima");
   };
   const navigateEdit = () => {
     navigate("/editar-vitima");

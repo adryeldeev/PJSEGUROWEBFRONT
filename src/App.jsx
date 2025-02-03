@@ -27,6 +27,7 @@ import CriarProcesso from './Pages/CriarProcesso/CriarProcesso';
 import { ApiUrlProvider } from './Context/ApiUrlProvider';
 import Profile from './Pages/Profile/Profile';
 import Vítimas from './Pages/Vítimas/Vítimas';
+import CadastrarVitima from './Pages/CadastrarVitima/CadastrarVitima';
 
 function App() {
   return (
@@ -54,11 +55,11 @@ function App() {
                 <Route path="/cadastrar-prioridade" element={<CadastrarPrioridades />} />
                 <Route path="/cadastrar-fase-de-processo" element={<CadastrarFaseDoProcesso />} />
                 <Route path="/cadastrar-tipo-de-veiculo" element={<CadastrarTiposDeVeiculo />} />
-                <Route path="/cadastrar-cliente" element={<CadastrarCliente />} />
                 <Route path="/cadastrar-banco" element={<CadastrarBancos />} />
                 <Route path="/cadastrar-seguradora" element={<CadastrarSeguradora />} />
                 <Route path="/cadastrar-documento" element={<CadastrarDocumento />} />
                 <Route path="/criarProcesso" element={<CriarProcesso />} />
+                <Route path="/cadastrarVitima" element={<CadastrarVitima />} />
                 <Route path="/conta" element={<Profile />} />
               </Route>
             </Route>
