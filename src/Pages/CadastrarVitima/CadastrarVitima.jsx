@@ -124,7 +124,7 @@ const CadastrarVitima = () => {
           </DivInputs>
           <DivInputs>
             <label htmlFor="dataNascimento">Data de nascimento</label>
-            <Input id="cpf" type="date"  value={state.data_nascimento} onChange={handleCpfChange} />
+            <Input id="dataNascimento" type="date"  value={state.data_nascimento} onChange={handleCpfChange} />
           </DivInputs>
           <DivInputs>
             <label htmlFor="cpf">Data de emissão</label>
