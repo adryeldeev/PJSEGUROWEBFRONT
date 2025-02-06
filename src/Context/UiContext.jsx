@@ -9,7 +9,8 @@ export const UIProvider = ({ children }) => {
     setIsOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (e) => {
+    e.preventDefault()
     setIsOpen(false);
   };
 

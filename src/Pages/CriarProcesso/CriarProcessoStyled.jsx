@@ -25,10 +25,7 @@ export const DivContentInputs = styled.div`
   gap: 10px;
 `;
 
-export const DivInputs = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
+
 export const DivInputsModal = styled.div`
    display: flex;
   flex-direction: column;
@@ -83,20 +80,7 @@ export const Form = styled.form`
   }
 `;
 
-export const Input = styled.input`
-width:80%;
-max-heigth:100%;
-outline:none;
-border: 1px solid #ccc;
-&:placeholder{
-  white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block; /* Garante que funcione */
-    max-width: 100%; /* Garante que o placeholder respeite o tamanho do input */
-}
 
-`
 
 export const ModalBackDro = styled.div`
   position: fixed;
@@ -149,3 +133,17 @@ export const ModalCadastroContent = styled.div`
     }
   
 `
+export const Input = styled.input`
+width:60%;
+height: 30px;
+padding: 0 10px; 
+outline:none;
+border: 1px solid #ccc;
+
+
+`;
+
+export const DivInputs = styled.div`
+  display: flex;
+  flex-direction: column;
+`;

@@ -16,7 +16,6 @@ import CadastrarFaseDoProcesso from './Pages/CadastrarFaseDoProcesso/CadastrarFa
 import TiposDeVeiculo from './Pages/TiposDeVeiculo/TiposDeVeiculo';
 import CadastrarTiposDeVeiculo from './Pages/CadastrarTiposDeVeiculo/CadastrarTiposDeVeiculo';
 import Clientes from './Pages/Clientes/Clientes';
-import CadastrarCliente from './Pages/CadastrarClientes/CadastrarCliente';
 import CadastrarBancos from './Pages/CadastrarBancos/CadastrarBancos';
 import Bancos from './Pages/Bancos/Bancos';
 import CadastrarSeguradora from './Pages/CadastrarSeguradora/CadastrarSeguradora';

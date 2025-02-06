@@ -51,18 +51,13 @@ export const Form = styled.form`
   }
 `;
 
+
 export const Input = styled.input`
-width:80%;
-max-heigth:100%;
+width:60%;
+height: 30px;
+padding: 0 10px; 
 outline:none;
 border: 1px solid #ccc;
-&:placeholder{
-  white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block; /* Garante que funcione */
-    max-width: 100%; /* Garante que o placeholder respeite o tamanho do input */
-}
 
 `;
 
