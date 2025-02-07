@@ -27,6 +27,11 @@ import { ApiUrlProvider } from './Context/ApiUrlProvider';
 import Profile from './Pages/Profile/Profile';
 import Vítimas from './Pages/Vítimas/Vítimas';
 import CadastrarVitima from './Pages/CadastrarVitima/CadastrarVitima';
+import ProcessLayout from './Layout/ProcessLayout';
+import Informacoes from './Pages/Informacoes/Informacoes';
+import Sinistro from './Pages/Sinistro/Sinistro';
+import CheckList from './Pages/Check/Check';
+import Cronologia from './Pages/Cronologia/Cronologia';
 
 function App() {
   return (
@@ -60,6 +65,13 @@ function App() {
                 <Route path="/criarProcesso" element={<CriarProcesso />} />
                 <Route path="/cadastrarVitima" element={<CadastrarVitima />} />
                 <Route path="/conta" element={<Profile />} />
+               {/* Layout específico para processos */}
+               <Route path="/processo/:id" element={<ProcessLayout />}>
+  <Route path="informacoes" element={<Informacoes />} />
+  <Route path="sinistro" element={<Sinistro />} />
+  <Route path="checklist" element={<CheckList />} />
+  <Route path="cronologia" element={<Cronologia />} />
+</Route>
               </Route>
             </Route>
           </Routes>

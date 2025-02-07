@@ -17,6 +17,7 @@ import DynamicVitma from "../../Components/DynamicVitima/DynamicVitma";
 import { useUI } from "../../Context/UiContext";
 import Toggle from "../../Components/Toggle/Toggle";
 import CampoInput from "../../Components/CamposInputs/CamposInputs";
+import { useNavigate} from "react-router-dom";
 
 
 // Definição inicial do estado do modal
@@ -73,6 +74,7 @@ const formatCpf = (cpf) => {
 };
 const CriarProcesso = () => {
   const api = useApi();
+  const navigate = useNavigate()
   const { isOpen, openModal, closeModal } = useUI();
 
 
@@ -202,21 +204,32 @@ const CriarProcesso = () => {
   
     try {
       const response = await api.post('/createProcessoV', processoData);
+      console.log("Resposta da API:", response);
+    
       if (response.status === 200 || response.status === 201) {
-        alert("Processo criado com sucesso!");
-        // Resetar tudo após criação
-        setFaseSelecionada("");
-        setTipoSelecionado("");
-        setPrioridadeSelecionada("");
-        dispatch({ type: "RESET" });
-        closeModal();
+        const { processo } = response.data; 
+        const id = processo?.id;
+        
+    
+        if (id) {
+          navigate(`/processo/${id}`);
+          alert("Processo criado com sucesso!");
+          setFaseSelecionada("");
+          setTipoSelecionado("");
+          setPrioridadeSelecionada("");
+          dispatch({ type: "RESET" });
+          closeModal();
+        } else {
+          alert("Erro ao tentar criar o processo: ID não retornado.");
+        }
       } else {
-        alert("Erro ao tentar criar o processo.");
+        alert("Erro ao tentar criar o processo: Status inesperado.");
       }
     } catch (error) {
       console.error("Erro ao criar processo:", error);
     }
-  };
+    }
+
   const handleSexoChange = (e) => {
     dispatch({ type: 'SET_SEXO', value: e.target.value });
   };
@@ -265,6 +278,7 @@ const CriarProcesso = () => {
       }
     }
   };
+
   if (loading) {
     return <p>Carregando...</p>;
   }
@@ -357,5 +371,6 @@ const CriarProcesso = () => {
     </DivContent>
   );
 };
+    
 
 export default CriarProcesso;
