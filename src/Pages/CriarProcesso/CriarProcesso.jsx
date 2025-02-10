@@ -354,7 +354,6 @@ const CriarProcesso = () => {
                                             <option value="FEMININO">Feminino</option>
                                           </select>
                                         </DivInputs>
-                          
                 <CampoInput label="Complemento " id="complemento" value={dadosModal.complemento} onChange={handleInputChange} />
                 <CampoInput label="Bairro" id="bairro" value={dadosModal.bairro} onChange={handleInputChange} />
                 <CampoInput label="Cidade" id="cidade" value={dadosModal.cidade} onChange={handleInputChange} />
