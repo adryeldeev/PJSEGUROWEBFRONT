@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Button } from "@mui/material";
 import {
   DivContent,
   InfoContainer,
@@ -154,9 +155,9 @@ const Informacoes = () => {
         </InfoBox>
       </InfoContainer>
 
-      <button onClick={() => setIsEditing(!isEditing)}>
+      <Button color="primary" onClick={() => setIsEditing(!isEditing)}>
         {isEditing ? "Cancelar" : "Editar"}
-      </button>
+      </Button>
     </DivContent>
   );
 };

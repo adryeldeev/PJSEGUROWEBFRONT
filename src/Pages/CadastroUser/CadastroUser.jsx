@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
 import { TbLockPassword } from "react-icons/tb";
+import { MoveLeft } from 'lucide-react';
 import Logo from "../../Img/Logo.webp";
 import InputField from "../../Components/Inputs/Inputs";
-import { ContentCadastro, DivInput, FormCadastro, ImgLogo, InfoCadastro, TituloCadastro } from "./CadastroUserStyled";
+import { ButtonArrow, ContentCadastro, DivInput, FormCadastro, ImgLogo, InfoCadastro, TituloCadastro } from "./CadastroUserStyled";
 import Button from "../../Components/Button/Button";
 import axios from "axios";
 
@@ -54,8 +55,12 @@ const CadastroUser = () => {
       setError(err.response?.data?.message || "Erro ao cadastrar usuário");
     }
   };
+  const handleNavigate=()=>{
+    navigate('/login')
+  }
   return (
     <ContentCadastro>
+      <ButtonArrow onClick={handleNavigate}><MoveLeft /></ButtonArrow>
       <InfoCadastro>
         <ImgLogo src={Logo} />
         <TituloCadastro>Cadastra-se</TituloCadastro>

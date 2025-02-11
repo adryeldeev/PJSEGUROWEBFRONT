@@ -1,14 +1,14 @@
 import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types'
 import { DivContent, InfoBox, InfoContainer, Input, Label, Title, Span } from './SinistroStyled';
-
+import { Button } from "@mui/material";
 // Definição do reducer
 const sinistroReducer = (state, action) => {
   switch (action.type) {
     case 'UPDATE_FIELD':
       return { ...state, [action.field]: action.value };
-    case 'RESET':
-      return action.payload; // Reseta os dados para os originais
+      case 'RESET':
+        return action.payload || { dataSinistro: '', numeroSinistro: '', dataAbertura: '' }; // Reseta os dados para os originais
     default:
       return state;
   }
@@ -18,10 +18,10 @@ const Sinistro = ({ initialData }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   // Estado inicial vindo de `initialData` ou valores vazios
-  const [sinistroData, dispatch] = useReducer(sinistroReducer, initialData || {
-    dataSinistro: '',
-    numeroSinistro: '',
-    dataAbertura: ''
+  const [sinistroData, dispatch] = useReducer(sinistroReducer, initialData ?? { 
+    dataSinistro: '', 
+    numeroSinistro: '', 
+    dataAbertura: '' 
   });
 
   const handleEditClick = () => {
@@ -94,11 +94,11 @@ const Sinistro = ({ initialData }) => {
       <div>
         {isEditing ? (
           <>
-            <button onClick={handleSaveClick}>Salvar</button>
-            <button onClick={handleCancelClick}>Cancelar</button>
+            <Button onClick={handleSaveClick}>Salvar</Button>
+            <Button color="secondary" onClick={handleCancelClick}>Cancelar</Button >
           </>
         ) : (
-          <button onClick={handleEditClick}>Editar</button>
+          <Button onClick={handleEditClick}>Editar</Button>
         )}
       </div>
     </DivContent>

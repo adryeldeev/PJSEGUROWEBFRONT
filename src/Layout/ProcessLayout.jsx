@@ -4,9 +4,12 @@ import CentralTabs from "../Components/CampoNavBar/CentralTabs";
 
 
 
+
 const ProcessLayout = () => {
+    
   return (
     <LayoutContainer>
+     
       {/* Abas Centrais */}
       <CentralTabs />
 

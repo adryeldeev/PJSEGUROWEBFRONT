@@ -60,4 +60,12 @@ export const DivInput = styled.div`
   }
 `;
 
+export const ButtonArrow = styled.button`
+border:none;
+outline:none;
+width:100px;
+cursor:pointer;
+`
+
+
 
