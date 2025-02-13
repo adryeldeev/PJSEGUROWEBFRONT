@@ -189,25 +189,29 @@ const CriarProcesso = () => {
         const response = await api.post('/createVitima', vitimaData);
         vitimaId = response.data.id; // Obtém o id da nova vítima criada
       } catch (error) {
-        alert("Erro ao criar nova vítima.");
+        alert("Erro ao criar nova vítima.", error);
         return;
       }
     }
   
     // Agora, cria o processo com o vitimaId, seja de uma vítima existente ou criada
     const processoData = {
-      faseProcessoId: faseSelecionada,
-      tipoProcessoId: tipoSelecionado,
-      prioridadeId: prioridadeSelecionada,
-      vitimaId: vitimaId,
+      tipoProcessoId: parseInt(tipoSelecionado, 10),
+      faseProcessoId: parseInt(faseSelecionada, 10),
+      vitimaId: parseInt(vitimaId, 10),
+      prioridadeId: parseInt(prioridadeSelecionada, 10),
+      cpf: dadosModal.cpf, // Adicione o CPF aqui
+      nome: dadosModal.nome,
     };
-  
+    
     try {
       const response = await api.post('/createProcessoV', processoData);
-      console.log("Resposta da API:", response);
+      
     
       if (response.status === 200 || response.status === 201) {
-        const { processo } = response.data; 
+       
+        const { processo } = response.data;  // Isso deve funcionar, dado que 'processo' é o nome correto
+    
         const id = processo?.id;
         
     
@@ -247,13 +251,13 @@ const CriarProcesso = () => {
   };
 
   const handleCpfChange = (e) => {
-    const rawCpf = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
-  
+    const rawCpf = e.target.value.replace(/\D/g, "");
     if (rawCpf.length <= 11) {
-      const formattedCpf = formatCpf(rawCpf);
-      dispatch({ type: "SET_INPUT", field: "cpf", value: formattedCpf });
+        const formattedCpf = formatCpf(rawCpf);
+        dispatch({ type: "SET_INPUT", field: "cpf", value: formattedCpf });
+        console.log("CPF formatado:", formattedCpf); // Verifique o valor aqui
     }
-  };
+};
   
   const handleCpfBlur = async () => {
     const rawCpf = dadosModal.cpf.replace(/\D/g, ""); // Remove pontos e traços
@@ -336,10 +340,10 @@ const CriarProcesso = () => {
                 <CampoInput label="RG " id="rg" value={dadosModal.rg} onChange={handleInputChange}  />
                 <CampoInput label="Data de nascimento " id="dataNascimento" type="date" value={dadosModal.data_nascimento} onChange={handleInputChange} />
                 <CampoInput label="Data de emissão" id="dataEmissao" type="date" value={dadosModal.data_emissao} onChange={handleInputChange} />
-                <CampoInput label="Orgão expedidor " id="orgaoExpedidor" value={dadosModal.orgao_expedidor} onChange={handleInputChange} />
+                <CampoInput label="Orgão expedidor " type='text' id="orgaoExpedidor" value={dadosModal.orgao_expedidor} onChange={handleInputChange} />
                 <CampoInput label="Profissão" id="profissao" value={dadosModal.profissao} onChange={handleInputChange} />
                 <CampoInput label="Renda mensal " id="rendaMensal" value={dadosModal.renda_mensal} onChange={handleInputChange} />
-                <CampoInput label="Cep" id="cep" value={dadosModal.cep} onChange={handleInputChange} />
+                <CampoInput label="Cep" id="cep" type="text" value={dadosModal.cep} onChange={handleInputChange} />
                 <CampoInput label="Uf " id="uf" value={dadosModal.uf} onChange={handleInputChange} />
                 <CampoInput label="Endereço " id="endereco" value={dadosModal.endereco} onChange={handleInputChange} />
                 <CampoInput label="Numero " id="numero" value={dadosModal.numero} onChange={handleInputChange} />
