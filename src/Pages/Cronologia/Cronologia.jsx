@@ -9,9 +9,10 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import Table from "../../Components/Table/Table";
 import useApi from "../../Api/Api";
+
 const Cronologia = () => {
   const api = useApi();
-const { id: processoId } = useParams();
+  const { id: processoId } = useParams();
   const [modalOpen, setModalOpen] = React.useState(false);
   const [editando, setEditando] = React.useState(false);
   const [andamentos, setAndamentos] = React.useState([]);
@@ -19,19 +20,25 @@ const { id: processoId } = useParams();
   const [loading, setLoading] = React.useState(false);
   const [erro, setErro] = React.useState(null);
 
-  // Reducer para gerenciar o estado do novo andamento
   const reducer = (state, action) => {
-    return { ...state, [action.field]: action.value };
+    switch (action.type) {
+      case 'SET_ANDAMENTO':
+        return { ...state, ...action.payload };
+      case 'UPDATE_FIELD':
+        return { ...state, [action.field]: action.value };
+      default:
+        return state;
+    }
   };
+
   const [novoAndamento, dispatch] = React.useReducer(reducer, {
-    id: null, // Adicionar ID para identificar quando um andamento já existe
+    id: null,
     data: "",
-    fase: "",
-    observacao: "",
+    faseProcessoId: "",
+    observacoes: "",
     processoId: Number(processoId),
   });
 
-  // Buscar fases do processo
   React.useEffect(() => {
     const fetchFasesProcesso = async () => {
       try {
@@ -48,95 +55,125 @@ const { id: processoId } = useParams();
     fetchFasesProcesso();
   }, []);
 
-  // Função para adicionar um novo andamento
-  const adicionarAndamento = async () => {
-    const andamentoData = {
-      observacoes: novoAndamento.observacao, // Ajustando para o nome esperado no backend
-    faseId: Number(novoAndamento.fase), // Convertendo fase para número
-    processoId: Number(processoId), // Garantindo que o processoId seja um número
-    data: novoAndamento.data ? new Date(novoAndamento.data).toISOString() : new Date().toISOString()// Certificando-se de que o ID do processo é enviado corretamente
-    };
-  
-    console.log("Novo andamento a ser enviado:", andamentoData);
-  
+  const fetchAndamentos = async () => {
     try {
-      if (novoAndamento.id) {
-        // Se o andamento já existe, fazemos um UPDATE (PUT)
-        const response = await api.put(`/updateAndamento/${novoAndamento.id}`, andamentoData);
-        setAndamentos((prev) => prev.map((item) => (item.id === novoAndamento.id ? response.data : item)));
-      } else {
-        // Caso contrário, criamos um novo andamento (POST)
-        const response = await api.post("/createAndamento", andamentoData);
-        setAndamentos((prev) => [...prev, response.data]);
-      }
-  
-      setModalOpen(false);
-    } catch (error) {
-      console.error("Erro ao adicionar andamento:", error);
+      setLoading(true);
+      const response = await api.get(`/andamentos?processoId=${processoId}`);
+      setAndamentos(Array.isArray(response.data.andamentos ) ? response.data.andamentos : []);
+    } catch {
+      setErro("Não foi possível carregar os andamentos.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Função para excluir um andamento
+  React.useEffect(() => {
+    fetchAndamentos();
+  }, [processoId]);
+
+  const adicionarAndamento = async () => {
+    if (!novoAndamento.faseProcessoId || novoAndamento.faseProcessoId === 0) {
+      alert("Por favor, selecione uma fase válida.");
+      return;
+    }
+
+    const andamentoData = {
+      observacoes: novoAndamento.observacoes,
+      faseProcessoId: Number(novoAndamento.faseProcessoId),
+      processoId: Number(processoId),
+      data: novoAndamento.data ? novoAndamento.data : new Date().toISOString().slice(0, 10),
+    };
+
+    try {
+      let response;
+      if (novoAndamento.id) {
+        response = await api.put(`/updateAndamento/${novoAndamento.id}`, andamentoData);
+        setAndamentos((prev) => prev.map((item) => (item.id === novoAndamento.id ? response.data : item)));
+      } else {
+        response = await api.post("/createAndamento", andamentoData);
+        setAndamentos((prev) => [...prev, response.data]);
+      }
+      setModalOpen(false);
+      setEditando(false);
+      fetchAndamentos();
+      dispatch({ type: 'SET_ANDAMENTO', payload: {
+        id: null,
+        data: "",
+        faseProcessoId: "",
+        observacoes: "",
+      }});
+    } catch (error) {
+      alert("Ocorreu um erro ao adicionar o andamento.");
+    }
+  };
+
   const excluirAndamento = (id) => {
     setAndamentos(andamentos.filter((item) => item.id !== id));
   };
 
-  // Configuração das colunas da tabela
-  const columns = [
-    { header: "Cod.", accessor: "id" },
-    { header: "Data", accessor: "data" },
-    { header: "Operador", accessor: "operador" },
-    { header: "Observações", accessor: "observacao" },
-    { header: "Fase", accessor: "fase" },
-  ];
-  if(loading){
-    return <Box>Carregando...</Box>
-  }
-
   return (
     <div>
       <Typography variant="h5">Cronologia do Processo</Typography>
-
       {editando ? (
         <div>
-          <Button variant="contained" color="secondary" onClick={() => setEditando(false)} style={{ marginBottom: 10 }}>
+          <Button variant="contained" color="secondary" onClick={() => setEditando(false)}>
             Voltar
           </Button>
-
-          <Button variant="contained" color="primary" onClick={() => setModalOpen(true)} style={{ margin: "0 10px" }}>
+          <Button variant="contained" color="primary" onClick={() => setModalOpen(true)}>
             Novo Andamento
           </Button>
-
-          <Table columns={columns} data={andamentos} onDelete={(row) => excluirAndamento(row.id)} />
+          <Table
+            columns={[
+              { header: "Cod.", accessor: "id" },
+              { header: "Data", accessor: "data" },
+              { header: "Fase", accessor: "faseProcesso.nome" },
+              { header: "Observações", accessor: "observacoes" },
+              {
+                header: "Ações",
+                Cell: ({ row }) => (
+                  <Button onClick={() => {
+                    setModalOpen(true);
+                    dispatch({ type: 'SET_ANDAMENTO', payload: row.original });
+                  }} variant="contained" color="primary">
+                    Editar
+                  </Button>
+                )
+              }
+            ]}
+            data={andamentos}
+            onDelete={(row) => excluirAndamento(row.id)}
+          />
         </div>
       ) : (
         <div>
           <Timeline position="alternate">
-            {andamentos.map((fase, index) => (
-              <TimelineItem key={fase.id}>
-                <TimelineSeparator>
-                  <TimelineDot color={index === 0 ? "success" : "secondary"} />
-                  {index < andamentos.length - 1 && <TimelineConnector />}
-                </TimelineSeparator>
-                <TimelineContent>
-                  <Typography variant="h6">{fase.fase}</Typography>
-                  <Typography variant="body2">{fase.data} - {fase.operador}</Typography>
-                  <Typography variant="body2">{fase.observacao}</Typography>
-                </TimelineContent>
-              </TimelineItem>
-            ))}
-          </Timeline>
-
-          <Button variant="contained" color="primary" onClick={() => setEditando(true)} style={{ marginTop: 10 }}>
+  {andamentos.map((fase, index) => (
+    <TimelineItem key={fase.id}>
+      <TimelineSeparator>
+        <TimelineDot color={index === 0 ? "success" : "secondary"} />
+        {index < andamentos.length - 1 && <TimelineConnector />}
+      </TimelineSeparator>
+      <TimelineContent>
+        <Typography variant="h6">
+          {fase.faseProcesso?.nome || "Fase desconhecida"}
+        </Typography>
+        <Typography variant="body2">{fase.observacoes}</Typography>
+        <Typography variant="body2">
+          {new Date(fase.data).toLocaleDateString("pt-BR")}
+        </Typography>
+      </TimelineContent>
+    </TimelineItem>
+  ))}
+</Timeline>
+          <Button variant="contained" color="primary" onClick={() => setEditando(true)}>
             Editar
           </Button>
         </div>
       )}
 
-      {/* Modal para Novo Andamento */}
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+  <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <Box sx={{ width: 400, padding: 4, backgroundColor: "white", margin: "auto", marginTop: "10%" }}>
-          <Typography variant="h6">Adicionar Novo Andamento</Typography>
+          <Typography variant="h6">{novoAndamento.id ? "Editar Andamento" : "Adicionar Novo Andamento"}</Typography>
           <TextField
             fullWidth
             label="Data"
@@ -144,28 +181,32 @@ const { id: processoId } = useParams();
             margin="normal"
             InputLabelProps={{ shrink: true }}
             value={novoAndamento.data}
-            onChange={(e) => dispatch({ field: "data", value: e.target.value })}
+            onChange={(e) => dispatch({ type: "UPDATE_FIELD", field: "data", value: e.target.value })}
           />
           <Select
             fullWidth
-            value={novoAndamento.fase}
-            onChange={(e) => dispatch({ field: "fase", value: e.target.value })}
+            value={novoAndamento.faseProcessoId}
+            onChange={(e) => dispatch({ type: "UPDATE_FIELD", field: "faseProcessoId", value: e.target.value })}
             displayEmpty
           >
-            <MenuItem value="" disabled>Selecione uma fase</MenuItem>
+            <MenuItem value="" disabled>
+              Selecione uma fase
+            </MenuItem>
             {fasesProcesso.map((fase) => (
-              <MenuItem key={fase.value} value={fase.value}>{fase.label}</MenuItem>
+              <MenuItem key={fase.value} value={fase.value}>
+                {fase.label}
+              </MenuItem>
             ))}
           </Select>
           <TextField
             fullWidth
             label="Observação"
             margin="normal"
-            value={novoAndamento.observacao}
-            onChange={(e) => dispatch({ field: "observacao", value: e.target.value })}
+            value={novoAndamento.observacoes}
+            onChange={(e) => dispatch({ type: "UPDATE_FIELD", field: "observacoes", value: e.target.value })}
           />
-          <Button variant="contained" color="primary" onClick={adicionarAndamento} style={{ marginTop: 10 }}>
-            Salvar
+          <Button variant="contained" color="primary" onClick={adicionarAndamento}>
+            {novoAndamento.id ? "Salvar Alterações" : "Salvar"}
           </Button>
         </Box>
       </Modal>
