@@ -16,7 +16,7 @@ const Cronologia = () => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [editando, setEditando] = React.useState(false);
   const [andamentos, setAndamentos] = React.useState([]);
-  const [fasesProcesso, setFasesProcesso] = React.useState([]);
+  const [fasesProcesso, setFasesProcesso] = React.useState([]); // Fases do processo
   const [loading, setLoading] = React.useState(false);
   const [erro, setErro] = React.useState(null);
 
@@ -54,18 +54,6 @@ const Cronologia = () => {
     };
     fetchFasesProcesso();
   }, []);
-
-  const fetchAndamentos = async () => {
-    try {
-      setLoading(true);
-      const response = await api.get(`/andamentos?processoId=${processoId}`);
-      setAndamentos(Array.isArray(response.data.andamentos ) ? response.data.andamentos : []);
-    } catch {
-      setErro("Não foi possível carregar os andamentos.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   React.useEffect(() => {
     fetchAndamentos();
@@ -107,9 +95,48 @@ const Cronologia = () => {
     }
   };
 
-  const excluirAndamento = (id) => {
-    setAndamentos(andamentos.filter((item) => item.id !== id));
+  const fetchAndamentos = async () => {
+    try {
+      setLoading(true); // Inicia o carregamento
+      const response = await api.get(`/andamentos?processoId=${processoId}`);
+      
+      // Verifica se a resposta contém a lista de andamentos e atualiza o estado
+      if (Array.isArray(response.data.andamentos)) {
+        setAndamentos(response.data.andamentos); // Atualiza o estado com os andamentos
+      } else {
+        setAndamentos([]); // Caso não haja andamentos, define um array vazio
+      }
+    } catch (error) {
+      setErro("Não foi possível carregar os andamentos.");
+    } finally {
+      setLoading(false); // Finaliza o carregamento
+    }
   };
+
+  const excluirAndamento = async (id) => {
+    try {
+      setLoading(true); // Set loading to true while deleting
+      const response = await api.delete(`/deleteAndamento/${id}`); // Correct URL and method
+
+      if (response.status === 200 || response.status === 204) { // Check for successful deletion (200 or 204)
+        setAndamentos(andamentos.filter((item) => item.id !== id)); // Update state after successful deletion
+      } else {
+        console.error("Erro ao excluir andamento:", response.status, response.data);
+        alert("Falha ao excluir o andamento. Tente novamente mais tarde.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição de exclusão:", error);
+      alert("Ocorreu um erro ao excluir o andamento. Tente novamente mais tarde.");
+    } finally {
+      setLoading(false); // Set loading to false after request completes, regardless of success/failure
+    }
+  };
+  const columns = [
+    { header: "Cod.", accessor: "id" },
+    { header: "Data", accessor: "data" },
+    { header: "Fase", accessor: "faseProcesso" }, // Usando `faseProcesso` diretamente
+    { header: "Observações", accessor: "observacoes" },
+  ]
 
   return (
     <div>
@@ -123,55 +150,39 @@ const Cronologia = () => {
             Novo Andamento
           </Button>
           <Table
-            columns={[
-              { header: "Cod.", accessor: "id" },
-              { header: "Data", accessor: "data" },
-              { header: "Fase", accessor: "faseProcesso.nome" },
-              { header: "Observações", accessor: "observacoes" },
-              {
-                header: "Ações",
-                Cell: ({ row }) => (
-                  <Button onClick={() => {
-                    setModalOpen(true);
-                    dispatch({ type: 'SET_ANDAMENTO', payload: row.original });
-                  }} variant="contained" color="primary">
-                    Editar
-                  </Button>
-                )
-              }
-            ]}
-            data={andamentos}
-            onDelete={(row) => excluirAndamento(row.id)}
-          />
+  columns={columns}
+  data={andamentos}
+  onDelete={(row) => excluirAndamento(row.id)}
+/>
         </div>
       ) : (
         <div>
           <Timeline position="alternate">
-  {andamentos.map((fase, index) => (
-    <TimelineItem key={fase.id}>
-      <TimelineSeparator>
-        <TimelineDot color={index === 0 ? "success" : "secondary"} />
-        {index < andamentos.length - 1 && <TimelineConnector />}
-      </TimelineSeparator>
-      <TimelineContent>
-        <Typography variant="h6">
-          {fase.faseProcesso?.nome || "Fase desconhecida"}
-        </Typography>
-        <Typography variant="body2">{fase.observacoes}</Typography>
-        <Typography variant="body2">
-          {new Date(fase.data).toLocaleDateString("pt-BR")}
-        </Typography>
-      </TimelineContent>
-    </TimelineItem>
-  ))}
-</Timeline>
+            {andamentos.map((fase, index) => (
+              <TimelineItem key={fase.id}>
+                <TimelineSeparator>
+                  <TimelineDot color={index === 0 ? "success" : "secondary"} />
+                  {index < andamentos.length - 1 && <TimelineConnector />}
+                </TimelineSeparator>
+                <TimelineContent>
+                  <Typography variant="h6">
+                    {fase.faseProcesso?.nome || "Fase desconhecida"}
+                  </Typography>
+                  <Typography variant="body2">{fase.observacoes}</Typography>
+                  <Typography variant="body2">
+                    {new Date(fase.data).toLocaleDateString("pt-BR")}
+                  </Typography>
+                </TimelineContent>
+              </TimelineItem>
+            ))}
+          </Timeline>
           <Button variant="contained" color="primary" onClick={() => setEditando(true)}>
             Editar
           </Button>
         </div>
       )}
 
-  <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
+      <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <Box sx={{ width: 400, padding: 4, backgroundColor: "white", margin: "auto", marginTop: "10%" }}>
           <Typography variant="h6">{novoAndamento.id ? "Editar Andamento" : "Adicionar Novo Andamento"}</Typography>
           <TextField

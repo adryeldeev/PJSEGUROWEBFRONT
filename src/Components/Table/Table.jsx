@@ -21,6 +21,7 @@ import {
 } from "./TableStyled";
 import { useContext } from "react";
 import { ApiUrlContext } from '../../Context/ApiUrlProvider';
+
 const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
   const baseUrl = useContext(ApiUrlContext);
 
@@ -42,19 +43,10 @@ const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
               <Tr key={rowIndex}>
                 {columns.map((column) => (
                   <Td key={column.accessor}>
-                    {column.accessor === 'activo' ? (
-                      row[column.accessor] ? (
-                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
-                      ) : (
-                        <MdBlock style={{ color: 'red' }} />
-                      )
-                    ) : column.accessor === 'pendencia' ? (
-                      row[column.accessor] ? (
-                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
-                      ) : (
-                        <MdBlock style={{ color: 'red' }} />
-                      )
-                    ) : column.accessor === 'muda_fase'?(
+                    {column.accessor === 'activo' ||
+                    column.accessor === 'pendencia' ||
+                    column.accessor === 'muda_fase' ||
+                    column.accessor === 'concedido' ? (
                       row[column.accessor] ? (
                         <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
                       ) : (
@@ -65,29 +57,18 @@ const Table = ({ columns, data, onEdit, onDelete, back, next }) => {
                         <Link href={`${baseUrl}${row[column.accessor]}`} target="_blank" rel="noopener noreferrer">
                           Visualizar
                         </Link>
-                       
-                      ) : (
-                        <MdBlock style={{ color: 'red', fontSize: '15px' }} />
-                    )
-                    ) :
-                    column.accessor === 'concedido'?(
-                      row[column.accessor] ? (
-                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
                       ) : (
                         <MdBlock style={{ color: 'red', fontSize: '15px' }} />
                       )
-                    ):
-
-                    column.accessor === 'activo'?(
-                      row[column.accessor] ? (
-                        <CiCircleCheck style={{ color: 'green', fontSize: '15px' }} />
+                    ) : column.accessor === 'faseProcesso' ? (
+                      // Aqui garantimos que estamos acessando o nome da fase corretamente
+                      row.faseProcesso ? (
+                        <>{row.faseProcesso.nome || 'Sem fase'}</>
                       ) : (
-                        <MdBlock style={{ color: 'red', fontSize: '15px' }} />
+                        'Sem fase'
                       )
-                    ):
-                    
-                    (
-                      row[column.accessor]
+                    ) : (
+                      row[column.accessor] || 'N/A' // Exibe 'N/A' se a propriedade não existir
                     )}
                   </Td>
                 ))}
@@ -126,7 +107,6 @@ Table.propTypes = {
   onDelete: PropTypes.func,
   back: PropTypes.func,
   next: PropTypes.func,
-
 };
 
 export default Table;
