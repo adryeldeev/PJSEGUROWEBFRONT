@@ -11,7 +11,6 @@ const CadastrarDocumento = () => {
   const navigate = useNavigate();
   const tipoRef = useRef();
   const descricaoRef = useRef();
-  const clienteIdRef = useRef(); // Novo ref para clienteId
   const [file, setFile] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -20,9 +19,8 @@ const CadastrarDocumento = () => {
     // Validação dos campos
     const tipo = tipoRef.current?.value.trim();
     const descricao = descricaoRef.current?.value.trim();
-    const clienteId = clienteIdRef.current?.value.trim(); // Obter o clienteId
 
-    if (!tipo || !descricao || !file || !clienteId) {
+    if (!tipo || !descricao || !file) {
       alert('Preencha todos os campos obrigatórios.');
       return;
     }
@@ -33,7 +31,6 @@ const CadastrarDocumento = () => {
       formData.append('tipo', tipo);
       formData.append('descricao', descricao);
       formData.append('file', file);
-      formData.append('clienteId', clienteId); // Adicionar clienteId ao FormData
 
       // Enviar dados ao backend
       const response = await api.post('/uploadDocumento', formData, {
@@ -78,15 +75,7 @@ const CadastrarDocumento = () => {
               ref={descricaoRef}
             />
           </DivInputs>
-          <DivInputs>
-            <label htmlFor="clienteId">Cliente ID *</label>
-            <InputField
-              id="clienteId"
-              type="text"
-              placeholder="Digite o ID do cliente"
-              ref={clienteIdRef} // Ref para o campo clienteId
-            />
-          </DivInputs>
+         
           <DivInputs>
             <label htmlFor="upload">Upload Documento *</label>
             <InputField

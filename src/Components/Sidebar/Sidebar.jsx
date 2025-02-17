@@ -34,5 +34,4 @@ Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   isDesktop: PropTypes.bool.isRequired,
 };
-
 export default Sidebar;
