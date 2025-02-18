@@ -1,9 +1,9 @@
 import { useReducer, useState, useEffect } from "react";
 import { Modal, Box, Typography, TextField, MenuItem, Button } from "@mui/material";
 import Toggle from "../../Components/Toggle/Toggle";
-import { Table } from "lucide-react";
 import useApi from "../../Api/Api";
 import { useParams } from "react-router-dom";
+import Table from "../../Components/Table/Table";
 
 const CheckList = () => {
   const { id: processoId } = useParams();
@@ -11,12 +11,13 @@ const CheckList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [checkList, setCheckList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
+  const [editingId, setEditingId] = useState(null); // Armazena ID para edição
   const itemsPerPage = 4;
 
   const initialState = {
     descricao: "",
     obrigatorio: false,
-    entrega: false,
+    entregue: false,
     arquivo: null,
     processoId: Number(processoId),
   };
@@ -28,11 +29,13 @@ const CheckList = () => {
       case "TOGGLE_OBRIGATORIO":
         return { ...state, obrigatorio: !state.obrigatorio };
       case "TOGGLE_ENTREGA":
-        return { ...state, entrega: !state.entrega };
+        return { ...state, entregue: !state.entregue };
       case "SET_FILE":
         return { ...state, arquivo: action.value };
       case "RESET":
         return initialState;
+      case "SET_EDIT":
+        return { ...action.payload };
       default:
         return state;
     }
@@ -44,7 +47,9 @@ const CheckList = () => {
     const fetchData = async () => {
       try {
         const response = await api.get("/checklist");
-        setCheckList(response.data);
+
+       
+        setCheckList(response.data)
       } catch (err) {
         console.error("Erro ao buscar documentos:", err);
       }
@@ -56,21 +61,75 @@ const CheckList = () => {
     dispatch({ type: "SET_FILE", value: e.target.files[0] });
   };
 
-  const adicionarCheckList = async () => {
-    const checkData = {
-      descricao: state.descricao,
-      obrigatorio: state.obrigatorio,
-      entregue: state.entrega,
-      arquivo: state.arquivo ? state.arquivo : null,
-      processoId: Number(processoId),
-    };
+  const adicionarOuAtualizarCheckList = async () => {
+    if (!state.descricao) {
+      alert("A descrição é obrigatória.");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("descricao", state.descricao);
+    formData.append("obrigatorio", state.obrigatorio ? "true" : "false");
+    formData.append("entregue", state.entregue ? "true" : "false");
+    formData.append("processoId", Number(processoId));
+  
+    if (state.arquivo) {
+      formData.append("file", state.arquivo);  // Adiciona o arquivo, mas só se existir
+    }
+    
+    try {
+      let response;
+      if (editingId) {
+        response = await api.put(`/updateChecklist/${editingId}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+        response = await api.post("/createChecklist", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+
+      if (response.status === 201 || response.status === 200) {
+        if (editingId) {
+          // Atualiza o checklist existente no estado
+          setCheckList((prev) =>
+              prev.map((item) =>
+                  item.id === editingId ? { ...item, ...response.data } : item
+              )
+          );
+   
+      } else {
+          // Adiciona o novo checklist ao estado
+          setCheckList([...checkList, response.data]);
+         
+      }
+        setModalOpen(false);
+        dispatch({ type: "RESET" });
+        setEditingId(null);
+      }
+    } catch (error) {
+      alert("Erro ao salvar checklist.");
+      console.error("Erro ao adicionar/atualizar checklist:", error);
+    }
+  };
+
+  const handleEdit = (item) => {
+    setEditingId(item.id);
+    dispatch({ type: "SET_EDIT", payload: item });
+    setModalOpen(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Tem certeza que deseja excluir este checklist?")) return;
 
     try {
-      await api.post("/checklist", checkData);
-      setCheckList([...checkList, checkData]); // Atualiza lista localmente
-      setModalOpen(false);
+      const response = await api.delete(`/deleteChecklist/${id}`);
+      if (response.status === 200) {
+        setCheckList((prev) => prev.filter((item) => item.id !== id));
+      }
     } catch (error) {
-      console.error("Erro ao adicionar checklist:", error);
+      alert("Erro ao excluir checklist.");
+      console.error("Erro ao excluir checklist:", error);
     }
   };
 
@@ -94,7 +153,8 @@ const CheckList = () => {
     }
   };
 
-  const paginatedData = checkList.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
+  const paginatedData = Array.isArray(checkList) ? checkList.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage) : [];
+
 
   return (
     <>
@@ -109,7 +169,8 @@ const CheckList = () => {
         data={paginatedData}
         back={handleBackPage}
         next={handleNextPage}
-        onDelete={(row) => console.log("Excluindo andamento", row.id)}
+        onEdit={handleEdit} // Adiciona funcionalidade de edição
+        onDelete={(row) => handleDelete(row.id)} // Adiciona funcionalidade de exclusão
       />
 
       {/* Modal */}
@@ -130,7 +191,6 @@ const CheckList = () => {
             <Toggle
               id="toggle-obrigatorio"
               checked={state.obrigatorio}
-              label="Ativo"
               onClick={() => dispatch({ type: "TOGGLE_OBRIGATORIO" })}
             />
           </MenuItem>
@@ -139,8 +199,7 @@ const CheckList = () => {
             <label htmlFor="toggle-entregue">Entregue *</label>
             <Toggle
               id="toggle-entregue"
-              checked={state.entrega}
-              label="Ativo"
+              checked={state.entregue}
               onClick={() => dispatch({ type: "TOGGLE_ENTREGA" })}
             />
           </MenuItem>
@@ -148,7 +207,7 @@ const CheckList = () => {
           <MenuItem>
             <TextField
               fullWidth
-              label="Upload arquivo *"
+              label="Upload arquivo "
               type="file"
               margin="normal"
               InputLabelProps={{ shrink: true }}
@@ -156,8 +215,8 @@ const CheckList = () => {
             />
           </MenuItem>
 
-          <Button variant="contained" color="primary" onClick={adicionarCheckList}>
-            Salvar
+          <Button variant="contained" color="primary" onClick={adicionarOuAtualizarCheckList}>
+            {editingId ? "Atualizar" : "Salvar"}
           </Button>
         </Box>
       </Modal>
