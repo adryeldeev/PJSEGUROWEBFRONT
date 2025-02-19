@@ -10,7 +10,7 @@ import Toggle from "../../Components/Toggle/Toggle";
 import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
 import { ContentFaseProcessos, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./FaseDoProcessoStyled";
-
+import Swal from "sweetalert2";  // Importando o Swal
 const FaseDoProcesso = () => {
   const api = useApi();
   const navigate = useNavigate();
@@ -86,7 +86,11 @@ const FaseDoProcesso = () => {
       });
 
       if (response.status === 200 || response.status === 201) {
-        alert("Tipo de processo atualizado com sucesso!");
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Tipo de processo atualizado com sucesso!",
+          icon: "success",
+        });
 
         const updatedData = processos.map((item) =>
           item.id === selectedItem.id
@@ -97,31 +101,57 @@ const FaseDoProcesso = () => {
         setProcessos(updatedData);
         closeModal();
       } else {
-        alert("Erro ao atualizar tipo de processo.");
+        Swal.fire({
+          title: "Erro",
+          text: "Erro ao atualizar tipo de processo.",
+          icon: "error",
+        });
       }
     } catch (error) {
       console.error("Erro ao atualizar tipo de processo:", error);
-      alert("Erro ao atualizar tipo de processo.");
+      Swal.fire({
+        title: "Erro",
+        text: "Erro ao atualizar tipo de processo.",
+        icon: "error",
+      });
     }
   };
 
   const handleDelete = async (row) => {
-    const confirmDelete = window.confirm(
-      `Tem certeza que deseja excluir ${row.nome}?`
-    );
-    if (confirmDelete) {
+    const confirmDelete = await Swal.fire({
+      title: `Tem certeza que deseja excluir ${row.nome}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmDelete.isConfirmed) {
       try {
         const response = await api.delete(`/deleteProcesso/${row.id}`);
         if (response.status === 200 || response.status === 201) {
-          alert("Fase do processo deletada com sucesso!");
+          Swal.fire({
+            title: "Sucesso!",
+            text: "Fase do processo deletada com sucesso!",
+            icon: "success",
+          });
+
           const filteredData = processos.filter((item) => item.id !== row.id);
           setProcessos(filteredData);
         } else {
-          alert("Erro ao deletar fase do processo.");
+          Swal.fire({
+            title: "Erro",
+            text: "Erro ao deletar fase do processo.",
+            icon: "error",
+          });
         }
       } catch (error) {
         console.error("Erro ao excluir fase do processo:", error);
-        alert("Erro ao excluir fase do processo.");
+        Swal.fire({
+          title: "Erro",
+          text: "Erro ao excluir fase do processo.",
+          icon: "error",
+        });
       }
     }
   };

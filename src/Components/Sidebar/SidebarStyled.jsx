@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 // Estilizando o NavLink com styled-components
@@ -20,7 +20,7 @@ export const SidebarHeader = styled.div`
   font-weight: bold;
 `;
 
-export const StyledNavLink = styled(NavLink)`
+export const StyledNavLink = styled(Link)`
   display: block;
   padding: 10px 20px;
   color: #fff;

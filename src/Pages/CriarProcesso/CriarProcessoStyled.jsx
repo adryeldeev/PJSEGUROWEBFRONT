@@ -147,3 +147,16 @@ export const DivInputs = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+export const BotaoCriarProcesso = styled.button`
+  margin-top: 20px;  // Isso vai criar o espaço entre o DynamicVitma e o botão
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #45a049;
+  }
+`;

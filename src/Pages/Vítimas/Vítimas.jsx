@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import ButtonPlus from '../../Components/ButtonPlus/ButtonPlus';
 import Table from '../../Components/Table/Table';
 import { ContentVitimas, DivInfo, TituloText } from './VitimasStyled';
+import Swal from 'sweetalert2'
 
 const Vítimas = () => {
   const api = useApi()
@@ -50,24 +51,37 @@ const Vítimas = () => {
           fetchData();
         }, []);
       
-        const handleDelete = async (row) => {
-          const confirmDelete = window.confirm(
-              `Tem certeza que deseja excluir ${row.nome}?`
-          );
-          if (confirmDelete) {
-              try {
-                  const response = await api.delete(`/deleteVitima/${row.id}`);
-                  if (response.status === 200){
-                    alert(response.data.message)
-                    
-                      await fetchData(); // Recarrega a lista após a exclusão
-                  } else {
-                      alert("Erro ao deletar cliente.");
+const handleDelete = async (row) => {
+          try {
+              const response = await api.delete(`/deleteVitima/${row.id}`);
+      
+              if (response.data.message === "Essa vítima está vinculada a um processo, deseja excluir?") {
+                  // Exibe o alerta para o usuário confirmar a exclusão
+                  const confirmDelete = await Swal.fire({
+                      title: response.data.message,
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonText: 'Sim, excluir!',
+                      cancelButtonText: 'Cancelar'
+                  });
+      
+                  if (confirmDelete.isConfirmed) {
+                      // Se o usuário confirmar, realiza a exclusão novamente
+                      const deleteResponse = await api.delete(`/deleteVitima/${row.id}`);
+                      if (deleteResponse.status === 200) {
+                          Swal.fire('Deletado!', deleteResponse.data.message, 'success');
+                          await fetchData(); // Recarrega a lista após a exclusão
+                      } else {
+                          Swal.fire('Erro!', 'Erro ao excluir vítima.', 'error');
+                      }
                   }
-              } catch (error) {
-                  console.error("Erro ao excluir cliente:", error);
-                  alert("Erro ao excluircliente.");
+              } else {
+                  Swal.fire('Deletado!', response.data.message, 'success');
+                  await fetchData(); // Recarrega a lista após a exclusão
               }
+          } catch (error) {
+              console.error("Erro ao excluir vítima:", error);
+              Swal.fire('Erro!', 'Erro ao excluir vítima.', 'error');
           }
       };
         

@@ -8,7 +8,8 @@ import {
   ModalBackDro,
   ModalCadastroContainer,
   ModalCadastroContent,
-  Form
+  Form,
+  BotaoCriarProcesso
 
 } from "./CriarProcessoStyled";
 import ButtonSelect from "../../Components/ButtonSelect/ButtonSelect";
@@ -18,6 +19,7 @@ import { useUI } from "../../Context/UiContext";
 import Toggle from "../../Components/Toggle/Toggle";
 import CampoInput from "../../Components/CamposInputs/CamposInputs";
 import { useNavigate} from "react-router-dom";
+import Swal from 'sweetalert2';
 
 
 // Definição inicial do estado do modal
@@ -143,17 +145,32 @@ const CriarProcesso = () => {
   
     // Validação de dados obrigatórios
     if (!faseSelecionada || !tipoSelecionado || !prioridadeSelecionada) {
-      setErro("Por favor, selecione Fase, Tipo e Prioridade.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos obrigatórios!',
+        text: 'Por favor, selecione Fase, Tipo e Prioridade.',
+        confirmButtonText: 'OK'
+      });
       return;
     }
   
     if (!dadosModal.nome || !dadosModal.cpf) {
-      alert("Preencha todos os campos obrigatórios.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Preencha todos os campos obrigatórios!',
+        text: 'Nome e CPF são obrigatórios.',
+        confirmButtonText: 'OK'
+      });
       return;
     }
   
     if (!isValidCpf(dadosModal.cpf)) {
-      alert("CPF inválido. Formato correto: 999.999.999-99.");
+      Swal.fire({
+        icon: 'warning',
+        title: 'CPF Inválido',
+        text: 'Formato correto: 999.999.999-99.',
+        confirmButtonText: 'OK'
+      });
       return;
     }
   
@@ -182,14 +199,18 @@ const CriarProcesso = () => {
           telefone02: dadosModal.telefone02,
           email: dadosModal.email,
           activo: dadosModal.activo,
-         
         };
   
         // Cria a nova vítima
         const response = await api.post('/createVitima', vitimaData);
         vitimaId = response.data.id; // Obtém o id da nova vítima criada
       } catch (error) {
-        alert("Erro ao criar nova vítima.", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao Criar Vítima',
+          text: 'Houve um erro ao criar a nova vítima. Tente novamente.',
+          confirmButtonText: 'Tentar Novamente'
+        });
         return;
       }
     }
@@ -200,39 +221,56 @@ const CriarProcesso = () => {
       faseProcessoId: parseInt(faseSelecionada, 10),
       vitimaId: parseInt(vitimaId, 10),
       prioridadeId: parseInt(prioridadeSelecionada, 10),
-      cpf: dadosModal.cpf, // Adicione o CPF aqui
+      cpf: dadosModal.cpf,
       nome: dadosModal.nome,
     };
-    
+  
     try {
       const response = await api.post('/createProcessoV', processoData);
-      
-    
+  
       if (response.status === 200 || response.status === 201) {
-       
         const { processo } = response.data;  // Isso deve funcionar, dado que 'processo' é o nome correto
-    
         const id = processo?.id;
-        
-    
+  
         if (id) {
           navigate(`/processo/${id}`);
-          alert("Processo criado com sucesso!");
+          Swal.fire({
+            icon: 'success',
+            title: 'Processo Criado!',
+            text: 'O processo foi criado com sucesso.',
+            confirmButtonText: 'OK'
+          });
           setFaseSelecionada("");
           setTipoSelecionado("");
           setPrioridadeSelecionada("");
           dispatch({ type: "RESET" });
           closeModal();
         } else {
-          alert("Erro ao tentar criar o processo: ID não retornado.");
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro ao Criar Processo',
+            text: 'O processo não foi criado corretamente. Tente novamente.',
+            confirmButtonText: 'Tentar Novamente'
+          });
         }
       } else {
-        alert("Erro ao tentar criar o processo: Status inesperado.");
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao Criar Processo',
+          text: 'Status inesperado. Tente novamente.',
+          confirmButtonText: 'Tentar Novamente'
+        });
       }
     } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro ao Criar Processo',
+        text: 'Ocorreu um erro ao criar o processo. Tente novamente.',
+        confirmButtonText: 'Tentar Novamente'
+      });
       console.error("Erro ao criar processo:", error);
     }
-    }
+  };
 
   const handleSexoChange = (e) => {
     dispatch({ type: 'SET_SEXO', value: e.target.value });
@@ -322,9 +360,9 @@ const CriarProcesso = () => {
       </DivProcesso>
       <DynamicVitma onClick={handleClick} />
       {erro && <p>{erro}</p>}
-      <button type="button" onClick={handleCriarProcesso}>
+      <BotaoCriarProcesso type="button" onClick={handleCriarProcesso}>
    Criar Processo
-</button>
+</BotaoCriarProcesso>
 {isOpen && (
         <ModalBackDro onClick={closeModal}>
           <ModalCadastroContainer onClick={(e) => e.stopPropagation()}>

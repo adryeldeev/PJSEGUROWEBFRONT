@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import { ContentTiposDeVeiculos, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./TiposDeVeiculoStyled";
 import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import Table from "../../Components/Table/Table";
-
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useUI } from "../../Context/UiContext";
 import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
 import InputField from "../../Components/Inputs/Inputs";
+import Swal from 'sweetalert2'
 
 const TiposDeVeiculo = () => {
   const api = useApi();
@@ -90,48 +90,52 @@ const handleChange = (e) =>{
     e.preventDefault();
   
     try {
-      // Envia os dados atualizados para a API
       const response = await api.put(`/updateTiposDeVeiculo/${selectedItem.id}`, dados);
-  
+      
       if (response.status === 200 || response.status === 201) {
-        alert("Tipo de veículo atualizado com sucesso!");
-  
+        Swal.fire("Atualizado!", "Tipo de veículo atualizado com sucesso.", "success");
         // Atualiza a lista local com os novos dados
         const updatedData = tiposDeVeiculo.map((item) =>
           item.id === selectedItem.id ? { ...item, ...dados } : item
         );
         setTiposDeVeiculo(updatedData);
-  
-        closeModal(); // Fecha o modal
+        closeModal();
       } else {
-        alert("Erro ao atualizar tipo de veículo.");
+        Swal.fire("Erro!", "Erro ao atualizar tipo de veículo.", "error");
       }
     } catch (error) {
       console.error("Erro ao atualizar tipo de veículo:", error);
-      alert("Erro ao atualizar tipo de veículo.");
+      Swal.fire("Erro!", "Erro ao atualizar tipo de veículo.", "error");
     }
   };
 
   const handleDelete = async (row) => {
-    const confirmDelete = window.confirm(
-        `Tem certeza que deseja excluir ${row.nome}?`
-    );
-    if (confirmDelete) {
-        try {
-            const response = await api.delete(`/deleteTiposDeVeiculo/${row.id}`);
-            if (response.status === 200){
-              alert(response.data.message)
-              
-                await fetchData(); // Recarrega a lista após a exclusão
-            } else {
-                alert("Erro ao deletar prioridade.");
-            }
-        } catch (error) {
-            console.error("Erro ao excluir prioridade:", error);
-            alert("Erro ao excluir prioridade.");
+    const result = await Swal.fire({
+      title: `Tem certeza que deseja excluir ${row.nome}?`,
+      text: "Essa ação não pode ser desfeita.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        const response = await api.delete(`/deleteTiposDeVeiculo/${row.id}`);
+        
+        if (response.status === 200) {
+          Swal.fire("Excluído!", "Tipo de veículo excluído com sucesso.", "success");
+          await fetchData(); // Recarrega a lista após a exclusão
+        } else {
+          Swal.fire("Erro!", "Erro ao excluir tipo de veículo.", "error");
         }
+      } catch (error) {
+        console.error("Erro ao excluir tipo de veículo:", error);
+        Swal.fire("Erro!", "Erro ao excluir tipo de veículo.", "error");
+      }
     }
-};
+  };
 
 
   const handleNavigate = () => {

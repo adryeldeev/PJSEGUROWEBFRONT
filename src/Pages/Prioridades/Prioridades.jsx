@@ -10,7 +10,7 @@ import Toggle from "../../Components/Toggle/Toggle";
 import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
 import { ContentPrioridades, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./PrioridadesStyled";
-
+import Swal from 'sweetalert2'; // Importando o SweetAlert2
 const Prioridades = () => {
   const api = useApi();
   const navigate = useNavigate();
@@ -75,41 +75,55 @@ const Prioridades = () => {
         activo: activo,
       });
       if (response.status === 200 || response.status === 201) {
-        alert("Tipo de processo atualizado com sucesso!");
+        Swal.fire("Sucesso!", "Tipo de processo atualizado com sucesso!", "success");
         const updatedData = prioridades.map((item) =>
           item.id === selectedItem.id ? { ...item, nome, activo } : item
         );
         setPrioridades(updatedData);
         closeModal();
       } else {
-        alert("Erro ao atualizar tipo de processo.");
+        Swal.fire("Erro!", "Erro ao atualizar tipo de processo.", "error");
       }
     } catch (error) {
       console.error("Erro ao atualizar tipo de processo:", error);
-      alert("Erro ao atualizar tipo de processo.");
+      Swal.fire("Erro!", "Erro ao atualizar tipo de processo.", "error");
     }
   };
 
   const handleDelete = async (row) => {
-    const confirmDelete = window.confirm(
-        `Tem certeza que deseja excluir ${row.nome}?`
-    );
-    if (confirmDelete) {
-        try {
-            const response = await api.delete(`/deletePrioridade/${row.id}`);
-            if (response.status === 200){
-              alert(response.data.message)
-              
-                await fetchData(); // Recarrega a lista após a exclusão
-            } else {
-                alert("Erro ao deletar prioridade.");
-            }
-        } catch (error) {
-            console.error("Erro ao excluir prioridade:", error);
-            alert("Erro ao excluir prioridade.");
+    const confirmDelete = await Swal.fire({
+      title: `Tem certeza que deseja excluir ${row.nome}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    });
+  
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await api.delete(`/deletePrioridade/${row.id}`);
+        
+        // Verifica a mensagem de erro dentro da resposta e trata de acordo
+        if (response.status === 200) {
+          Swal.fire('Deletado!', response.data.message, 'success');
+          await fetchData(); // Recarrega a lista após a exclusão
+        } else if (response.data.message && response.data.message.includes('vinculada a processos')) {
+          // Caso a prioridade esteja vinculada a um processo, tratamos como um erro específico, mas sem erro 400
+          Swal.fire('Erro!', response.data.message, 'error');
+        } else {
+          Swal.fire('Erro!', 'Erro desconhecido ao deletar prioridade.', 'error');
         }
+      } catch (error) {
+        // Aqui podemos verificar se o erro foi de status 400, mas com a mensagem da resposta
+        if (error.response && error.response.data && error.response.data.message) {
+          Swal.fire('Erro!', error.response.data.message, 'error');
+        } else {
+          console.error("Erro ao excluir prioridade:", error);
+          Swal.fire('Erro!', 'Erro ao excluir prioridade.', 'error');
+        }
+      }
     }
-};
+  };
 
 
   const handleNavigate = () => {

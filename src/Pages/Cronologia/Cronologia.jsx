@@ -9,6 +9,7 @@ import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineDot from "@mui/lab/TimelineDot";
 import Table from "../../Components/Table/Table";
 import useApi from "../../Api/Api";
+import Swal from 'sweetalert2';
 
 const Cronologia = () => {
   const api = useApi();
@@ -61,17 +62,21 @@ const Cronologia = () => {
 
   const adicionarAndamento = async () => {
     if (!novoAndamento.faseProcessoId || novoAndamento.faseProcessoId === 0) {
-      alert("Por favor, selecione uma fase válida.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Por favor, selecione uma fase válida.',
+      });
       return;
     }
-
+  
     const andamentoData = {
       observacoes: novoAndamento.observacoes,
       faseProcessoId: Number(novoAndamento.faseProcessoId),
       processoId: Number(processoId),
       data: novoAndamento.data ? novoAndamento.data : new Date().toISOString().slice(0, 10),
     };
-
+  
     try {
       let response;
       if (novoAndamento.id) {
@@ -81,6 +86,14 @@ const Cronologia = () => {
         response = await api.post("/createAndamento", andamentoData);
         setAndamentos((prev) => [...prev, response.data]);
       }
+  
+      // Sucesso ao adicionar/editar
+      Swal.fire({
+        icon: 'success',
+        title: 'Sucesso!',
+        text: novoAndamento.id ? 'Andamento atualizado com sucesso!' : 'Novo andamento adicionado com sucesso!',
+      });
+  
       setModalOpen(false);
       setEditando(false);
       fetchAndamentos();
@@ -91,7 +104,11 @@ const Cronologia = () => {
         observacoes: "",
       }});
     } catch (error) {
-      alert("Ocorreu um erro ao adicionar o andamento.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro',
+        text: 'Ocorreu um erro ao adicionar ou atualizar o andamento.',
+      });
     }
   };
 
@@ -114,23 +131,50 @@ const Cronologia = () => {
   };
 
   const excluirAndamento = async (id) => {
-    try {
-      setLoading(true); // Set loading to true while deleting
-      const response = await api.delete(`/deleteAndamento/${id}`); // Correct URL and method
+  // Confirmação antes de excluir
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: 'Você não poderá reverter esta ação!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sim, excluir!',
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        setLoading(true); // Set loading to true while deleting
+        const response = await api.delete(`/deleteAndamento/${id}`); // Correct URL and method
 
-      if (response.status === 200 || response.status === 204) { // Check for successful deletion (200 or 204)
-        setAndamentos(andamentos.filter((item) => item.id !== id)); // Update state after successful deletion
-      } else {
-        console.error("Erro ao excluir andamento:", response.status, response.data);
-        alert("Falha ao excluir o andamento. Tente novamente mais tarde.");
+        if (response.status === 200 || response.status === 204) { // Check for successful deletion (200 or 204)
+          setAndamentos(andamentos.filter((item) => item.id !== id)); // Update state after successful deletion
+          
+          Swal.fire(
+            'Deletado!',
+            'O andamento foi excluído com sucesso.',
+            'success'
+          );
+        } else {
+          console.error("Erro ao excluir andamento:", response.status, response.data);
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: 'Falha ao excluir o andamento. Tente novamente mais tarde.',
+          });
+        }
+      } catch (error) {
+        console.error("Erro na requisição de exclusão:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro',
+          text: 'Ocorreu um erro ao excluir o andamento. Tente novamente mais tarde.',
+        });
+      } finally {
+        setLoading(false); // Set loading to false after request completes, regardless of success/failure
       }
-    } catch (error) {
-      console.error("Erro na requisição de exclusão:", error);
-      alert("Ocorreu um erro ao excluir o andamento. Tente novamente mais tarde.");
-    } finally {
-      setLoading(false); // Set loading to false after request completes, regardless of success/failure
     }
-  };
+  });
+};
   const columns = [
     { header: "Cod.", accessor: "id" },
     { header: "Data", accessor: "data" },

@@ -7,6 +7,7 @@ import { useUI } from "../../Context/UiContext";
 import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
 import InputField from "../../Components/Inputs/Inputs";
+import Swal from 'sweetalert2';
 import {
   ContentTiposDeDocumento,
   DivInfo,
@@ -53,7 +54,6 @@ const TiposDeDocumento = () => {
     { header: "ID", accessor: "id" },
     { header: "Tipo", accessor: "tipo" },
     { header: "Descrição", accessor: "descricao" },
-    { header: "Cliente ID", accessor: "clienteId" },  // Coluna para clienteId
     { header: "Arquivo", accessor: "arquivoUrl" },
   ];
 
@@ -79,50 +79,79 @@ const TiposDeDocumento = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-
+  
     try {
       const formData = new FormData();
       formData.append("tipo", tipo);
       formData.append("descricao", descricao);
       formData.append("clienteId", clienteId);  // Adicionar clienteId
       if (file) formData.append("file", file);
-
+  
       if (selectedItem) {
         const response = await api.put(`/updateDocumento/${selectedItem.id}`, formData);
-
+  
         if (response.status === 200 || response.status === 201) {
-          alert("Documento atualizado com sucesso!");
-          fetchData();
+          Swal.fire({
+            title: 'Sucesso!',
+            text: 'Documento atualizado com sucesso!',
+            icon: 'success',
+            confirmButtonText: 'Ok',
+          });
+          fetchData(); // Recarrega a lista de documentos
           closeModal();
           resetForm();
         } else {
-          alert("Erro ao atualizar documento.");
+          Swal.fire({
+            title: 'Erro!',
+            text: 'Erro ao atualizar documento.',
+            icon: 'error',
+            confirmButtonText: 'Tentar novamente',
+          });
         }
       } else {
-        alert("Nenhum documento selecionado para atualização.");
+        Swal.fire({
+          title: 'Erro!',
+          text: 'Nenhum documento selecionado para atualização.',
+          icon: 'error',
+          confirmButtonText: 'Fechar',
+        });
       }
     } catch (error) {
       console.error("Erro ao salvar documento:", error);
-      alert("Erro ao salvar documento.");
+      Swal.fire({
+        title: 'Erro!',
+        text: 'Erro ao salvar documento.',
+        icon: 'error',
+        confirmButtonText: 'Tentar novamente',
+      });
     }
   };
 
   const handleDelete = async (row) => {
-    const confirmDelete = window.confirm(`Tem certeza que deseja excluir ${row.tipo}?`);
-    if (confirmDelete) {
-      try {
-        const response = await api.delete(`/deleteDocumento/${row.id}`);
-        if (response.status === 200) {
-          alert(response.data.message);
-          fetchData();
-        } else {
-          alert("Erro ao deletar documento.");
+    Swal.fire({
+      title: `Tem certeza que deseja excluir ${row.tipo}?`,
+      text: "Essa ação não pode ser desfeita.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Sim, excluir!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await api.delete(`/deleteDocumento/${row.id}`);
+          if (response.status === 200) {
+            Swal.fire("Excluído!", response.data.message, "success");
+            fetchData();
+          } else {
+            Swal.fire("Erro", "Erro ao deletar documento.", "error");
+          }
+        } catch (error) {
+          console.error("Erro ao excluir documento:", error);
+          Swal.fire("Erro", "Erro ao excluir documento.", "error");
         }
-      } catch (error) {
-        console.error("Erro ao excluir documento:", error);
-        alert("Erro ao excluir documento.");
       }
-    }
+    });
   };
 
   const handleNavigate = () => {

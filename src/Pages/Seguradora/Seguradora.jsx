@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import Table from "../../Components/Table/Table";
-
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useUI } from "../../Context/UiContext";
@@ -9,6 +8,7 @@ import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
 import InputField from "../../Components/Inputs/Inputs";
 import { ContentSeguradora, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./SeguradoraStyled";
+import Swal from 'sweetalert2';
 
 const Seguradora = () => {
   const api = useApi();
@@ -81,50 +81,82 @@ const handleChange = (e) =>{
 
   const handleSave = async (e) => {
     e.preventDefault();
-  
     try {
-      // Envia os dados atualizados para a API
       const response = await api.put(`/updateSeguradora/${selectedItem.id}`, dados);
-  
+
       if (response.status === 200 || response.status === 201) {
-        alert("Tipo de veículo atualizado com sucesso!");
-  
-        // Atualiza a lista local com os novos dados
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Tipo de veículo atualizado com sucesso!",
+          icon: "success",
+          confirmButtonText: "OK"
+        });
+
         const updatedData = seguradora.map((item) =>
           item.id === selectedItem.id ? { ...item, ...dados } : item
         );
         setSeguradora(updatedData);
-  
-        closeModal(); 
+        closeModal();
       } else {
-        alert("Erro ao atualizar tipo de veículo.");
+        Swal.fire({
+          title: "Erro!",
+          text: "Erro ao atualizar tipo de veículo.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
       }
     } catch (error) {
       console.error("Erro ao atualizar tipo de veículo:", error);
-      alert("Erro ao atualizar tipo de veículo.");
+      Swal.fire({
+        title: "Erro!",
+        text: "Erro ao atualizar tipo de veículo.",
+        icon: "error",
+        confirmButtonText: "OK"
+      });
     }
   };
 
   const handleDelete = async (row) => {
-    const confirmDelete = window.confirm(
-        `Tem certeza que deseja excluir ${row.nome}?`
-    );
-    if (confirmDelete) {
-        try {
-            const response = await api.delete(`/deleteSeguradora/${row.id}`);
-            if (response.status === 200){
-              alert(response.data.message)
-              
-                await fetchData(); // Recarrega a lista após a exclusão
-            } else {
-                alert("Erro ao deletar cliente.");
-            }
-        } catch (error) {
-            console.error("Erro ao excluir cliente:", error);
-            alert("Erro ao excluircliente.");
+    const confirmDelete = await Swal.fire({
+      title: `Tem certeza que deseja excluir ${row.nome}?`,
+      text: "Essa ação não pode ser desfeita.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await api.delete(`/deleteSeguradora/${row.id}`);
+        if (response.status === 200) {
+          Swal.fire({
+            title: "Excluído!",
+            text: response.data.message,
+            icon: "success",
+            confirmButtonText: "OK"
+          });
+          await fetchData(); // Recarrega a lista após a exclusão
+        } else {
+          Swal.fire({
+            title: "Erro!",
+            text: "Erro ao deletar cliente.",
+            icon: "error",
+            confirmButtonText: "OK"
+          });
         }
+      } catch (error) {
+        console.error("Erro ao excluir cliente:", error);
+        Swal.fire({
+          title: "Erro!",
+          text: "Erro ao excluir cliente.",
+          icon: "error",
+          confirmButtonText: "OK"
+        });
+      }
     }
-};
+  };
+
 
 
   const handleNavigate = () => {
