@@ -32,6 +32,7 @@ import Informacoes from './Pages/Informacoes/Informacoes';
 import Sinistro from './Pages/Sinistro/Sinistro';
 import CheckList from './Pages/Check/Check';
 import Cronologia from './Pages/Cronologia/Cronologia';
+import Processo from './Pages/Processo/Processo';
 
 function App() {
   return (
@@ -48,7 +49,8 @@ function App() {
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/tipos-de-processo" element={<TiposDeProcesso />} />
                 <Route path="/prioridades" element={<Prioridades />} />
-                <Route path="/processos" element={<FaseDoProcesso />} />
+                <Route path="/processos" element={<Processo />} />
+                <Route path="/fase-do-processos" element={<FaseDoProcesso />} />
                 <Route path="/clientes" element={<Clientes />} />
                 <Route path="/bancos" element={<Bancos />} />
                 <Route path="/seguradoras" element={<Seguradora />} />

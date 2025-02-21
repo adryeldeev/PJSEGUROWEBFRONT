@@ -59,7 +59,7 @@ const CadastrarFaseDoProcesso = () => {
       const response = await api.post("/createProcesso", data);
       if (response.status === 200 || response.status === 201) {
         alert("Cadastro realizado com sucesso!");
-        navigate("/processos");
+        navigate("/fase-do-processos");
       } else {
         alert("Erro ao cadastrar fase do processo. Tente novamente.");
       }

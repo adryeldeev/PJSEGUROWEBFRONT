@@ -4,8 +4,8 @@ import { StyledNavLink, SidebarContainer, SidebarHeader } from "./SidebarStyled"
 const Sidebar = ({ isOpen, isDesktop }) => {
   const menuItems = [
     { path: "/", label: "Início" },
-    { path: '/criarProcesso', label: 'Processo' },
-    { path: "/processos", label: "Fases dos processos" },
+    { path: '/processos', label: 'Processos' },
+    { path: "/fase-do-processos", label: "Fases dos processos" },
     { path: "/bancos", label: "Bancos" },
     { path: "/prioridades", label: "Prioridades" },
     { path: "/seguradoras", label: "Seguradoras" },

@@ -33,7 +33,7 @@ const FaseDoProcesso = () => {
     try {
       setLoading(true);
 
-      const response = await api.get("/processos");
+      const response = await api.get("/fases-processos");
       const { processos } = response.data;
 
       if (Array.isArray(processos)) {
@@ -78,7 +78,7 @@ const FaseDoProcesso = () => {
 
   const handleSave = async () => {
     try {
-      const response = await api.put(`/updateProcesso/${selectedItem.id}`, {
+      const response = await api.put(`/updateFasesProcesso/${selectedItem.id}`, {
         nome,
         activo,
         pendencia,
@@ -128,7 +128,7 @@ const FaseDoProcesso = () => {
   
     if (confirmDelete.isConfirmed) {
       try {
-        const response = await api.delete(`/deleteProcesso/${row.id}`);
+        const response = await api.delete(`/deleteFasesProcesso/${row.id}`);
   
         if (response.status === 200 || response.status === 201) {
           Swal.fire({
