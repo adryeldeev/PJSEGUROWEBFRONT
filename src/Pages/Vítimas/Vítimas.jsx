@@ -96,8 +96,8 @@ const Vítimas = () => {
   const handleNavigate = () => {
     navigate("/cadastrarVitima");
   };
-  const navigateEdit = () => {
-    navigate("/editar-vitima");
+  const navigateEdit = (row) => {
+    navigate(`/editar-vitima/${row.id}`);
   };
 
   const paginatedData = Array.isArray(vitima) ?

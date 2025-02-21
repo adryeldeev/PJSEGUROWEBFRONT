@@ -6,22 +6,55 @@ import {
     BotaoAcoes, 
     Filtros, 
     StatusBadge, 
-    AcoesDropdown, 
     BotaoNovo,
-    DivDropDown
+  
 } from "./ProcessoStyled";
+import Swal from "sweetalert2";  // Importando o Swal
 import useApi from "../../Api/Api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 
 const Processo = () => {
   const api = useApi()
     const [processos, setProcessos] = useState([]);
-    const [dropDown, setDropDown] = useState(false);
     const navigate = useNavigate()
 
-    const handleDropDown =()=>{
-      setDropDown(!dropDown)
-    }
+  
+    const handleDelete = async (id) => {
+        const processo = processos.find((p) => p.id === id);
+      
+        const confirmDelete = await Swal.fire({
+          title: `Tem certeza que deseja excluir o processo ${processo?.vitima?.nome || "?"}?`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Sim, excluir!",
+          cancelButtonText: "Cancelar",
+        });
+      
+        if (confirmDelete.isConfirmed) {
+          try {
+            const response = await api.delete(`/processos/${id}`);
+      
+            if (response.status === 200 || response.status === 201) {
+              Swal.fire({
+                title: "Sucesso!",
+                text: "Processo deletado com sucesso!",
+                icon: "success",
+              });
+      
+              // Atualiza a lista removendo o item deletado
+              setProcessos((prevProcessos) => prevProcessos.filter((item) => item.id !== id));
+            }
+          } catch (error) {
+            console.error("Erro ao excluir processo:", error);
+      
+            Swal.fire({
+              title: "Erro!",
+              text: error.response?.data?.message || "Erro ao excluir o processo.",
+              icon: "error",
+            });
+          }
+        }
+      };
 
     useEffect(() => {
         async function fetchData() {
@@ -73,7 +106,9 @@ const Processo = () => {
                                 <td>-</td>
                                 <td>{processo.sinistro || "N/A"}</td>
                                 <td>
-                                    <a href={`/vitima/${processo.vitima.id}`}>{processo.vitima.nome}</a>
+                                <NavLink to={`/processo/${processo.id}/informacoes`}>
+        {processo.vitima?.nome || "Nome da vítima não disponível"}
+    </NavLink>
                                 </td>
                                 <td>{processo.tipoProcesso.nome}</td>
                                 <td>
@@ -82,20 +117,9 @@ const Processo = () => {
                                     </StatusBadge>
                                 </td>
                                 <td>
-                                    <DivDropDown>
-
-                                    <BotaoAcoes onClick={handleDropDown}>
-                                        Ações
+                                <BotaoAcoes onClick={() => handleDelete(processo.id)}>
+                                        Deletar
                                     </BotaoAcoes>
-                                        {dropDown && (
-
-                                          <AcoesDropdown>
-                                            <li>Excluir</li>
-                                            <li>Exportar para PDF</li>
-                                            <li>Exportar para XLS</li>
-                                        </AcoesDropdown>
-                                        )}
-                                        </DivDropDown>
                                 </td>
                             </tr>
                         ))}

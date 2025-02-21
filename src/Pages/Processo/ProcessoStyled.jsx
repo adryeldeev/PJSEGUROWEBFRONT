@@ -76,53 +76,19 @@ export const Tabela = styled.table`
     }
 `;
 
-export const DivDropDown = styled.div`
-position: relative;
-`
+
 export const BotaoAcoes = styled.button`
-    background: #6c757d;
+    background-color: #f44336;
     color: white;
+    border:none;
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
     display: inline-block;
-
    
 `;
 
-export const AcoesDropdown = styled.ul`
 
-   
-    position: absolute;
-    background: white;
-    list-style: none;
-    padding: 5px;
-    margin: 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    top: 100%;
-    left: 0;
-    width: 150px;
-    z-index: 10;
-
-    li {
-        padding: 8px;
-        cursor: pointer;
-        font-size: 14px;
-
-        &:hover {
-            background: #f0f0f0;
-        }
-    }
-
-    @media (max-width: 768px) {
-        width: 120px;
-        li {
-            font-size: 12px;
-            padding: 6px;
-        }
-    }
-`;
 
 export const StatusBadge = styled.span`
     background: ${({ status }) => 

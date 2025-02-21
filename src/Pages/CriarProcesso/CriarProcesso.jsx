@@ -100,7 +100,7 @@ const CriarProcesso = () => {
   const fetchFasesProcesso = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/processos");
+      const response = await api.get("/fases-processos");
       const { processos } = response.data || [];
       setFasesProcesso(processos.map((fase) => ({ label: fase.nome, value: fase.id })));
     } catch {

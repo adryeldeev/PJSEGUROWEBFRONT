@@ -33,6 +33,7 @@ import Sinistro from './Pages/Sinistro/Sinistro';
 import CheckList from './Pages/Check/Check';
 import Cronologia from './Pages/Cronologia/Cronologia';
 import Processo from './Pages/Processo/Processo';
+import EditarVitima from './Pages/EditarVitima/EditarVitima';
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/cadastrar-banco" element={<CadastrarBancos />} />
                 <Route path="/cadastrar-seguradora" element={<CadastrarSeguradora />} />
                 <Route path="/cadastrar-documento" element={<CadastrarDocumento />} />
+                <Route path="/editar-vitima/:id" element={<EditarVitima />} />
                 <Route path="/criarProcesso" element={<CriarProcesso />} />
                 <Route path="/cadastrarVitima" element={<CadastrarVitima />} />
                 <Route path="/conta" element={<Profile />} />
