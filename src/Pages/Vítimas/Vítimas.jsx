@@ -51,37 +51,31 @@ const Vítimas = () => {
           fetchData();
         }, []);
       
-const handleDelete = async (row) => {
+        const handleDelete = async (row) => {
           try {
+              // Primeira requisição - verifica se a vítima está vinculada a um processo
               const response = await api.delete(`/deleteVitima/${row.id}`);
       
-              if (response.data.message === "Essa vítima está vinculada a um processo, deseja excluir?") {
-                  // Exibe o alerta para o usuário confirmar a exclusão
-                  const confirmDelete = await Swal.fire({
-                      title: response.data.message,
-                      icon: 'warning',
-                      showCancelButton: true,
-                      confirmButtonText: 'Sim, excluir!',
-                      cancelButtonText: 'Cancelar'
-                  });
-      
-                  if (confirmDelete.isConfirmed) {
-                      // Se o usuário confirmar, realiza a exclusão novamente
-                      const deleteResponse = await api.delete(`/deleteVitima/${row.id}`);
-                      if (deleteResponse.status === 200) {
-                          Swal.fire('Deletado!', deleteResponse.data.message, 'success');
-                          await fetchData(); // Recarrega a lista após a exclusão
-                      } else {
-                          Swal.fire('Erro!', 'Erro ao excluir vítima.', 'error');
-                      }
-                  }
-              } else {
+              // Verifica se a resposta foi bem-sucedida (status 200)
+              if (response.status === 200) {
                   Swal.fire('Deletado!', response.data.message, 'success');
                   await fetchData(); // Recarrega a lista após a exclusão
               }
           } catch (error) {
-              console.error("Erro ao excluir vítima:", error);
-              Swal.fire('Erro!', 'Erro ao excluir vítima.', 'error');
+              // Verifica se o erro foi causado por um status 400
+              if (error.response && error.response.status === 400) {
+                  Swal.fire({
+                      title: error.response.data.message, // Mensagem retornada pelo backend
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonText: 'Ok',
+                      cancelButtonText: false
+                  });
+              } else {
+                  // Para outros erros, exibe a mensagem padrão de erro
+                  console.error("Erro ao excluir vítima e processos:", error);
+                  Swal.fire('Erro!', 'Erro ao excluir vítima e processos.', 'error');
+              }
           }
       };
         

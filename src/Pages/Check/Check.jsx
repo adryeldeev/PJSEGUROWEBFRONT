@@ -46,16 +46,17 @@ const CheckList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("/checklist");
-
-       
-        setCheckList(response.data)
+        const response = await api.get(`/checklist/${processoId}`); // Filtra pelo ID do processo
+        setCheckList(response.data);
       } catch (err) {
-        console.error("Erro ao buscar documentos:", err);
+        console.error("Erro ao buscar checklist:", err);
       }
     };
-    fetchData();
-  }, []);
+  
+    if (processoId) { // Só busca se o processoId estiver disponível
+      fetchData();
+    }
+  }, [processoId]);
 
   const handleFileChange = (e) => {
     dispatch({ type: "SET_FILE", value: e.target.files[0] });

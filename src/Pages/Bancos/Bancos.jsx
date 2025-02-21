@@ -1,7 +1,7 @@
+import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import Table from "../../Components/Table/Table";
-
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { useUI } from "../../Context/UiContext";
@@ -43,7 +43,7 @@ const [dados, setDados] = useState({
         if (Array.isArray(bancos)) {
             setBancos(bancos);
         } else {
-            throw new Error("A resposta da API não contém uma lista de clientes válida.");
+            throw new Error("A resposta da API não contém uma lista de bancos válida.");
         }
     } catch (err) {
         console.error("Erro ao buscar clientes:", err);
@@ -82,50 +82,75 @@ const handleChange = (e) =>{
 
   const handleSave = async (e) => {
     e.preventDefault();
-  
+
     try {
-      // Envia os dados atualizados para a API
       const response = await api.put(`/updateBanco/${selectedItem.id}`, dados);
-  
+
       if (response.status === 200 || response.status === 201) {
-        alert("Tipo de veículo atualizado com sucesso!");
-  
-        // Atualiza a lista local com os novos dados
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Banco atualizado com sucesso!",
+          icon: "success",
+          confirmButtonColor: "#3085d6",
+        });
+
         const updatedData = bancos.map((item) =>
           item.id === selectedItem.id ? { ...item, ...dados } : item
         );
         setBancos(updatedData);
-  
-        closeModal(); 
+        closeModal();
       } else {
-        alert("Erro ao atualizar banco.");
+        throw new Error("Erro ao atualizar banco.");
       }
     } catch (error) {
       console.error("Erro ao atualizar banco:", error);
-      alert("Erro ao atualizar banco.");
+      Swal.fire({
+        title: "Erro!",
+        text: "Erro ao atualizar banco.",
+        icon: "error",
+        confirmButtonColor: "#d33",
+      });
     }
   };
 
   const handleDelete = async (row) => {
-    const confirmDelete = window.confirm(
-        `Tem certeza que deseja excluir ${row.nome}?`
-    );
-    if (confirmDelete) {
+    Swal.fire({
+      title: `Tem certeza que deseja excluir ${row.nome}?`,
+      text: "Essa ação não pode ser desfeita!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sim, excluir!",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-            const response = await api.delete(`/deleteBanco/${row.id}`);
-            if (response.status === 200){
-              alert(response.data.message)
-              
-                await fetchData(); // Recarrega a lista após a exclusão
-            } else {
-                alert("Erro ao deletar banco.");
-            }
+          const response = await api.delete(`/deleteBanco/${row.id}`);
+          if (response.status === 200) {
+            Swal.fire({
+              title: "Excluído!",
+              text: response.data.message,
+              icon: "success",
+              confirmButtonColor: "#3085d6",
+            });
+
+            await fetchData();
+          } else {
+            throw new Error("Erro ao deletar banco.");
+          }
         } catch (error) {
-            console.error("Erro ao excluir banco:", error);
-            alert("Erro ao excluircliente.");
+          console.error("Erro ao excluir banco:", error);
+          Swal.fire({
+            title: "Erro!",
+            text: "Erro ao excluir banco.",
+            icon: "error",
+            confirmButtonColor: "#d33",
+          });
         }
-    }
-};
+      }
+    });
+  }
 
 
   const handleNavigate = () => {

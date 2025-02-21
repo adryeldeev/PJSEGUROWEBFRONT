@@ -125,36 +125,41 @@ const FaseDoProcesso = () => {
       confirmButtonText: "Sim, excluir!",
       cancelButtonText: "Cancelar",
     });
-
+  
     if (confirmDelete.isConfirmed) {
       try {
         const response = await api.delete(`/deleteProcesso/${row.id}`);
+  
         if (response.status === 200 || response.status === 201) {
           Swal.fire({
             title: "Sucesso!",
             text: "Fase do processo deletada com sucesso!",
             icon: "success",
           });
-
+  
           const filteredData = processos.filter((item) => item.id !== row.id);
           setProcessos(filteredData);
-        } else {
-          Swal.fire({
-            title: "Erro",
-            text: "Erro ao deletar fase do processo.",
-            icon: "error",
-          });
         }
       } catch (error) {
         console.error("Erro ao excluir fase do processo:", error);
-        Swal.fire({
-          title: "Erro",
-          text: "Erro ao excluir fase do processo.",
-          icon: "error",
-        });
+  
+        // Verifica se o erro tem resposta da API
+        if (error.response && error.response.data.message) {
+          Swal.fire({
+            title: "Erro!",
+            text: error.response.data.message,
+            icon: "error",
+          });
+        } else {
+          Swal.fire({
+            title: "Erro",
+            text: "Erro ao excluir fase do processo.",
+            icon: "error",
+          });
+        }
       }
     }
-  };
+  }
 
   const handleNavigate = () => {
     navigate("/cadastrar-fase-de-processo");
