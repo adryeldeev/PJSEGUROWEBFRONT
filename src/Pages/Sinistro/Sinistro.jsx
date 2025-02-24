@@ -84,16 +84,17 @@ const Sinistro = ({ initialData }) => {
           <Label>Data da Abertura</Label>
           {isEditing ? (
             <Input 
-              type="date" 
-              name="dataAbertura" 
-              value={sinistroData.dataAbertura} 
-              onChange={handleChange} 
+            type="date" 
+            name="dataAbertura" 
+            value={sinistroData.dataAbertura} 
+            onChange={handleChange} 
             />
           ) : (
             <Span>{sinistroData.dataAbertura || 'Não Informado'}</Span>
           )}
-        </InfoBox>
+          </InfoBox>
         </DivSinistroInput>
+          </InfoContainer>
         <Veiculo
         inputs={[
           { name: "marca", label: "Marca do Veículo", type: "text" },
@@ -104,13 +105,13 @@ const Sinistro = ({ initialData }) => {
         />
         <Delegacia
         inputs={[
-          { name: "marca", label: "Marca do Veículo", type: "text" },
-          { name: "modelo", label: "Modelo", type: "text" },
-          { name: "placa", label: "Placa", type: "text" },
-          { name: "ano", label: "Ano", type: "number" },
+          { name: "delegacia", label: "Delegacia", type: "text" },
+          { name: "uf", label: "Uf", type: "text" },
+          { name: "cidade", label: "Cidade", type: "text" },
+          { name: "dataBo", label: "Data do BO", type: "date" },
+          { name: "numeroBo", label: "Número do BO", type: "text" },
         ]}
         />
-      </InfoContainer>
 
       <div>
         {isEditing ? (
