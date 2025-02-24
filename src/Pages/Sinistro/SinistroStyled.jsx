@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const DivContent = styled.div`
+
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -17,6 +18,7 @@ export const Title = styled.h2`
 
 export const InfoContainer = styled.div`
   display: flex;
+  flex-direction:column;
   flex-wrap: wrap;
   gap: 15px;
   margin-bottom: 20px;
@@ -60,4 +62,8 @@ export const Value = styled.span`
 
 export const Span = styled.span`
   font-size: 16px;
+`
+export const DivSinistroInput = styled.div`
+display:flex;
+
 `

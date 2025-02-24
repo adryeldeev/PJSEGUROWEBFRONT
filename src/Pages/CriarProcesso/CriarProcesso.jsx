@@ -233,7 +233,7 @@ const CriarProcesso = () => {
         const id = processo?.id;
   
         if (id) {
-          navigate(`/processo/${id}`);
+          navigate(`/processo/${id}/informacoes`);
           Swal.fire({
             icon: 'success',
             title: 'Processo Criado!',

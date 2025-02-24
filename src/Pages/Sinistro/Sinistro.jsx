@@ -1,6 +1,8 @@
 import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types'
 import { DivContent, InfoBox, InfoContainer, Input, Label, Title, Span } from './SinistroStyled';
+import Veiculo from '../../Components/Veiculo/Veiculo'
+import Delegacia from '../../Components/Delegacia/Delegacia'
 import { Button } from "@mui/material";
 // Definição do reducer
 const sinistroReducer = (state, action) => {
@@ -89,6 +91,22 @@ const Sinistro = ({ initialData }) => {
             <Span>{sinistroData.dataAbertura || 'Não Informado'}</Span>
           )}
         </InfoBox>
+        <Veiculo
+        inputs={[
+          { name: "marca", label: "Marca do Veículo", type: "text" },
+          { name: "modelo", label: "Modelo", type: "text" },
+          { name: "placa", label: "Placa", type: "text" },
+          { name: "ano", label: "Ano", type: "number" },
+        ]}
+        />
+        <Delegacia
+        inputs={[
+          { name: "marca", label: "Marca do Veículo", type: "text" },
+          { name: "modelo", label: "Modelo", type: "text" },
+          { name: "placa", label: "Placa", type: "text" },
+          { name: "ano", label: "Ano", type: "number" },
+        ]}
+        />
       </InfoContainer>
 
       <div>

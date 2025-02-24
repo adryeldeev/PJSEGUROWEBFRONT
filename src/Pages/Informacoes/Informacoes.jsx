@@ -13,59 +13,54 @@ import useApi from "../../Api/Api";
 
 const Informacoes = () => {
   const api = useApi();
-  const { id } = useParams();
+  const { id: processoId } = useParams();
   const [processo, setProcesso] = useState(null);
   const [prioridades, setPrioridades] = useState([]);
   const [seguradoras, setSeguradoras] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Fetch processo
   useEffect(() => {
     const fetchProcesso = async () => {
       try {
-        const response = await api.get(`/processos/${id}`);
+        const response = await api.get(`/processos/${processoId}`);
+        console.log("Processo recebido:", response.data); // Para debug
         setProcesso(response.data);
       } catch (error) {
         console.error("Erro ao buscar processo:", error);
       }
     };
+    if (processoId) {
+      fetchProcesso();
+    }
+  }, [processoId]);
 
-    fetchProcesso();
-  }, [id]);
-
-  // Fetch prioridades
   useEffect(() => {
     const fetchPrioridades = async () => {
       try {
         const response = await api.get("/prioridades");
-        const { prioridades } = response.data;
-
-        setPrioridades(prioridades);
+        console.log("Prioridades recebidas:", response.data); // Para debug
+        setPrioridades(response.data.prioridades || []);
       } catch (error) {
         console.error("Erro ao buscar prioridades:", error);
       }
     };
-
     fetchPrioridades();
   }, []);
 
-  // Fetch seguradoras
   useEffect(() => {
     const fetchSeguradoras = async () => {
       try {
         const response = await api.get("/seguradoras");
-        const { seguradoras } = response.data;
-
-        setSeguradoras(seguradoras);
+        console.log("Seguradoras recebidas:", response.data); // Para debug
+        setSeguradoras(response.data.seguradoras || []);
       } catch (error) {
         console.error("Erro ao buscar seguradoras:", error);
       }
     };
-
     fetchSeguradoras();
   }, []);
 
-  if (!processo || !prioridades.length || !seguradoras.length) {
+  if (!processo || prioridades.length === 0) {
     return <p>Carregando...</p>;
   }
 
@@ -97,16 +92,16 @@ const Informacoes = () => {
         <InfoBox>
           <Label>Operador</Label>
           {isEditing ? (
-            <Input type="text" />
+            <Input type="text" defaultValue={processo.user?.username || ""} />
           ) : (
-            <Value>{processo.user?.nome || "Não informado"}</Value>
+            <Value>{processo.user?.username || "Não informado"}</Value>
           )}
         </InfoBox>
 
         <InfoBox>
           <Label>Data de Cadastro</Label>
           {isEditing ? (
-            <Input type="date" />
+            <Input type="date" defaultValue={new Date(processo.criado_em).toISOString().split("T")[0]} />
           ) : (
             <Value>{new Date(processo.criado_em).toLocaleDateString()}</Value>
           )}
@@ -115,7 +110,7 @@ const Informacoes = () => {
         <InfoBox>
           <Label>Seguradora</Label>
           {isEditing ? (
-            <select >
+            <select>
               {seguradoras.map((seguradora) => (
                 <option key={seguradora.id} value={seguradora.id}>
                   {seguradora.nome}
@@ -123,14 +118,16 @@ const Informacoes = () => {
               ))}
             </select>
           ) : (
-            <Value>{processo.sinistro?.seguradora || "Não informado"}</Value>
+            <Value>
+              {processo.sinistro.length > 0 ? processo.sinistro[0].seguradora : "Não informado"}
+            </Value>
           )}
         </InfoBox>
 
         <InfoBox>
           <Label>Endereço</Label>
           {isEditing ? (
-            <Input type="text"  />
+            <Input type="text" defaultValue={processo.vitima?.endereco || ""} />
           ) : (
             <Value>{processo.vitima?.endereco || "Não informado"}</Value>
           )}
@@ -139,7 +136,7 @@ const Informacoes = () => {
         <InfoBox>
           <Label>Email</Label>
           {isEditing ? (
-            <Input type="email"  />
+            <Input type="email" defaultValue={processo.vitima?.email || ""} />
           ) : (
             <Value>{processo.vitima?.email || "Não informado"}</Value>
           )}
@@ -148,7 +145,7 @@ const Informacoes = () => {
         <InfoBox>
           <Label>Telefone</Label>
           {isEditing ? (
-            <Input type="tel" />
+            <Input type="tel" defaultValue={processo.vitima?.telefone01 || ""} />
           ) : (
             <Value>{processo.vitima?.telefone01 || "Não informado"}</Value>
           )}
@@ -163,3 +160,4 @@ const Informacoes = () => {
 };
 
 export default Informacoes;
+
