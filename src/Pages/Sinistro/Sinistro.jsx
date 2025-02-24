@@ -1,6 +1,6 @@
 import React, { useState, useReducer } from 'react';
 import PropTypes from 'prop-types'
-import { DivContent, InfoBox, InfoContainer, Input, Label, Title, Span } from './SinistroStyled';
+import { DivContent, InfoBox, InfoContainer, Input, Label, Title, Span, DivSinistroInput } from './SinistroStyled';
 import Veiculo from '../../Components/Veiculo/Veiculo'
 import Delegacia from '../../Components/Delegacia/Delegacia'
 import { Button } from "@mui/material";
@@ -50,6 +50,8 @@ const Sinistro = ({ initialData }) => {
       <Title>Sinistro</Title>
 
       <InfoContainer>
+        <DivSinistroInput>
+
         <InfoBox>
           <Label>Data do Sinistro</Label>
           {isEditing ? (
@@ -58,7 +60,7 @@ const Sinistro = ({ initialData }) => {
               name="dataSinistro" 
               value={sinistroData.dataSinistro} 
               onChange={handleChange} 
-            />
+              />
           ) : (
             <Span>{sinistroData.dataSinistro || 'Não Informado'}</Span>
           )}
@@ -68,7 +70,7 @@ const Sinistro = ({ initialData }) => {
           <Label>Número do Sinistro</Label>
           {isEditing ? (
             <Input 
-              type="text" 
+            type="text" 
               name="numeroSinistro" 
               value={sinistroData.numeroSinistro} 
               onChange={handleChange} 
@@ -91,6 +93,7 @@ const Sinistro = ({ initialData }) => {
             <Span>{sinistroData.dataAbertura || 'Não Informado'}</Span>
           )}
         </InfoBox>
+        </DivSinistroInput>
         <Veiculo
         inputs={[
           { name: "marca", label: "Marca do Veículo", type: "text" },
