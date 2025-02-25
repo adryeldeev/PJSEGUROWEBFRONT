@@ -1,13 +1,8 @@
-import { useState } from "react";
+
 import PropTypes from "prop-types";
 import { InfoContainer, InfoBox, Label, Input, DivDelegaciaInput, Titulo,DivContentDelegacia } from "./DelegaciaStyled";
 
-const Delegacia = ({ inputs }) => {
-  const [formData, setFormData] = useState({});
-
-  const handleChange = (e, field) => {
-    setFormData({ ...formData, [field]: e.target.value });
-  };
+const Delegacia = ({ inputs, onChange, values }) => {
 
   return (
     <DivContentDelegacia>
@@ -19,9 +14,13 @@ const Delegacia = ({ inputs }) => {
             <InfoBox key={index}>
               <Label>{input.label}</Label>
               <Input
-                type={input.type}
-                value={formData[input.name] || ""}
-                onChange={(e) => handleChange(e, input.name)}
+               key={index}
+               fullWidth
+               type={input.type}
+               margin="normal"
+               name={input.name}
+               value={values[input.name] || ""}
+                onChange={onChange}
               />
             </InfoBox>
           ))}
@@ -33,6 +32,8 @@ const Delegacia = ({ inputs }) => {
 
 Delegacia.propTypes = {
   inputs: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
 };
 
 export default Delegacia;

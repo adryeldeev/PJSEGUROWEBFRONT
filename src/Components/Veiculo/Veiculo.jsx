@@ -6,19 +6,17 @@ import { useUI } from "../../Context/UiContext";
 import {DivTipo,DivConteudo,Titulo, DivButton, UlList, Li, BtnToggle,DivSpans }  from './VeiculoStyled';
 
 
-const Veiculo = ({ inputs  }) => {
+const Veiculo = ({ inputs, onChange, values  }) => {
  
   const { isOpen,openModal, closeModal } = useUI();
   const [dropDownVisible, setDropDownVisible] = useState(false);
-  const [formData, setFormData] = useState({});
+ 
 
   const toggleDropDown = () => {
     setDropDownVisible(!dropDownVisible);
   };
 
-  const handleChange = (e, field) => {
-    setFormData({ ...formData, [field]: e.target.value });
-  };
+
 
   return (
     <div>
@@ -54,14 +52,14 @@ const Veiculo = ({ inputs  }) => {
 
           {inputs.map((input, index) => (
             <TextField
-              key={index}
-              fullWidth
-              label={input.label}
-              type={input.type}
-              margin="normal"
-              InputLabelProps={{ shrink: true }}
-              value={formData[input.name] || ""}
-              onChange={(e) => handleChange(e, input.name)}
+            key={index}
+            fullWidth
+            label={input.label}
+            type={input.type}
+            margin="normal"
+            name={input.name}
+            value={values[input.name] || ""}
+            onChange={onChange}
             />
           ))}
 
@@ -80,7 +78,9 @@ const Veiculo = ({ inputs  }) => {
 };
 
 Veiculo.propTypes = {
-  inputs:PropTypes.func.isRequired,
+  inputs: PropTypes.array.isRequired,
+  onChange: PropTypes.func.isRequired,
+  values: PropTypes.object.isRequired,
 
 }
 
