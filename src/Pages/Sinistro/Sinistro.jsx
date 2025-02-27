@@ -1,6 +1,6 @@
 import React, { useState, useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { DivContent, InfoBox, InfoContainer, Input, Label, Title, Span, DivSinistroInput } from './SinistroStyled';
+import { DivContent, InfoBox, InfoContainer, Input, Label, Title, Span, DivSinistroInput, InfoSpnas } from './SinistroStyled';
 import Veiculo from '../../Components/Veiculo/Veiculo';
 import Delegacia from '../../Components/Delegacia/Delegacia';
 import { Button } from "@mui/material";
@@ -16,7 +16,7 @@ const initialState = {
     dataAbertura: "",
     processoId: null, // O valor de processoId será atribuído depois
   },
-  veiculo: {
+  tipoDeVeiculo: { 
     marca: "",
     modelo: "",
     placa: "",
@@ -80,33 +80,103 @@ const Sinistro = () => {
     dispatch({ type, field: name, value: formattedValue });
   };
 
-  const handleSaveClick = async (tipo) => {
-    let dadosParaAtualizar = {};
+  const handleSave = async (tipo, dadosParaAtualizar) => {
+    const { numero, dataSinistro, dataAbertura } = state.sinistro; // Aqui você pega os campos do estado
 
-    if (tipo === "sinistro") {
-      dadosParaAtualizar = { sinistro: state.sinistro };
-    } else if (tipo === "veiculo") {
-      dadosParaAtualizar = { veiculo: state.veiculo };
-    } else if (tipo === "delegacia") {
-      dadosParaAtualizar = { delegacia: state.delegacia };
+    // Verifica se algum dos campos obrigatórios está vazio
+    if (!numero || !dataSinistro || !dataAbertura) {
+      // Se algum campo obrigatório estiver vazio, mostra o alerta
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos obrigatórios!',
+        text: 'Por favor, preencha todos os campos do sinistro!',
+      });
+      return; // Impede o salvamento se os campos não estiverem preenchidos
     }
 
     try {
-      await api.put(`/updateSinistro/${processoId}`, dadosParaAtualizar); // Ajuste a rota conforme necessário
+      // Adiciona o processoId aos dados para atualização
+      const dadosComProcessoId = { ...dadosParaAtualizar, processoId: state.sinistro.processoId };
+  
+      let response;
+      if (dadosParaAtualizar.id) { // Atualizar
+        response = await api.put(`/sinistro/${dadosParaAtualizar.id}`, dadosComProcessoId);
+      } else { // Criar
+        response = await api.post(`/sinistro`, dadosComProcessoId);
+      }
+  
       Swal.fire({
         icon: "success",
-        title: "Atualização realizada",
-        text: `Os dados de ${tipo} foram atualizados com sucesso!`,
+        title: tipo === "sinistro" ? "Sinistro" : tipo === "veiculo" ? "Veículo" : "Delegacia",
+        text: `${tipo.charAt(0).toUpperCase() + tipo.slice(1)} foi ${dadosParaAtualizar.id ? 'atualizado' : 'cadastrado'} com sucesso!`,
       });
+  
+      // Atualizar o estado após a criação ou atualização
+      if (tipo === "sinistro") {
+        dispatch({ type: "UPDATE_SINISTRO", field: "sinistro", value: response.data });
+      } else if (tipo === "veiculo") {
+        dispatch({ type: "UPDATE_VEICULO", field: "tipoDeVeiculo", value: response.data });
+      } else if (tipo === "delegacia") {
+        dispatch({ type: "UPDATE_DELEGACIA", field: "delegacia", value: response.data });
+      }
     } catch (error) {
-      console.error(`Erro ao atualizar ${tipo}:`, error);
+      console.error("Erro ao salvar", tipo, error);
       Swal.fire({
         icon: "error",
-        title: "Erro ao salvar",
-        text: `Houve um problema ao atualizar os dados de ${tipo}.`,
+        title: `Erro ao salvar ${tipo}`,
+        text: `Houve um problema ao ${dadosParaAtualizar.id ? 'atualizar' : 'cadastrar'} os dados do ${tipo}.`,
       });
     }
   };
+
+  const handleSaveClick = async (tipo) => {
+    if (tipo === "sinistro") {
+      const dadosParaAtualizar = { sinistro: state.sinistro };
+      await handleSave(tipo, dadosParaAtualizar);
+    } else if (tipo === "veiculo") {
+      const dadosParaAtualizar = { tipoDeVeiculo: state.tipoDeVeiculo };
+      await handleSave(tipo, dadosParaAtualizar);
+    } else if (tipo === "delegacia") {
+      const dadosParaAtualizar = { delegacia: state.delegacia };
+      await handleSave(tipo, dadosParaAtualizar);
+    }
+  };
+  
+  useEffect(() => {
+    const fetchSinistro = async () => {
+      try {
+        const response = await api.get(`/sinistro/${processoId}`); // Ajuste a rota conforme necessário
+        if (response.data) {
+          dispatch({ type: "UPDATE_SINISTRO", field: "dataSinistro", value: response.data.dataSinistro || "" });
+          dispatch({ type: "UPDATE_SINISTRO", field: "numero", value: response.data.numero || "" });
+          dispatch({ type: "UPDATE_SINISTRO", field: "dataAbertura", value: response.data.dataAbertura || "" });
+    
+          // Atualiza os dados do tipoDeVeiculo
+          if (response.data.tipoDeVeiculo) {
+            dispatch({ type: "UPDATE_VEICULO", field: "marca", value: response.data.tipoDeVeiculo.marca || "" });
+            dispatch({ type: "UPDATE_VEICULO", field: "modelo", value: response.data.tipoDeVeiculo.modelo || "" });
+            dispatch({ type: "UPDATE_VEICULO", field: "placa", value: response.data.tipoDeVeiculo.placa || "" });
+            dispatch({ type: "UPDATE_VEICULO", field: "ano", value: response.data.tipoDeVeiculo.ano || "" });
+          }
+    
+          // Atualiza os dados da delegacia
+          if (response.data.delegacia) {
+            dispatch({ type: "UPDATE_DELEGACIA", field: "delegacia", value: response.data.delegacia.delegacia || "" });
+            dispatch({ type: "UPDATE_DELEGACIA", field: "uf", value: response.data.delegacia.uf || "" });
+            dispatch({ type: "UPDATE_DELEGACIA", field: "cidade", value: response.data.delegacia.cidade || "" });
+            dispatch({ type: "UPDATE_DELEGACIA", field: "dataBo", value: response.data.delegacia.dataBo || "" });
+            dispatch({ type: "UPDATE_DELEGACIA", field: "numeroBo", value: response.data.delegacia.numeroBo || "" });
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao buscar sinistro:", error);
+      }
+    };
+  
+    if (processoId) {
+      fetchSinistro();
+    }
+  }, [processoId]);
 
   const handleCancelClick = () => {
     dispatch({ type: "RESET" });
@@ -131,89 +201,72 @@ const Sinistro = () => {
               <Input 
                 type="date" 
                 name="dataSinistro" 
-                value={state.sinistro.dataSinistro}
-                onChange={handleChange} 
+                value={state.sinistro.dataSinistro} 
+                onChange={(e) => handleChange(e, "UPDATE_SINISTRO")} 
               />
             ) : (
-              <Span>{state.sinistro.dataSinistro || 'Não Informado'}</Span>
+              <Span>{state.sinistro.dataSinistro}</Span>
             )}
           </InfoBox>
 
           <InfoBox>
-            <Label>Número do Sinistro</Label>
+            <Label>Número</Label>
             {isEditing ? (
               <Input 
                 type="text" 
                 name="numero" 
                 value={state.sinistro.numero} 
-                onChange={handleChange} 
+                onChange={(e) => handleChange(e, "UPDATE_SINISTRO")} 
               />
             ) : (
-              <Span>{state.sinistro.numero || 'Não Informado'}</Span>
+              <Span>{state.sinistro.numero}</Span>
             )}
           </InfoBox>
 
           <InfoBox>
-            <Label>Data da Abertura</Label>
+            <Label>Data de Abertura</Label>
             {isEditing ? (
               <Input 
                 type="date" 
                 name="dataAbertura" 
                 value={state.sinistro.dataAbertura} 
-                onChange={handleChange} 
+                onChange={(e) => handleChange(e, "UPDATE_SINISTRO")} 
               />
             ) : (
-              <Span>{state.sinistro.dataAbertura || 'Não Informado'}</Span>
+              <Span>{state.sinistro.dataAbertura}</Span>
             )}
           </InfoBox>
         </DivSinistroInput>
       </InfoContainer>
 
+      {/* Seção Veículo */}
       <Veiculo
-        inputs={[
-          { name: "marca", label: "Marca do Veículo", type: "text" },
-          { name: "modelo", label: "Modelo", type: "text" },
-          { name: "placa", label: "Placa", type: "text" },
-          { name: "ano", label: "Ano", type: "number" },
-        ]}
-        onChange={(e) => handleChange(e, "UPDATE_VEICULO")}
-        values={state.veiculo}
+        veiculo={state.tipoDeVeiculo}
+        isEditing={isEditing}
+        onChange={handleChange}
       />
 
+      {/* Seção Delegacia */}
       <Delegacia
-        inputs={[
-          { name: "delegacia", label: "Delegacia", type: "text" },
-          { name: "uf", label: "Uf", type: "text" },
-          { name: "cidade", label: "Cidade", type: "text" },
-          { name: "dataBo", label: "Data do BO", type: "date" },
-          { name: "numeroBo", label: "Número do BO", type: "text" },
-        ]}
-        onChange={(e) => handleChange(e, "UPDATE_DELEGACIA")}
-        values={state.delegacia}
+        delegacia={state.delegacia}
+        isEditing={isEditing}
+        onChange={handleChange}
       />
 
-      <div>
-        {isEditing ? (
-          <>
-            <Button onClick={() => handleSaveClick("sinistro")}>Salvar Sinistro</Button>
-            <Button onClick={() => handleSaveClick("veiculo")}>Salvar Veículo</Button>
-            <Button onClick={() => handleSaveClick("delegacia")}>Salvar Delegacia</Button>
-            <Button color="secondary" onClick={handleCancelClick}>Cancelar</Button>
-          </>
-        ) : (
-          <Button onClick={handleEditClick}>Editar</Button>
-        )}
-      </div>
+      {isEditing ? (
+        <Button onClick={() => handleSaveClick("sinistro")}>Salvar</Button>
+      ) : (
+        <Button onClick={handleEditClick}>Editar</Button>
+      )}
+      {isEditing && (
+        <Button onClick={handleCancelClick}>Cancelar</Button>
+      )}
     </DivContent>
   );
 };
 
 Sinistro.propTypes = {
-  initialData: PropTypes.shape({
-    dataSinistro: PropTypes.string,
-    numeroSinistro: PropTypes.string,
-    dataAbertura: PropTypes.string
-  })
+  tipoDeVeiculo: PropTypes.object.isRequired,
 };
 
 export default Sinistro;

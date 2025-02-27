@@ -23,6 +23,12 @@ export const InfoContainer = styled.div`
   gap: 15px;
   margin-bottom: 20px;
 `;
+export const InfoSpnas = styled.div`
+ display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
+`
 export const Input = styled.input`
 width:60%;
 heigth:40px;
