@@ -1,43 +1,82 @@
-import  { useEffect, useState } from "react";
-import { useAuth } from "../../Context/AuthProvider";
+import { useEffect, useState } from "react";
+import { Container, Grid, Card, CardContent, Typography } from "@mui/material";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import useApi from "../../Api/Api";
+import { useAuth } from "../../Context/AuthProvider";
 
 const Dashboard = () => {
-  const api = useApi()
-  const auth = useAuth();  // Acesso ao contexto de autenticação
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
+  const api = useApi();
+  const auth = useAuth();
+  const [processos, setProcessos] = useState([]);
+  const [faseData, setFaseData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get(`/user/${auth.user.id}`);  // Fetch de dados protegidos
-        setData(response);
-      } catch (err) {
-        setError("Falha ao carregar dados" + err);
+        const response = await api.get("/processos");
+        setProcessos(response);
+      } catch (error) {
+        console.error("Erro ao buscar processos", error);
       }
     };
+    fetchData();
+  }, []);
 
-    fetchData();  // Chama a função de obtenção de dados após renderização
-  }, [auth.token]);
+  useEffect(() => {
+    if (processos.length > 0) {
+      const faseCount = processos.reduce((acc, processo) => {
+        const nomeFase = processo.faseProcesso?.nome || "Desconhecido";
+        acc[nomeFase] = (acc[nomeFase] || 0) + 1;
+        return acc;
+      }, {});
+
+      const faseArray = Object.keys(faseCount).map((key) => ({
+        name: key,
+        value: faseCount[key],
+      }));
+      setFaseData(faseArray);
+    }
+  }, [processos]);
+
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A28BFE", "#FF6384"];
 
   return (
-    <div className="container">
-      <h1>Bem-vindo, {auth.user?.username}</h1> {/* Exibe o nome do usuário */}
-      <button onClick={() => auth.logOut()} className="btn-submit">
-        Logout
-      </button>
-
-      <div>
-        <h2>Dados Protegidos:</h2>
-        {error && <p>Error: {error}</p>}
-        {data ? (
-          <pre>{JSON.stringify(data, null, 2)}</pre>  // Exibe os dados protegidos
-        ) : (
-          <p>Carregando dados protegidos...</p>
-        )}
-      </div>
-    </div>
+    <Container>
+      <Typography variant="h4" gutterBottom>
+        Dashboard de Processos
+      </Typography>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item xs={12} md={8} lg={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h6" align="center">
+                Distribuição de Processos por Fase
+              </Typography>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={faseData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={100}
+                    fill="#8884d8"
+                    label
+                  >
+                    {faseData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 

@@ -27,6 +27,7 @@
     "react-router-dom": "^6.29.0",
     "react-scripts": "^5.0.1",
     "react-switch": "^7.1.0",
+    "recharts": "^2.15.1",
     "styled-components": "^6.1.13",
     "sweetalert2": "^11.17.2"
   },

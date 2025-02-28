@@ -40,35 +40,46 @@ const Sinistro = () => {
   const [isEditing, setIsEditing] = useState(false);
   const api = useApi();
   const { id: processoId } = useParams();
-
+  const [dataLoaded, setDataLoaded] = useState(false)
   // Buscar dados do sinistro ao carregar a página
   useEffect(() => {
-    if (processoId) {
+    if (processoId && !dataLoaded) { // Carregar dados apenas uma vez
       const fetchSinistro = async () => {
         try {
           const response = await api.get(`/sinistro/${processoId}`);
           const { dataSinistro, numero, dataAbertura, tipoDeVeiculo, delegacia } = response.data;
-          
+  
+          // Atualiza o estado com os dados obtidos da API, caso ainda não tenha sido feito
           dispatch({ type: "SET_VALUE", field: "dataSinistro", value: dataSinistro || "" });
           dispatch({ type: "SET_VALUE", field: "numero", value: numero || "" });
           dispatch({ type: "SET_VALUE", field: "dataAbertura", value: dataAbertura || "" });
-          dispatch({ type: "SET_VEICULO", field: "marca", value: tipoDeVeiculo?.marca || "" });
-          dispatch({ type: "SET_VEICULO", field: "modelo", value: tipoDeVeiculo?.modelo || "" });
-          dispatch({ type: "SET_VEICULO", field: "placa", value: tipoDeVeiculo?.placa || "" });
-          dispatch({ type: "SET_VEICULO", field: "ano", value: tipoDeVeiculo?.ano || "" });
-          dispatch({ type: "SET_DELEGACIA", field: "delegacia", value: delegacia?.delegacia || "" });
-          dispatch({ type: "SET_DELEGACIA", field: "uf", value: delegacia?.uf || "" });
-          dispatch({ type: "SET_DELEGACIA", field: "cidade", value: delegacia?.cidade || "" });
-          dispatch({ type: "SET_DELEGACIA", field: "dataBo", value: delegacia?.dataBo || "" });
-          dispatch({ type: "SET_DELEGACIA", field: "numeroBo", value: delegacia?.numeroBo || "" });
+  
+          // Atualiza o estado do veículo, caso exista
+          if (tipoDeVeiculo) {
+            dispatch({ type: "SET_VEICULO", field: "marca", value: tipoDeVeiculo.marca || "" });
+            dispatch({ type: "SET_VEICULO", field: "modelo", value: tipoDeVeiculo.modelo || "" });
+            dispatch({ type: "SET_VEICULO", field: "placa", value: tipoDeVeiculo.placa || "" });
+            dispatch({ type: "SET_VEICULO", field: "ano", value: tipoDeVeiculo.ano || "" });
+          }
+  
+          // Atualiza o estado da delegacia, caso exista
+          if (delegacia) {
+            dispatch({ type: "SET_DELEGACIA", field: "delegacia", value: delegacia.delegacia || "" });
+            dispatch({ type: "SET_DELEGACIA", field: "uf", value: delegacia.uf || "" });
+            dispatch({ type: "SET_DELEGACIA", field: "cidade", value: delegacia.cidade || "" });
+            dispatch({ type: "SET_DELEGACIA", field: "dataBo", value: delegacia.dataBo || "" });
+            dispatch({ type: "SET_DELEGACIA", field: "numeroBo", value: delegacia.numeroBo || "" });
+          }
+  
+          setDataLoaded(true); // Marca os dados como carregados
         } catch (error) {
           console.error("Erro ao buscar sinistro:", error);
         }
       };
+  
       fetchSinistro();
     }
-  }, [processoId, api]);
-
+  }, [processoId, api, dispatch, dataLoaded])
   // Salvar ou atualizar sinistro
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,7 +147,7 @@ const Sinistro = () => {
           </InfoBox>
 
           <InfoBox>
-            <Label>Número</Label>
+            <Label>Número do sinistro</Label>
             {isEditing ? (
               <Input
                 type="text"
@@ -162,29 +173,44 @@ const Sinistro = () => {
           </InfoBox>
         </DivSinistroInput>
       </InfoContainer>
+            {isEditing ? (
 
-      <Veiculo
-        inputs={[
-          { name: "marca", label: "Marca do Veículo", type: "text" },
-          { name: "modelo", label: "Modelo", type: "text" },
-          { name: "placa", label: "Placa", type: "text" },
+              <Veiculo
+              inputs={[
+                { name: "marca", label: "Marca do Veículo", type: "text" },
+                { name: "modelo", label: "Modelo", type: "text" },
+                { name: "placa", label: "Placa", type: "text" },
           { name: "ano", label: "Ano", type: "number" },
         ]}
         values={state.veiculo}
         onChange={(e) => dispatch({ type: "SET_VEICULO", field: e.target.name, value: e.target.value })}
-        isEditing={isEditing}
-      />
+        
+        />
+      ):(
+        <p>{state.veiculo.marca}</p>
+      )}
 
-      <Delegacia values={state.delegacia} isEditing={isEditing} 
-      inputs={[
-        { name: "delegacia", label: "Delegacia", type: "text" },
-        { name: "uf", label: "UF", type: "text" },
-        { name: "cidade", label: "Cidade", type: "text" },
+      {isEditing ? (
+
+        <Delegacia values={state.delegacia} 
+        inputs={[
+          { name: "delegacia", label: "Delegacia", type: "text" },
+          { name: "uf", label: "UF", type: "text" },
+          { name: "cidade", label: "Cidade", type: "text" },
         { name: "dataBo", label: "Data do BO", type: "date" },
         { name: "numeroBo", label: "Número do BO", type: "text" },
       ]}
       onChange={(e) => dispatch({ type: "SET_DELEGACIA", field: e.target.name, value: e.target.value })}
       />
+    ) : (
+      <div>
+    <p>Delegacia: {state.delegacia.delegacia}</p>
+    <p>UF: {state.delegacia.uf}</p>
+    <p>Cidade: {state.delegacia.cidade}</p>
+    <p>Data do BO: {state.delegacia.dataBo}</p>
+    <p>Número do BO: {state.delegacia.numeroBo}</p>
+  </div>
+    )}
 
       {isEditing ? (
         <Button onClick={handleSubmit}>Salvar</Button>
