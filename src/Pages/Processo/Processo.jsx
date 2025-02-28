@@ -104,7 +104,7 @@ const Processo = () => {
                         {processos.map((processo) => (
                             <tr key={processo.id}>
                                 <td>-</td>
-                                <td>{processo.sinistro?.numero || "N/A"}</td>
+                               <td>{processo.sinistro?.[0]?.numero || "N/A"}</td>
                                 <td>
                                 <NavLink to={`/processo/${processo.id}/informacoes`}>
         {processo.vitima?.nome || "Nome da vítima não disponível"}
