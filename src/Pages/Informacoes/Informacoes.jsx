@@ -23,7 +23,7 @@ const Informacoes = () => {
     const fetchProcesso = async () => {
       try {
         const response = await api.get(`/processos/${processoId}`);
-        console.log("Processo recebido:", response.data); // Para debug
+      
         setProcesso(response.data);
       } catch (error) {
         console.error("Erro ao buscar processo:", error);
@@ -38,7 +38,7 @@ const Informacoes = () => {
     const fetchPrioridades = async () => {
       try {
         const response = await api.get("/prioridades");
-        console.log("Prioridades recebidas:", response.data); // Para debug
+
         setPrioridades(response.data.prioridades || []);
       } catch (error) {
         console.error("Erro ao buscar prioridades:", error);
@@ -51,7 +51,7 @@ const Informacoes = () => {
     const fetchSeguradoras = async () => {
       try {
         const response = await api.get("/seguradoras");
-        console.log("Seguradoras recebidas:", response.data); // Para debug
+     
         setSeguradoras(response.data.seguradoras || []);
       } catch (error) {
         console.error("Erro ao buscar seguradoras:", error);
