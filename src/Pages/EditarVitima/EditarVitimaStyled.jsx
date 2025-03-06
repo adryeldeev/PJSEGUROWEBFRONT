@@ -21,3 +21,31 @@ export const ButtonSalvar = styled.button`
       }
 `
 
+
+export const DivInputs = styled.div`
+  display: flex;
+  flex-direction: column;
+  
+  label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  select {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+  }
+    `

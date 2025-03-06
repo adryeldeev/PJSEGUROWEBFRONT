@@ -56,6 +56,7 @@ export const Tabela = styled.table`
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    table-layout:fixed;
 
     th, td {
         padding: 12px;
@@ -104,4 +105,43 @@ export const StatusBadge = styled.span`
         font-size: 10px;
         padding: 4px 8px;
     }
+`;
+
+export const ButtonsDiv = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+
+export const PageInfo = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 20px;
+  display: flex;
+  align-items: center;
+`;
+
+// Botões de navegação com estilo
+export const NavigationButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #d6d6d6;
+    cursor: not-allowed;
+  }
 `;

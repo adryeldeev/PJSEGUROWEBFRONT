@@ -169,6 +169,7 @@ const handleChange = (e) =>{
       setCurrentPage(currentPage - 1);
     }
   };
+  const totalPages = Math.ceil(bancos.length / itemsPerPage);
 
   // Dados da página atual
   const paginatedData = Array.isArray(bancos)
@@ -205,6 +206,8 @@ const handleChange = (e) =>{
        onDelete={handleDelete}
        back={handleBackPage} // Função de voltar
        next={handleNextPage} // Função de avançar
+       currentPage={currentPage}
+       totalPages={totalPages}
        />
       )}
       {isOpen && (

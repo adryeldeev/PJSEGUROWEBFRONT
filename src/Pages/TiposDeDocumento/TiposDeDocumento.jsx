@@ -192,6 +192,8 @@ const TiposDeDocumento = () => {
         onDelete={handleDelete}
         back={handleBackPage}
         next={handleNextPage}
+        currentPage={currentPage}
+       totalPages={totalPages}
       />
       {isOpen && (
         <ModalBackDro onClick={closeModal}>

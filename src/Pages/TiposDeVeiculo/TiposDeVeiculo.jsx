@@ -154,7 +154,7 @@ const handleChange = (e) =>{
       setCurrentPage(currentPage - 1);
     }
   };
-
+  const totalPages = Math.ceil(tiposDeVeiculo.length / itemsPerPage);
   // Dados da página atual
   const paginatedData = Array.isArray(tiposDeVeiculo)
   ? tiposDeVeiculo.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
@@ -190,6 +190,8 @@ const handleChange = (e) =>{
        onDelete={handleDelete}
        back={handleBackPage} // Função de voltar
        next={handleNextPage} // Função de avançar
+       currentPage={currentPage}
+       totalPages={totalPages}
        />
       )}
       {isOpen && (

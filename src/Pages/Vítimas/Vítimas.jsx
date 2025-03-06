@@ -68,8 +68,8 @@ const Vítimas = () => {
                       title: error.response.data.message, // Mensagem retornada pelo backend
                       icon: 'warning',
                       showCancelButton: true,
-                      confirmButtonText: 'Ok',
-                      cancelButtonText: false
+                      confirmButtonText: 'Ok'
+                     
                   });
               } else {
                   // Para outros erros, exibe a mensagem padrão de erro
@@ -99,7 +99,7 @@ const Vítimas = () => {
   const navigateEdit = (row) => {
     navigate(`/editar-vitima/${row.id}`);
   };
-
+  const totalPages = Math.ceil(vitima.length / itemsPerPage);
   const paginatedData = Array.isArray(vitima) ?
   vitima.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage) : [];
 
@@ -133,6 +133,8 @@ const Vítimas = () => {
           onDelete={handleDelete}
           back={handleBackPage} // Função de voltar
           next={handleNextPage} // Função de avançar
+          currentPage={currentPage}
+       totalPages={totalPages}
           />
          )}
        </ContentVitimas>

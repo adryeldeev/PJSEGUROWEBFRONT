@@ -175,7 +175,7 @@ const handleChange = (e) =>{
       setCurrentPage(currentPage - 1);
     }
   };
-
+  const totalPages = Math.ceil(seguradora.length / itemsPerPage);
   // Dados da página atual
   const paginatedData = Array.isArray(seguradora)
   ? seguradora.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
@@ -211,6 +211,8 @@ const handleChange = (e) =>{
        onDelete={handleDelete}
        back={handleBackPage} // Função de voltar
        next={handleNextPage} // Função de avançar
+       currentPage={currentPage}
+       totalPages={totalPages}
        />
       )}
       {isOpen && (
@@ -227,6 +229,8 @@ const handleChange = (e) =>{
       placeholder="Digite o nome da seguradora"
       value={dados.nome} // Controlado pelo estado
       onChange={handleChange} // Atualiza o estado
+      currentPage={currentPage}
+      totalPages={totalPages}
     />
   </DivInputs>
 

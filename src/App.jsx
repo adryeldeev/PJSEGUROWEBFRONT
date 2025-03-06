@@ -15,7 +15,6 @@ import FaseDoProcesso from './Pages/FaseDoProcesso/FaseDoProcesso';
 import CadastrarFaseDoProcesso from './Pages/CadastrarFaseDoProcesso/CadastrarFaseDoProcesso';
 import TiposDeVeiculo from './Pages/TiposDeVeiculo/TiposDeVeiculo';
 import CadastrarTiposDeVeiculo from './Pages/CadastrarTiposDeVeiculo/CadastrarTiposDeVeiculo';
-import Clientes from './Pages/Clientes/Clientes';
 import CadastrarBancos from './Pages/CadastrarBancos/CadastrarBancos';
 import Bancos from './Pages/Bancos/Bancos';
 import CadastrarSeguradora from './Pages/CadastrarSeguradora/CadastrarSeguradora';
@@ -52,7 +51,6 @@ function App() {
                 <Route path="/prioridades" element={<Prioridades />} />
                 <Route path="/processos" element={<Processo />} />
                 <Route path="/fase-do-processos" element={<FaseDoProcesso />} />
-                <Route path="/clientes" element={<Clientes />} />
                 <Route path="/bancos" element={<Bancos />} />
                 <Route path="/seguradoras" element={<Seguradora />} />
                 <Route path="/documentos" element={<TiposDeDocumento />} />

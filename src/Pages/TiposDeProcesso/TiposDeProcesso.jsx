@@ -159,7 +159,8 @@ const TiposDeProcesso = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-
+  
+  const totalPages = Math.ceil(tiposProcesso.length / itemsPerPage);
   // Dados da página atual
   const paginatedData = tiposProcesso.slice(
     currentPage * itemsPerPage,
@@ -197,6 +198,8 @@ const TiposDeProcesso = () => {
        onDelete={handleDelete}
        back={handleBackPage} // Função de voltar
        next={handleNextPage} // Função de avançar
+       currentPage={currentPage}
+       totalPages={totalPages}
        />
       )}
       {isOpen && (

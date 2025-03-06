@@ -142,7 +142,7 @@ const Prioridades = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-
+  const totalPages = Math.ceil(prioridades.length / itemsPerPage);
   // Dados da página atual
   const paginatedData = Array.isArray(prioridades)
   ? prioridades.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
@@ -178,6 +178,8 @@ const Prioridades = () => {
        onDelete={handleDelete}
        back={handleBackPage} // Função de voltar
        next={handleNextPage} // Função de avançar
+       currentPage={currentPage}
+      totalPages={totalPages}
        />
       )}
       {isOpen && (

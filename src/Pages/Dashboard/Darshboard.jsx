@@ -14,7 +14,9 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response = await api.get("/processos");
-        setProcessos(response);
+       
+       
+        setProcessos(response.data || []);
       } catch (error) {
         console.error("Erro ao buscar processos", error);
       }
@@ -34,6 +36,7 @@ const Dashboard = () => {
         name: key,
         value: faseCount[key],
       }));
+      console.log("Dados do gráfico:", faseArray)
       setFaseData(faseArray);
     }
   }, [processos]);

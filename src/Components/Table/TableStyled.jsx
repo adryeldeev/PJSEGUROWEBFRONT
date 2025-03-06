@@ -9,6 +9,7 @@ export const TableContent = styled.table`
   width: 100%;
   min-width: 600px;  /* Garante que a tabela tenha uma largura mínima, se necessário */
   border-collapse: collapse;
+  table-layout:fixed;
 `;
 
 export const TableWrapper = styled.div`
@@ -91,3 +92,33 @@ export const Link = styled.a`
 `;
 
 
+export const PageInfo = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 20px;
+  display: flex;
+  align-items: center;
+`;
+
+// Botões de navegação com estilo
+export const NavigationButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  &:disabled {
+    background-color: #d6d6d6;
+    cursor: not-allowed;
+  }
+`;

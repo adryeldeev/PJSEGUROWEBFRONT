@@ -155,7 +155,7 @@ const CheckList = () => {
   };
 
   const paginatedData = Array.isArray(checkList) ? checkList.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage) : [];
-
+  const totalPages = Math.ceil(checkList.length / itemsPerPage);
 
   return (
     <>
@@ -172,6 +172,9 @@ const CheckList = () => {
         next={handleNextPage}
         onEdit={handleEdit} // Adiciona funcionalidade de edição
         onDelete={(row) => handleDelete(row.id)} // Adiciona funcionalidade de exclusão
+       
+        currentPage={currentPage}
+        totalPages={totalPages}
       />
 
       {/* Modal */}

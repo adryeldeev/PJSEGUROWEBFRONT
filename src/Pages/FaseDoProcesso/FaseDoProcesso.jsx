@@ -125,25 +125,24 @@ const FaseDoProcesso = () => {
       confirmButtonText: "Sim, excluir!",
       cancelButtonText: "Cancelar",
     });
-  
+
     if (confirmDelete.isConfirmed) {
       try {
         const response = await api.delete(`/deleteFasesProcesso/${row.id}`);
-  
+
         if (response.status === 200 || response.status === 201) {
           Swal.fire({
             title: "Sucesso!",
             text: "Fase do processo deletada com sucesso!",
             icon: "success",
           });
-  
+
           const filteredData = processos.filter((item) => item.id !== row.id);
           setProcessos(filteredData);
         }
       } catch (error) {
         console.error("Erro ao excluir fase do processo:", error);
-  
-        // Verifica se o erro tem resposta da API
+
         if (error.response && error.response.data.message) {
           Swal.fire({
             title: "Erro!",
@@ -159,7 +158,7 @@ const FaseDoProcesso = () => {
         }
       }
     }
-  }
+  };
 
   const handleNavigate = () => {
     navigate("/cadastrar-fase-de-processo");
@@ -181,6 +180,8 @@ const FaseDoProcesso = () => {
     ? processos.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
     : [];
 
+  const totalPages = Math.ceil(processos.length / itemsPerPage);
+
   if (loading) {
     return <p>Carregando...</p>;
   }
@@ -200,21 +201,17 @@ const FaseDoProcesso = () => {
           onClick={handleNavigate}
         />
       </DivInfo>
-      {loading ? (
-        <p>Carregando...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : (
-        <Table
-          columns={columns}
-          data={paginatedData}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          back={handleBackPage}
-          next={handleNextPage}
-        />
-      )}
-      {isOpen && (
+      <Table
+        columns={columns}
+        data={paginatedData}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        back={handleBackPage}
+        next={handleNextPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
+         {isOpen && (
         <ModalBackDro onClick={closeModal}>
           <ModalCadastroContainer onClick={(e) => e.stopPropagation()}>
             <ModalCadastroContent>
@@ -272,3 +269,4 @@ const FaseDoProcesso = () => {
 };
 
 export default FaseDoProcesso;
+

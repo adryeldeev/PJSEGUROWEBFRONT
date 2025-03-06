@@ -51,8 +51,9 @@ const Informacoes = () => {
     const fetchSeguradoras = async () => {
       try {
         const response = await api.get("/seguradoras");
-     
+        console.log(response.data)
         setSeguradoras(response.data.seguradoras || []);
+
       } catch (error) {
         console.error("Erro ao buscar seguradoras:", error);
       }
@@ -119,7 +120,7 @@ const Informacoes = () => {
             </select>
           ) : (
             <Value>
-              {processo.sinistro.length > 0 ? processo.sinistro[0].seguradora : "Não informado"}
+              { seguradoras[0]?.nome || "Não informado"}
             </Value>
           )}
         </InfoBox>
