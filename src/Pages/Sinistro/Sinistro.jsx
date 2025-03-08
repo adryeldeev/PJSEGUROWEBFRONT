@@ -1,33 +1,42 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { 
-  DivContent, InfoBox, InfoContainer, Input, Label, Title, DivSinistroInput 
+import {
+  DivContent,
+  InfoBox,
+  InfoContainer,
+  Input,
+  Label,
+  Title,
+  DivSinistroInput,
 } from "./SinistroStyled";
-import Veiculo from "../../Components/Veiculo/Veiculo";
-import Delegacia from "../../Components/Delegacia/Delegacia";
 import { Button } from "@mui/material";
 import Swal from "sweetalert2";
 import useApi from "../../Api/Api";
 import { useParams } from "react-router-dom";
+import Veiculo from "../../Components/Veiculo/Veiculo";
+import Delegacia from "../../Components/Delegacia/Delegacia";
 
-// Estado inicial
+// Estado inicial **plano**
 const initialState = {
   dataSinistro: "",
   numero: "",
   dataAbertura: "",
-  veiculo: { marca: "", modelo: "", placa: "", ano: "" },
-  delegacia: { delegacia: "", uf: "", cidade: "", dataBo: "", numeroBo: "" },
+  marca: "",
+  modelo: "",
+  placa: "",
+  ano: "",
+  delegacia: "",
+  uf: "",
+  cidade: "",
+  dataBo: "",
+  numeroBo: "",
 };
 
-// Reducer
+// Reducer atualizado
 const reducer = (state, action) => {
   switch (action.type) {
     case "SET_VALUE":
       return { ...state, [action.field]: action.value };
-    case "SET_VEICULO":
-      return { ...state, veiculo: { ...state.veiculo, [action.field]: action.value } };
-    case "SET_DELEGACIA":
-      return { ...state, delegacia: { ...state.delegacia, [action.field]: action.value } };
     case "RESET":
       return initialState;
     default:
@@ -40,50 +49,51 @@ const Sinistro = () => {
   const [isEditing, setIsEditing] = useState(false);
   const api = useApi();
   const { id: processoId } = useParams();
-  const [dataLoaded, setDataLoaded] = useState(false)
-  // Buscar dados do sinistro ao carregar a página
+  const dataLoadedRef = useRef(false);
+
+  // Buscar os dados do sinistro
   useEffect(() => {
-    if (processoId && !dataLoaded) { // Carregar dados apenas uma vez
+    if (processoId && !dataLoadedRef.current) {
       const fetchSinistro = async () => {
         try {
           const response = await api.get(`/sinistro/${processoId}`);
-          const { dataSinistro, numero, dataAbertura, tipoDeVeiculo, delegacia } = response.data;
+          if (response.data) {
+            const sinistro = response.data;
+            
+            // Preenchendo os dados do sinistro
+            dispatch({ type: "SET_VALUE", field: "dataSinistro", value: sinistro.dataSinistro || "" });
+            dispatch({ type: "SET_VALUE", field: "numero", value: sinistro.numero || "" });
+            dispatch({ type: "SET_VALUE", field: "dataAbertura", value: sinistro.dataAbertura || "" });
   
-          // Atualiza o estado com os dados obtidos da API, caso ainda não tenha sido feito
-          dispatch({ type: "SET_VALUE", field: "dataSinistro", value: dataSinistro || "" });
-          dispatch({ type: "SET_VALUE", field: "numero", value: numero || "" });
-          dispatch({ type: "SET_VALUE", field: "dataAbertura", value: dataAbertura || "" });
+            // Preenchendo os dados do veículo
+            if (sinistro.tipoDeVeiculo) {
+              dispatch({ type: "SET_VALUE", field: "marca", value: sinistro.tipoDeVeiculo.marca || "" });
+              dispatch({ type: "SET_VALUE", field: "modelo", value: sinistro.tipoDeVeiculo.modelo || "" });
+              dispatch({ type: "SET_VALUE", field: "placa", value: sinistro.tipoDeVeiculo.placa || "" });
+              dispatch({ type: "SET_VALUE", field: "ano", value: sinistro.tipoDeVeiculo.ano || "" });
+            }
   
-          // Atualiza o estado do veículo, caso exista
-          if (tipoDeVeiculo) {
-            dispatch({ type: "SET_VEICULO", field: "marca", value: tipoDeVeiculo.marca || "" });
-            dispatch({ type: "SET_VEICULO", field: "modelo", value: tipoDeVeiculo.modelo || "" });
-            dispatch({ type: "SET_VEICULO", field: "placa", value: tipoDeVeiculo.placa || "" });
-            dispatch({ type: "SET_VEICULO", field: "ano", value: tipoDeVeiculo.ano || "" });
+            // Preenchendo os dados da delegacia
+            if (sinistro.delegacia) {
+              dispatch({ type: "SET_VALUE", field: "delegacia", value: sinistro.delegacia.delegacia || "" });
+              dispatch({ type: "SET_VALUE", field: "uf", value: sinistro.delegacia.uf || "" });
+              dispatch({ type: "SET_VALUE", field: "cidade", value: sinistro.delegacia.cidade || "" });
+              dispatch({ type: "SET_VALUE", field: "dataBo", value: sinistro.delegacia.dataBo || "" });
+              dispatch({ type: "SET_VALUE", field: "numeroBo", value: sinistro.delegacia.numeroBo || "" });
+            }
           }
-  
-          // Atualiza o estado da delegacia, caso exista
-          if (delegacia) {
-            dispatch({ type: "SET_DELEGACIA", field: "delegacia", value: delegacia.delegacia || "" });
-            dispatch({ type: "SET_DELEGACIA", field: "uf", value: delegacia.uf || "" });
-            dispatch({ type: "SET_DELEGACIA", field: "cidade", value: delegacia.cidade || "" });
-            dispatch({ type: "SET_DELEGACIA", field: "dataBo", value: delegacia.dataBo || "" });
-            dispatch({ type: "SET_DELEGACIA", field: "numeroBo", value: delegacia.numeroBo || "" });
-          }
-  
-          setDataLoaded(true); // Marca os dados como carregados
+          dataLoadedRef.current = true;
         } catch (error) {
           console.error("Erro ao buscar sinistro:", error);
         }
       };
-  
       fetchSinistro();
     }
-  }, [processoId, api, dispatch, dataLoaded])
+  }, [processoId, api]);
+
   // Salvar ou atualizar sinistro
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!state.dataSinistro || !state.numero || !state.dataAbertura) {
       Swal.fire({
         icon: "warning",
@@ -94,14 +104,9 @@ const Sinistro = () => {
     }
 
     try {
-      const dadosComProcessoId = {
-        dataSinistro: state.dataSinistro,
-        numero: state.numero,
-        dataAbertura: state.dataAbertura,
-        processoId,
-        tipoDeVeiculo: state.veiculo,
-        delegacia: state.delegacia,
-      };
+      const dadosComProcessoId = { ...state, processoId };
+
+      console.log("Enviando payload:", dadosComProcessoId);
 
       if (processoId) {
         await api.put(`/sinistro/${processoId}`, dadosComProcessoId);
@@ -139,10 +144,12 @@ const Sinistro = () => {
               <Input
                 type="date"
                 value={state.dataSinistro}
-                onChange={(e) => dispatch({ type: "SET_VALUE", field: "dataSinistro", value: e.target.value })}
+                onChange={(e) =>
+                  dispatch({ type: "SET_VALUE", field: "dataSinistro", value: e.target.value })
+                }
               />
             ) : (
-              <p>{state.dataSinistro}</p>
+              <p>{state.dataSinistro || "Não informado"}</p>
             )}
           </InfoBox>
 
@@ -152,10 +159,12 @@ const Sinistro = () => {
               <Input
                 type="text"
                 value={state.numero}
-                onChange={(e) => dispatch({ type: "SET_VALUE", field: "numero", value: e.target.value })}
+                onChange={(e) =>
+                  dispatch({ type: "SET_VALUE", field: "numero", value: e.target.value })
+                }
               />
             ) : (
-              <p>{state.numero}</p>
+              <p>{state.numero || "Não informado"}</p>
             )}
           </InfoBox>
 
@@ -165,52 +174,65 @@ const Sinistro = () => {
               <Input
                 type="date"
                 value={state.dataAbertura}
-                onChange={(e) => dispatch({ type: "SET_VALUE", field: "dataAbertura", value: e.target.value })}
+                onChange={(e) =>
+                  dispatch({ type: "SET_VALUE", field: "dataAbertura", value: e.target.value })
+                }
               />
             ) : (
-              <p>{state.dataAbertura}</p>
+              <p>{state.dataAbertura || "Não informado"}</p>
             )}
           </InfoBox>
         </DivSinistroInput>
       </InfoContainer>
-            {isEditing ? (
 
-              <Veiculo
-              inputs={[
-                { name: "marca", label: "Marca do Veículo", type: "text" },
-                { name: "modelo", label: "Modelo", type: "text" },
-                { name: "placa", label: "Placa", type: "text" },
-          { name: "ano", label: "Ano", type: "number" },
-        ]}
-        values={state.veiculo}
-        onChange={(e) => dispatch({ type: "SET_VEICULO", field: e.target.name, value: e.target.value })}
-        
+      {/* Dados do Veículo */}
+      {isEditing ? (
+        <Veiculo
+          inputs={[
+            { name: "marca", label: "Marca do Veículo", type: "text" },
+            { name: "modelo", label: "Modelo", type: "text" },
+            { name: "placa", label: "Placa", type: "text" },
+            { name: "ano", label: "Ano", type: "number" },
+          ]}
+          values={state}
+          onChange={(e) =>
+            dispatch({ type: "SET_VALUE", field: e.target.name, value: e.target.value })
+          }
         />
-      ):(
-        <p>{state.veiculo.marca}</p>
+      ) : (
+        <p>{state?.marca ? `Veículo: ${state?.marca} - ${state?.modelo}` : "Não informado"}</p>
       )}
 
+      {/* Dados da Delegacia */}
       {isEditing ? (
-
-        <Delegacia values={state.delegacia} 
-        inputs={[
-          { name: "delegacia", label: "Delegacia", type: "text" },
-          { name: "uf", label: "UF", type: "text" },
-          { name: "cidade", label: "Cidade", type: "text" },
-        { name: "dataBo", label: "Data do BO", type: "date" },
-        { name: "numeroBo", label: "Número do BO", type: "text" },
-      ]}
-      onChange={(e) => dispatch({ type: "SET_DELEGACIA", field: e.target.name, value: e.target.value })}
-      />
-    ) : (
-      <div>
-    <p>Delegacia: {state.delegacia.delegacia}</p>
-    <p>UF: {state.delegacia.uf}</p>
-    <p>Cidade: {state.delegacia.cidade}</p>
-    <p>Data do BO: {state.delegacia.dataBo}</p>
-    <p>Número do BO: {state.delegacia.numeroBo}</p>
-  </div>
-    )}
+        <Delegacia
+          inputs={[
+            { name: "delegacia", label: "Delegacia", type: "text" },
+            { name: "uf", label: "UF", type: "text" },
+            { name: "cidade", label: "Cidade", type: "text" },
+            { name: "dataBo", label: "Data do BO", type: "date" },
+            { name: "numeroBo", label: "Número do BO", type: "text" },
+          ]}
+          values={{
+            delegacia: state.delegacia || "",
+            uf: state.uf || "",
+            cidade: state.cidade || "",
+            dataBo: state.dataBo || "",
+            numeroBo: state.numeroBo || "",
+          }}
+          onChange={(e) =>
+            dispatch({ type: "SET_VALUE", field: e.target.name, value: e.target.value })
+          }
+        />
+      ) : (
+        <div>
+        <p>{state?.sinistro?.delegacia?.delegacia || "Não informado"}</p>
+<p>{state?.sinistro?.delegacia?.uf || "Não informado"}</p>
+<p>{state?.sinistro?.delegacia?.cidade || "Não informado"}</p>
+<p>{state?.sinistro?.delegacia?.dataBo || "Não informado"}</p>
+<p>{state?.sinistro?.delegacia?.numeroBo || "Não informado"}</p>
+        </div>
+      )}
 
       {isEditing ? (
         <Button onClick={handleSubmit}>Salvar</Button>
