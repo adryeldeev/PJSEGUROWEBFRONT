@@ -21,7 +21,7 @@ const TiposDeVeiculo = () => {
 
   const [selectedItem, setSelectedItem] = useState(null);
 const [dados, setDados] = useState({
-  nome:'',
+  ano:'',
   placa:'',
   marca:'',
  modelo:''
@@ -63,7 +63,7 @@ const [dados, setDados] = useState({
 
   const columns = [
     { header: "ID", accessor: "id" },
-    { header: "Nome", accessor: "nome" },
+    { header: "Ano", accessor: "ano" },
     { header: "Marca", accessor: "marca" },
     { header: "Placa", accessor: "placa" },
     { header: "Modelo", accessor: "modelo" }
@@ -76,7 +76,7 @@ const handleChange = (e) =>{
   const handleEdit = async (row) => {
     setSelectedItem(row);
     setDados({
-      nome: row.nome || "",
+      ano: row.ano || "",
       placa: row.placa || "",
       marca: row.marca || "",
       modelo: row.modelo || "",
@@ -200,13 +200,13 @@ const handleChange = (e) =>{
             <ModalCadastroContent>
             <form onSubmit={handleSave}>
   <DivInputs>
-    <label htmlFor="nome">Nome *</label>
+    <label htmlFor="ano">Ano *</label>
     <InputField
-      id="nome"
-      name="nome"
+      id="ano"
+      name="ano"
       type="text"
-      placeholder="Digite o nome do veículo"
-      value={dados.nome} // Controlado pelo estado
+      placeholder="Digite o ano do veículo"
+      value={dados.ano} // Controlado pelo estado
       onChange={handleChange} // Atualiza o estado
     />
   </DivInputs>

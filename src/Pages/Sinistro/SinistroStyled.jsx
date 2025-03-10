@@ -73,3 +73,33 @@ export const DivSinistroInput = styled.div`
 display:flex;
 
 `
+
+
+export const InfoBoxWrapper = styled.div`
+  display: flex;
+
+  background-color: #f8f8f8;
+  padding: 10px;
+  border-radius: 8px;
+  min-width: 200px;
+  flex: 1;
+  text-align: and;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  /* Em telas menores, os itens ficarão empilhados */
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+export const InfoBoxItem = styled.p`
+  gap:5px;
+  flex: 1 1 200px; /* Garante que os itens fiquem lado a lado, mínimo de 200px */
+  min-width: 200px;
+  background: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+`;

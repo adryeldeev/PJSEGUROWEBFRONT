@@ -8,6 +8,8 @@ import {
   Label,
   Title,
   DivSinistroInput,
+  InfoBoxWrapper,
+  InfoBoxItem,
 } from "./SinistroStyled";
 import { Button } from "@mui/material";
 import Swal from "sweetalert2";
@@ -194,13 +196,30 @@ const Sinistro = () => {
             { name: "placa", label: "Placa", type: "text" },
             { name: "ano", label: "Ano", type: "number" },
           ]}
-          values={state}
+          values={{
+            marca: state.marca || "",
+            modelo: state.modelo || "",
+            placa: state.placa || "",
+            ano: state.ano || "",
+          }}
           onChange={(e) =>
             dispatch({ type: "SET_VALUE", field: e.target.name, value: e.target.value })
           }
         />
       ) : (
-        <p>{state?.marca ? `Veículo: ${state?.marca} - ${state?.modelo}` : "Não informado"}</p>
+      
+
+        <InfoBoxWrapper>
+          <Label>Marca</Label>
+        <InfoBoxItem>{state?.marca || "Não informado"}</InfoBoxItem>
+          <Label>Modelo</Label>
+        <InfoBoxItem>{state?.modelo || "Não informado"}</InfoBoxItem>
+          <Label>Placa</Label>
+        <InfoBoxItem>{state?.placa || "Não informado"}</InfoBoxItem>
+          <Label>Ano</Label>
+        <InfoBoxItem>{state?.ano || "Não informado"}</InfoBoxItem>
+      </InfoBoxWrapper>
+      
       )}
 
       {/* Dados da Delegacia */}
@@ -225,13 +244,13 @@ const Sinistro = () => {
           }
         />
       ) : (
-        <div>
-        <p>{state?.sinistro?.delegacia?.delegacia || "Não informado"}</p>
-<p>{state?.sinistro?.delegacia?.uf || "Não informado"}</p>
-<p>{state?.sinistro?.delegacia?.cidade || "Não informado"}</p>
-<p>{state?.sinistro?.delegacia?.dataBo || "Não informado"}</p>
-<p>{state?.sinistro?.delegacia?.numeroBo || "Não informado"}</p>
-        </div>
+        <InfoBoxWrapper>
+        <InfoBoxItem>{state?.delegacia || "Não informado"}</InfoBoxItem>
+        <InfoBoxItem>{state?.uf || "Não informado"}</InfoBoxItem>
+        <InfoBoxItem>{state?.cidade || "Não informado"}</InfoBoxItem>
+        <InfoBoxItem>{state?.dataBo || "Não informado"}</InfoBoxItem>
+        <InfoBoxItem>{state?.numeroBo || "Não informado"}</InfoBoxItem>
+      </InfoBoxWrapper>
       )}
 
       {isEditing ? (
