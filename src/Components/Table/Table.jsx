@@ -6,7 +6,23 @@ import { MdBlock } from "react-icons/md";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { ApiUrlContext } from "../../Context/ApiUrlProvider";
-import {  ButtonDelete, ButtonEdit, ButtonsDiv, DivContentTable, Link, TableContent, TableWrapper, Tbody, Td, Th, Thead, Title, Tr, PageInfo, NavigationButton } from "./TableStyled";
+import { 
+  ButtonDelete, 
+  ButtonEdit, 
+  ButtonsDiv, 
+  DivContentTable, 
+  Link, 
+  TableContent, 
+  TableWrapper, 
+  Tbody, 
+  Td, 
+  Th, 
+  Thead, 
+  Title, 
+  Tr, 
+  PageInfo, 
+  NavigationButton 
+} from "./TableStyled";
 
 const getFileIcon = (url) => {
   if (!url) return <MdBlock style={{ color: "red", fontSize: "20px" }} />;
@@ -43,16 +59,16 @@ const Table = ({ columns, data, onEdit, onDelete, back, next, currentPage, total
           </Thead>
           <Tbody>
             {data.map((row) => (
-              <Tr key={row.id}> {/* Use row.id como chave */}
+              <Tr key={row.id}>
                 {columns.map((column) => (
-                  <Td key={column.accessor}>
-                    {[
-                      "activo",
-                      "pendencia",
-                      "muda_fase",
-                      "concedido",
-                      "obrigatorio",
-                      "entregue",
+                  <Td key={column.accessor} data-label={column.header}>
+                    {[ 
+                      "activo", 
+                      "pendencia", 
+                      "muda_fase", 
+                      "concedido", 
+                      "obrigatorio", 
+                      "entregue"
                     ].includes(column.accessor) ? (
                       row[column.accessor] ? (
                         <CiCircleCheck style={{ color: "green", fontSize: "15px" }} />
@@ -81,7 +97,7 @@ const Table = ({ columns, data, onEdit, onDelete, back, next, currentPage, total
                   </Td>
                 ))}
                 {(onEdit || onDelete) && (
-                  <Td>
+                  <Td data-label="Ações">
                     {onEdit && <ButtonEdit onClick={() => onEdit(row)}>Editar</ButtonEdit>}
                     {onDelete && <ButtonDelete onClick={() => onDelete(row)}>Deletar</ButtonDelete>}
                   </Td>

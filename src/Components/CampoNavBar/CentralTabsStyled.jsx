@@ -9,6 +9,11 @@ export  const TabsContainer = styled.div`
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  @media (max-width: 768px) {
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  }
 `;
 
 export const TabButton = styled.button`

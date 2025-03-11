@@ -151,7 +151,7 @@ const Sinistro = () => {
                 }
               />
             ) : (
-              <p>{state.dataSinistro || "Não informado"}</p>
+              <p>{new Date(state.dataSinistro).toLocaleDateString() || "Não informado"}</p>
             )}
           </InfoBox>
 
@@ -181,7 +181,7 @@ const Sinistro = () => {
                 }
               />
             ) : (
-              <p>{state.dataAbertura || "Não informado"}</p>
+              <p>{new Date(state.dataAbertura).toLocaleDateString() || "Não informado"}</p>
             )}
           </InfoBox>
         </DivSinistroInput>
@@ -210,14 +210,22 @@ const Sinistro = () => {
       
 
         <InfoBoxWrapper>
+        <div>
           <Label>Marca</Label>
-        <InfoBoxItem>{state?.marca || "Não informado"}</InfoBoxItem>
+          <InfoBoxItem>{state?.marca || "Não informado"}</InfoBoxItem>
+        </div>
+        <div>
           <Label>Modelo</Label>
-        <InfoBoxItem>{state?.modelo || "Não informado"}</InfoBoxItem>
+          <InfoBoxItem>{state?.modelo || "Não informado"}</InfoBoxItem>
+        </div>
+        <div>
           <Label>Placa</Label>
-        <InfoBoxItem>{state?.placa || "Não informado"}</InfoBoxItem>
+          <InfoBoxItem>{state?.placa || "Não informado"}</InfoBoxItem>
+        </div>
+        <div>
           <Label>Ano</Label>
-        <InfoBoxItem>{state?.ano || "Não informado"}</InfoBoxItem>
+          <InfoBoxItem>{state?.ano || "Não informado"}</InfoBoxItem>
+        </div>
       </InfoBoxWrapper>
       
       )}
@@ -245,11 +253,26 @@ const Sinistro = () => {
         />
       ) : (
         <InfoBoxWrapper>
-        <InfoBoxItem>{state?.delegacia || "Não informado"}</InfoBoxItem>
-        <InfoBoxItem>{state?.uf || "Não informado"}</InfoBoxItem>
-        <InfoBoxItem>{state?.cidade || "Não informado"}</InfoBoxItem>
-        <InfoBoxItem>{state?.dataBo || "Não informado"}</InfoBoxItem>
-        <InfoBoxItem>{state?.numeroBo || "Não informado"}</InfoBoxItem>
+        <div>
+          <Label>Delegacia</Label>
+          <InfoBoxItem>{state?.delegacia || "Não informado"}</InfoBoxItem>
+        </div>
+        <div>
+          <Label>UF</Label>
+          <InfoBoxItem>{state?.uf || "Não informado"}</InfoBoxItem>
+        </div>
+        <div>
+          <Label>Cidade</Label>
+          <InfoBoxItem>{state?.cidade || "Não informado"}</InfoBoxItem>
+        </div>
+        <div>
+          <Label>Data do BO</Label>
+          <InfoBoxItem>{new Date(state.dataBo).toLocaleDateString() || "Não informado"}</InfoBoxItem>
+        </div>
+        <div>
+          <Label>Número do BO</Label>
+          <InfoBoxItem>{state?.numeroBo || "Não informado"}</InfoBoxItem>
+        </div>
       </InfoBoxWrapper>
       )}
 
