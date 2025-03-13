@@ -18,7 +18,9 @@ const initialState = {
 
   seguradora: { id: "", nome: null },
   vitima: { endereco: "", email: "", telefone01: "" },
+  tipoProcesso: { id: "", nome: null },
   seguradoras: [], // Estado para as seguradoras
+  tiposDeProcessos: [],
   prioridades: [], // Estado para as prioridades
 };
 
@@ -29,6 +31,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         ...action.payload,
+       
       };
     case "SET_FIELD":
       return { ...state, [action.field]: action.value };
@@ -42,6 +45,8 @@ const reducer = (state, action) => {
       };
     case "SET_SEGURADORAS":
       return { ...state, seguradoras: action.payload }; // Atualiza as seguradoras
+    case "SET_TIPOSDEPROCESSO":
+      return { ...state, tiposDeProcessos: action.payload || [] };
 
     case "SET_PRIORIDADES":
       return { ...state, prioridades: action.payload }; // Atualiza as prioridades
@@ -63,7 +68,7 @@ const Informacoes = () => {
       const fetchProcesso = async () => {
         try {
           const response = await api.get(`/processos/${processoId}`);
-           console.log("Dados do processo recebidos:", response.data);
+          console.log("Dados do processo recebidos:", response.data);
           dispatch({ type: "SET_PROCESSO", payload: response.data });
           dataLoadedRef.current = true; // Marca como carregado
         } catch (error) {
@@ -89,6 +94,21 @@ const Informacoes = () => {
     };
     fetchSeguradoras();
   }, []);
+  useEffect(() => {
+    const fetchTipoProcesso = async () => {
+      try {
+        const response = await api.get("/tiposProcesso");
+        console.log("Resposta da API:", response.data); // Debug
+        dispatch({
+          type: "SET_TIPOSDEPROCESSO",
+          payload: response.data || [],
+        });
+      } catch (error) {
+        console.error("Erro ao buscar tipos de processo:", error);
+      }
+    };
+    fetchTipoProcesso();
+  }, []);
 
   // Buscar fases do processo
 
@@ -112,8 +132,8 @@ const Informacoes = () => {
   const handleSave = async () => {
     try {
       const payload = {
-        tipoProcessoId: state.tipoProcessoId
-          ? parseInt(state.tipoProcessoId, 10)
+        tipoProcessoId: state.tipoProcesso?.id
+          ? parseInt(state.tipoProcesso.id, 10)
           : undefined,
         faseProcessoId: state.faseProcessoId
           ? parseInt(state.faseProcessoId, 10)
@@ -124,6 +144,7 @@ const Informacoes = () => {
         seguradoraId: state.seguradora?.id
           ? parseInt(state.seguradora.id, 10)
           : undefined,
+
         vitimaId: state.vitima?.id,
         vitima: {
           email: state.vitima?.email,
@@ -131,15 +152,23 @@ const Informacoes = () => {
           endereco: state.vitima?.endereco,
         },
         seguradora: {
-          id: state.seguradora?.id ? parseInt(state.seguradora.id, 10) : undefined,
+          id: state.seguradora?.id
+            ? parseInt(state.seguradora.id, 10)
+            : undefined,
           nome: state.seguradora?.nome || "",
         },
+        tipoProcesso: {
+          id: state.tipoProcesso?.id
+            ? parseInt(state.tipoProcesso.id, 10)
+            : undefined,
+          nome: state.tipoProcesso?.nome || "",
+        },
       };
-  
+
       console.log("Payload enviado para API:", payload);
-  
+
       await api.put(`/updateProcessos/${processoId}`, payload);
-  
+
       setIsEditing(false);
     } catch (error) {
       console.error("Erro ao atualizar processo:", error);
@@ -194,46 +223,84 @@ const Informacoes = () => {
 
         <InfoBox>
           <Label>Data de Cadastro</Label>
-          
-            <Value>{new Date(state.criado_em).toLocaleDateString()}</Value>
-        
+
+          <Value>{new Date(state.criado_em).toLocaleDateString()}</Value>
         </InfoBox>
 
         <InfoBox>
           <Label>Seguradora</Label>
           {isEditing ? (
             <select
-            value={state.seguradora?.id || ""}
-            onChange={(e) => {
-              const selectedId = e.target.value;
-              const selectedSeguradora = state.seguradoras.find(
-                (s) => s.id.toString() === selectedId
-              );
-          
-              dispatch({
-                type: "SET_NESTED_FIELD",
-                field: "seguradora",
-                subField: "id",
-                value: selectedId,
-              });
-          
-              dispatch({
-                type: "SET_NESTED_FIELD",
-                field: "seguradora",
-                subField: "nome",
-                value: selectedSeguradora ? selectedSeguradora.nome : "",
-              });
-            }}
-          >
-            <option value="">Selecione uma seguradora</option>
-            {state.seguradoras.map((seguradora) => (
-              <option key={seguradora.id} value={seguradora.id}>
-                {seguradora.nome}
-              </option>
-            ))}
-          </select>
+              value={state.seguradora?.id || ""}
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedSeguradora = state.seguradoras.find(
+                  (s) => s.id.toString() === selectedId
+                );
+
+                dispatch({
+                  type: "SET_NESTED_FIELD",
+                  field: "seguradora",
+                  subField: "id",
+                  value: selectedId,
+                });
+
+                dispatch({
+                  type: "SET_NESTED_FIELD",
+                  field: "seguradora",
+                  subField: "nome",
+                  value: selectedSeguradora ? selectedSeguradora.nome : "",
+                });
+              }}
+            >
+              <option value="">Selecione uma seguradora</option>
+              {state.seguradoras.map((seguradora) => (
+                <option key={seguradora.id} value={seguradora.id}>
+                  {seguradora.nome}
+                </option>
+              ))}
+            </select>
           ) : (
-            <Value>{state.seguradora?.nome || 'Não informado'}</Value>
+            <Value>{state.seguradora?.nome || "Não informado"}</Value>
+          )}
+        </InfoBox>
+        <InfoBox>
+          <Label>Tipo de processo</Label>
+          {isEditing ? (
+            <select
+              value={state.tipoProcesso?.id || ""}
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedTipoDeProcesso = state.tiposDeProcessos?.find(
+                  (s) => s.id.toString() === selectedId
+                );
+
+                dispatch({
+                  type: "SET_NESTED_FIELD",
+                  field: "tipoProcesso",
+                  subField: "id",
+                  value: selectedId,
+                });
+
+                dispatch({
+                  type: "SET_NESTED_FIELD",
+                  field: "tipoProcesso",
+                  subField: "nome",
+                  value: selectedTipoDeProcesso
+                    ? selectedTipoDeProcesso.nome
+                    : "",
+                });
+              }}
+            >
+              <option value="">Selecione um tipo de processo</option>
+              {state.tiposDeProcessos?.map((tipoDeProcesso) => (
+                <option key={tipoDeProcesso.id} value={tipoDeProcesso.id}>
+                  {tipoDeProcesso.nome}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <Value>{state.tipoProcesso?.nome || "Não informado"}</Value>
           )}
         </InfoBox>
 
