@@ -163,6 +163,12 @@ const Informacoes = () => {
             : undefined,
           nome: state.tipoProcesso?.nome || "",
         },
+        prioridade: {
+          id: state.prioridade?.id
+            ? parseInt(state.prioridade.id, 10)
+            : undefined,
+          nome: state.prioridade?.nome || "",
+        },
       };
 
       console.log("Payload enviado para API:", payload);
@@ -193,14 +199,26 @@ const Informacoes = () => {
           {isEditing ? (
             <select
               value={state.prioridade.id}
-              onChange={(e) =>
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedPrioridade = state.prioridades.find(
+                  (s) => s.id.toString() === selectedId
+                )
                 dispatch({
                   type: "SET_NESTED_FIELD",
                   field: "prioridade",
                   subField: "id",
                   value: e.target.value,
                 })
-              }
+
+                dispatch({
+                  type: "SET_NESTED_FIELD",
+                  field: "prioridade",
+                  subField: "nome",
+                  value: selectedPrioridade ? selectedPrioridade.nome : "",
+                });
+              }}
+            
             >
               {state.prioridades.map((prioridade) => (
                 <option key={prioridade.id} value={prioridade.id}>

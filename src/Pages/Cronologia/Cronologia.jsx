@@ -103,7 +103,7 @@ const Cronologia = () => {
     try {
       if (novoAndamento.id) {
         // Atualizar andamento existente
-        await api.put(`/updateAndamento/${novoAndamento.id}`, andamentoData);
+        await api.put(`/updateProcessos/${processoId}}`, andamentoData);
         Swal.fire({
           icon: "success",
           title: "Sucesso!",
