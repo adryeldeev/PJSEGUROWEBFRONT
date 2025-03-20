@@ -12,12 +12,13 @@ import {
 import Toggle from "../../Components/Toggle/Toggle";
 import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import InputField from "../../Components/Inputs/Inputs";
+import Swal from "sweetalert2";
 
 const CadastrarPrioridades = () => {
   const api = useApi();
   const navigate = useNavigate();
   const nomeRef = useRef();
-  const [isChecked, setIsChecked] = useState(false); 
+  const [isChecked, setIsChecked] = useState(false);
   const [corFundo, setCorFundo] = useState("#ffffff"); // Estado inicial para a cor de fundo
   const [corFonte, setCorFonte] = useState("#000000"); // Estado inicial para a cor da fonte
 
@@ -42,10 +43,18 @@ const CadastrarPrioridades = () => {
     try {
       const response = await api.post("/createPrioridade", data);
       if (response.status === 200 || response.status === 201) {
-        alert("Cadastro realizado com sucesso!");
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso",
+          text: "Nova prioridade cadastrada com sucesso!",
+        });
         navigate("/prioridades");
       } else {
-        alert("Erro ao cadastrar a prioridade. Tente novamente.");
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "Erro ao cadastrar prioridade. Tente novamente mais tarde.",
+        });
       }
     } catch (error) {
       console.error("Erro ao enviar os dados:", error);
@@ -63,7 +72,7 @@ const CadastrarPrioridades = () => {
               id="nome"
               type="text"
               placeholder="Digite o nome da  prioridade"
-              ref={nomeRef} 
+              ref={nomeRef}
             />
           </DivInputs>
           <DivInputs>
@@ -87,15 +96,15 @@ const CadastrarPrioridades = () => {
           <DivInputs>
             <Toggle
               id="toggle-1"
-              checked={isChecked} 
+              checked={isChecked}
               label="Ativo"
-              onClick={handleToggle} 
+              onClick={handleToggle}
             />
           </DivInputs>
           <ButtonPlus
             text="Salvar"
             Icon={IoIosCheckmarkCircleOutline}
-            onClick={handleSubmit} 
+            onClick={handleSubmit}
           />
         </Form>
       </InfoCadastro>

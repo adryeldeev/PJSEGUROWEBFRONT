@@ -1,17 +1,22 @@
-import { ContentCadastro, InfoCadastro, Form, DivInputs } from './CadastroTDPStyled';
-import InputField from '../../Components/Inputs/Inputs';
-import ButtonPlus from '../../Components/ButtonPlus/ButtonPlus';
-import Toggle from '../../Components/Toggle/Toggle';
+import {
+  ContentCadastro,
+  InfoCadastro,
+  Form,
+  DivInputs,
+} from "./CadastroTDPStyled";
+import InputField from "../../Components/Inputs/Inputs";
+import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
+import Toggle from "../../Components/Toggle/Toggle";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { useRef, useState } from 'react';
-import useApi from '../../Api/Api';
-import { useNavigate } from 'react-router-dom'; // Importa o hook para navegação
-
+import { useRef, useState } from "react";
+import useApi from "../../Api/Api";
+import { useNavigate } from "react-router-dom"; // Importa o hook para navegação
+import Swal from "sweetalert2";
 const CadastroTipoDeProcesso = () => {
   const api = useApi();
   const navigate = useNavigate(); // Inicializa o hook de navegação
   const nomeRef = useRef();
-  const [isChecked, setIsChecked] = useState(false); 
+  const [isChecked, setIsChecked] = useState(false);
 
   const handleToggle = () => {
     setIsChecked((prev) => !prev);
@@ -24,23 +29,31 @@ const CadastroTipoDeProcesso = () => {
       activo: isChecked,
     };
 
-    if (data.nome === "" ) {
-      alert('Preencha o nome do tipo de processo.');
+    if (data.nome === "") {
+      alert("Preencha o nome do tipo de processo.");
       return;
     }
 
-      console.log(data)
+    console.log(data);
     try {
-      const response = await api.post('/createTipoProcesso', data); 
-      if (response.status === 200 || response.status === 201) { 
-        alert('Cadastro realizado com sucesso!');
-        navigate('/tipos-de-processo'); 
+      const response = await api.post("/createTipoProcesso", data);
+      if (response.status === 200 || response.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Novo tipo de processo cadastrado com sucesso!",
+        });
+        navigate("/tipos-de-processo");
       } else {
-        alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "Falha ao cadastrar o tipo de processo. Tente novamente mais tarde.",
+        });
       }
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
-      alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+      console.error("Erro ao enviar os dados:", error);
+      alert("Erro ao cadastrar tipo de processo. Tente novamente.");
     }
   };
 

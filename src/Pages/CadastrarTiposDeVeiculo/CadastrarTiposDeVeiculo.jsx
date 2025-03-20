@@ -1,46 +1,57 @@
-import InputField from '../../Components/Inputs/Inputs';
-import ButtonPlus from '../../Components/ButtonPlus/ButtonPlus';
+import InputField from "../../Components/Inputs/Inputs";
+import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { useRef } from 'react';
-import useApi from '../../Api/Api';
-import { useNavigate } from 'react-router-dom'; // Importa o hook para navegação
-import { ContentCadastro, DivInputs, Form, InfoCadastro } from './CadastrarTiposDeVeiculosStyled';
-
+import { useRef } from "react";
+import useApi from "../../Api/Api";
+import { useNavigate } from "react-router-dom"; // Importa o hook para navegação
+import {
+  ContentCadastro,
+  DivInputs,
+  Form,
+  InfoCadastro,
+} from "./CadastrarTiposDeVeiculosStyled";
+import Swal from "sweetalert2";
 const CadastrarTiposDeVeiculo = () => {
   const api = useApi();
   const navigate = useNavigate(); // Inicializa o hook de navegação
-  const nomeRef = useRef();
+  const anoRef = useRef();
   const placaRef = useRef();
   const marcaRef = useRef();
   const modeloRef = useRef();
 
-;
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
-      nome: nomeRef.current?.value.trim(),
+      ano:  anoRef.current?.value.trim(),
       placa: placaRef.current?.value.trim(),
       modelo: modeloRef.current?.value.trim(),
       marca: marcaRef.current?.value.trim(),
     };
 
-    if (data.nome === "" || !data.marca || !data.placa || !data.modelo  ) {
-      alert('Preencha o nome do tipo de processo.');
+    if ( !data.marca || !data.placa || !data.modelo || !data.ano) {
+      alert("Preencha os campos todos os campos.");
       return;
     }
 
     try {
-      const response = await api.post('/createTiposDeVeiculo', data); 
-      if (response.status === 200 || response.status === 201) { 
-        alert('Cadastro realizado com sucesso!');
-        navigate('/tipos-de-veiculo'); 
+      const response = await api.post("/createTiposDeVeiculo", data);
+      if (response.status === 200 || response.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Novo tipo de veículo cadastrado com sucesso!",
+        });
+        navigate("/tipos-de-veiculo");
       } else {
-        alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          tet: "Erro ao cadastrar novo tipo de veículo. Tente novamente mais tarde.",
+        });
       }
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
-      alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+      console.error("Erro ao enviar os dados:", error);
+      alert("Erro ao cadastrar tipo de processo. Tente novamente.");
     }
   };
 
@@ -49,30 +60,12 @@ const CadastrarTiposDeVeiculo = () => {
       <InfoCadastro>
         <Form>
           <DivInputs>
-            <label htmlFor="nome">Nome *</label>
+            <label htmlFor="modelo">Modelo *</label>
             <InputField
-              id="nome"
-              type="text"
-              placeholder="Digite o nome do veículo"
-              ref={nomeRef} 
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="nome">Placa *</label>
-            <InputField
-              id="nome"
-              type="text"
-              placeholder="Digite a placa do veículo"
-              ref={placaRef} 
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="nome">Modelo *</label>
-            <InputField
-              id="nome"
+              id="modelo"
               type="text"
               placeholder="Digite o modelo do veículo"
-              ref={modeloRef} 
+              ref={modeloRef}
             />
           </DivInputs>
           <DivInputs>
@@ -81,10 +74,29 @@ const CadastrarTiposDeVeiculo = () => {
               id="marca"
               type="text"
               placeholder="Digite a marca do veículo"
-              ref={marcaRef} 
+              ref={marcaRef}
             />
           </DivInputs>
           
+          <DivInputs>
+            <label htmlFor="placa">Placa *</label>
+            <InputField
+              id="placa"
+              type="text"
+              placeholder="Digite a placa do veículo"
+              ref={placaRef}
+            />
+          </DivInputs>
+          <DivInputs>
+            <label htmlFor="nome">Ano *</label>
+            <InputField
+              id="ano"
+              type="text"
+              placeholder="Digite o ano do veículo"
+              ref={placaRef}
+            />
+          </DivInputs>
+
           <ButtonPlus
             text="Salvar"
             Icon={IoIosCheckmarkCircleOutline}

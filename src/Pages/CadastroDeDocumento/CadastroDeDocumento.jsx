@@ -1,11 +1,16 @@
-import InputField from '../../Components/Inputs/Inputs';
-import ButtonPlus from '../../Components/ButtonPlus/ButtonPlus';
+import InputField from "../../Components/Inputs/Inputs";
+import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { useRef, useState } from 'react';
-import useApi from '../../Api/Api';
-import { useNavigate } from 'react-router-dom';
-import { ContentCadastroDeDocumento, DivInputs, Form, InfoCadastro } from './CadastroDeDocumentoStyled';
-
+import { useRef, useState } from "react";
+import useApi from "../../Api/Api";
+import { useNavigate } from "react-router-dom";
+import {
+  ContentCadastroDeDocumento,
+  DivInputs,
+  Form,
+  InfoCadastro,
+} from "./CadastroDeDocumentoStyled";
+import Swal from "sweetalert2";
 const CadastrarDocumento = () => {
   const api = useApi();
   const navigate = useNavigate();
@@ -21,31 +26,39 @@ const CadastrarDocumento = () => {
     const descricao = descricaoRef.current?.value.trim();
 
     if (!tipo || !descricao || !file) {
-      alert('Preencha todos os campos obrigatórios.');
+      alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
     try {
       // Criar objeto FormData
       const formData = new FormData();
-      formData.append('tipo', tipo);
-      formData.append('descricao', descricao);
-      formData.append('file', file);
+      formData.append("tipo", tipo);
+      formData.append("descricao", descricao);
+      formData.append("file", file);
 
       // Enviar dados ao backend
-      const response = await api.post('/uploadDocumento', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await api.post("/uploadDocumento", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.status === 200 || response.status === 201) {
-        alert('Documento cadastrado com sucesso!');
-        navigate('/documentos');
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Novo documento cadastrado com sucesso!",
+        });
+        navigate("/documentos");
       } else {
-        alert('Erro ao cadastrar o documento. Tente novamente.');
+        Swal.fire({
+          icon: "error",
+          title: "Erro",
+          text: "Falha ao cadastrar o documento. Tente novamente mais tarde.",
+        });
       }
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
-      alert('Erro ao cadastrar o documento. Tente novamente.');
+      console.error("Erro ao enviar os dados:", error);
+      alert("Erro ao cadastrar o documento. Tente novamente.");
     }
   };
 
@@ -75,7 +88,7 @@ const CadastrarDocumento = () => {
               ref={descricaoRef}
             />
           </DivInputs>
-         
+
           <DivInputs>
             <label htmlFor="upload">Upload Documento *</label>
             <InputField
@@ -85,10 +98,7 @@ const CadastrarDocumento = () => {
               onChange={handleFileChange}
             />
           </DivInputs>
-          <ButtonPlus
-            text="Salvar"
-            Icon={IoIosCheckmarkCircleOutline}
-          />
+          <ButtonPlus text="Salvar" Icon={IoIosCheckmarkCircleOutline} />
         </Form>
       </InfoCadastro>
     </ContentCadastroDeDocumento>

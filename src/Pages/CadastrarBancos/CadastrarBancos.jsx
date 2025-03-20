@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import useApi from '../../Api/Api';
 import { useNavigate } from 'react-router-dom'; // Importa o hook para navegação
 import { ContentCadastroBanco, DivInputs, Form, InfoCadastro } from './CadastrarBancosStyled';
-
+import Swal from "sweetalert2";
 const CadastrarBancos = () => {
   const api = useApi();
   const navigate = useNavigate(); 
@@ -31,7 +31,11 @@ const CadastrarBancos = () => {
     try {
       const response = await api.post('/createBanco', data); 
       if (response.status === 200 || response.status === 201) { 
-        alert('Cadastro realizado com sucesso!');
+          Swal.fire({
+                  icon: "success",
+                  title: "Sucesso!",
+                  text: "Novo banco cadastrado com sucesso!",
+                });
         navigate('/bancos'); 
       } else {
         alert('Erro ao cadastrar tipo de processo. Tente novamente.');

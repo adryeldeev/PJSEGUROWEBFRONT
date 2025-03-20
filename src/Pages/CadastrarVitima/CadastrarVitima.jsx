@@ -3,7 +3,7 @@ import { ContentCadastrarVitima, DivForm, DivInputs, Form, Input, Titulo } from 
 import useApi from '../../Api/Api';
 import Toggle from '../../Components/Toggle/Toggle';
 import { useNavigate } from 'react-router-dom';
-
+import Swal from "sweetalert2";
 const initialState = {
   nome: '',
   cpf: '',
@@ -89,10 +89,18 @@ const CadastrarVitima = () => {
       const response = await api.post('/createVitima', state);
       if (response.status === 200 || response.status === 201) {
         dispatch({ type: 'SET_VITIMA_ID', value: response.data.id });
-        alert('Vítima cadastrada com sucesso!');
+          Swal.fire({
+                  icon: "success",
+                  title: "Sucesso!",
+                  text: "Nova vítima cadastrada com sucesso!",
+                });
         navigate('/vitimas');
       } else {
-        alert('Erro ao cadastrar vítima.');
+          Swal.fire({
+                  icon: "error",
+                  title: "Erro",
+                  text: "Falha ao cadastrar vítima. Tente novamente mais tarde.",
+                });
       }
     } catch (error) {
       console.error('Erro ao cadastrar vítima:', error);

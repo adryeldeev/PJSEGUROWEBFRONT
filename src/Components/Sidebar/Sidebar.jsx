@@ -3,7 +3,7 @@ import { StyledNavLink, SidebarContainer, SidebarHeader } from "./SidebarStyled"
 
 const Sidebar = ({ isOpen, isDesktop }) => {
   const menuItems = [
-    { path: "/", label: "Início" },
+    { path: "/", label: "Dashboard" },
     { path: '/processos', label: 'Processos' },
     { path: "/fase-do-processos", label: "Fases dos processos" },
     { path: "/bancos", label: "Bancos" },

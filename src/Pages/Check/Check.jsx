@@ -4,6 +4,7 @@ import Toggle from "../../Components/Toggle/Toggle";
 import useApi from "../../Api/Api";
 import { useParams } from "react-router-dom";
 import Table from "../../Components/Table/Table";
+import Swal from "sweetalert2";
 
 const CheckList = () => {
   const { id: processoId } = useParams();
@@ -84,9 +85,19 @@ const CheckList = () => {
         response = await api.put(`/updateChecklist/${editingId}`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Check list atualizao com sucesso!",
+        });
       } else {
         response = await api.post("/createChecklist", formData, {
           headers: { "Content-Type": "multipart/form-data" },
+        });
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Check list cadastrado com sucesso!",
         });
       }
 

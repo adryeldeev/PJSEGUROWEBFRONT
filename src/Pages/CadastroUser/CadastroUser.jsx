@@ -9,6 +9,7 @@ import InputField from "../../Components/Inputs/Inputs";
 import { ButtonArrow, ContentCadastro, DivInput, FormCadastro, ImgLogo, InfoCadastro, TituloCadastro } from "./CadastroUserStyled";
 import Button from "../../Components/Button/Button";
 import axios from "axios";
+import Swal from 'sweetalert2'
 
 const CadastroUser = () => {
   const navigate = useNavigate();
@@ -44,6 +45,11 @@ const CadastroUser = () => {
           "Content-Type": "application/json",
         },
       });
+       Swal.fire({
+                icon: "success",
+                title: "Sucesso!",
+                text: "Usúario cadastrado com sucesso!",
+              });
   
       if (response.status === 201) {
         navigate("/login"); // Redireciona após sucesso

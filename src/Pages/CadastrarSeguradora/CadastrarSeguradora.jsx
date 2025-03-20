@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import useApi from '../../Api/Api';
 import { useNavigate } from 'react-router-dom'; // Importa o hook para navegação
 import { ContentCadastroSeguradora, DivInputs, Form, InfoCadastro } from './CadastrarSeguradoraStyled';
-
+import Swal from 'sweetalert2'
 const CadastrarSeguradora = () => {
   const api = useApi();
   const navigate = useNavigate(); 
@@ -29,10 +29,19 @@ const CadastrarSeguradora = () => {
     try {
       const response = await api.post('/createSeguradora', data); 
       if (response.status === 200 || response.status === 201) { 
-        alert('Cadastro realizado com sucesso!');
+        Swal.fire({
+          icon:'success',
+          title:'Sucesso!',
+          text:'Nova Seguradora cadadstrada com sucesso!'
+        })
         navigate('/seguradoras'); 
       } else {
-        alert('Erro ao cadastrar o nome da seguradora. Tente novamente.');
+       
+        Swal.fire({
+          icon:'error',
+          title:'Erro',
+          text:'Erro ao cadastrar seguradora. Tente novamente mais tarde.'
+        })
       }
     } catch (error) {
       console.error('Erro ao enviar os dados:', error);

@@ -38,7 +38,7 @@ const Veiculo = ({ inputs, onChange, values  }) => {
 
         <DivSpans>
           <span>
-            Caso não encontre, crie uma nova vítima no menu:{" "}
+            Caso não encontre, crie um novo tipo de veículo no menu:{" "}
             <strong>Ações &gt; Criar veículo</strong>
           </span>
         </DivSpans>
