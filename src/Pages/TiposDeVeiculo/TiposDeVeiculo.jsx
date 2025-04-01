@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { ContentTiposDeVeiculos, DivInfo, ModalBackDro, ModalCadastroContainer, ModalCadastroContent, TituloText } from "./TiposDeVeiculoStyled";
+import {
+  ContentTiposDeVeiculos,
+  DivInfo,
+  ModalBackDro,
+  ModalCadastroContainer,
+  ModalCadastroContent,
+  TituloText,
+} from "./TiposDeVeiculoStyled";
 import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import Table from "../../Components/Table/Table";
 import { AiOutlinePlusCircle } from "react-icons/ai";
@@ -8,7 +15,7 @@ import { useUI } from "../../Context/UiContext";
 import { DivInputs } from "../CadastroTipoDeProcesso/CadastroTDPStyled";
 import useApi from "../../Api/Api";
 import InputField from "../../Components/Inputs/Inputs";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 const TiposDeVeiculo = () => {
   const api = useApi();
@@ -20,43 +27,45 @@ const TiposDeVeiculo = () => {
   const [loading, setLoading] = useState(false);
 
   const [selectedItem, setSelectedItem] = useState(null);
-const [dados, setDados] = useState({
-  ano:'',
-  placa:'',
-  marca:'',
- modelo:''
-})
- 
+  const [dados, setDados] = useState({
+    ano: "",
+    placa: "",
+    marca: "",
+    modelo: "",
+  });
+
   const [currentPage, setCurrentPage] = useState(0); // Página atual
   const itemsPerPage = 4; // Número de itens por página
 
   const fetchData = async () => {
     try {
-        setLoading(true);
-  
-        // Faz a requisição para a API
-        const response = await api.get("/tiposDeVeiculos");
-  
-        // Logando a resposta para ver o que está sendo retornado
-        console.log(response.data);
-  
-        // Acessa a propriedade "tipoVeiculos" no objeto retornado
-        const { tipoVeiculos } = response.data;
-  
-        // Verifica se é uma lista válida
-        if (Array.isArray(tipoVeiculos)) {
-            setTiposDeVeiculo(tipoVeiculos);
-        } else {
-            throw new Error("A resposta da API não contém uma lista de tipoVeiculos válida.");
-        }
+      setLoading(true);
+
+      // Faz a requisição para a API
+      const response = await api.get("/tiposDeVeiculos");
+
+      // Logando a resposta para ver o que está sendo retornado
+      console.log(response.data);
+
+      // Acessa a propriedade "tipoVeiculos" no objeto retornado
+      const { tipoVeiculos } = response.data;
+
+      // Verifica se é uma lista válida
+      if (Array.isArray(tipoVeiculos)) {
+        setTiposDeVeiculo(tipoVeiculos);
+      } else {
+        throw new Error(
+          "A resposta da API não contém uma lista de tipoVeiculos válida."
+        );
+      }
     } catch (err) {
-        console.error("Erro ao buscar tipoVeiculos:", err);
-        setError("Falha ao carregar os dados.");
+      console.error("Erro ao buscar tipoVeiculos:", err);
+      setError("Falha ao carregar os dados.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
-  
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -66,13 +75,13 @@ const [dados, setDados] = useState({
     { header: "Ano", accessor: "ano" },
     { header: "Marca", accessor: "marca" },
     { header: "Placa", accessor: "placa" },
-    { header: "Modelo", accessor: "modelo" }
+    { header: "Modelo", accessor: "modelo" },
   ];
-const handleChange = (e) =>{
-  const { name , value} = e.target
-  setDados({...dados, [name]: value });
-}
- 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setDados({ ...dados, [name]: value });
+  };
+
   const handleEdit = async (row) => {
     setSelectedItem(row);
     setDados({
@@ -80,20 +89,26 @@ const handleChange = (e) =>{
       placa: row.placa || "",
       marca: row.marca || "",
       modelo: row.modelo || "",
-    })
+    });
 
-    
     openModal();
-  };;
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await api.put(`/updateTiposDeVeiculo/${selectedItem.id}`, dados);
-      
+      const response = await api.put(
+        `/updateTiposDeVeiculo/${selectedItem.id}`,
+        dados
+      );
+
       if (response.status === 200 || response.status === 201) {
-        Swal.fire("Atualizado!", "Tipo de veículo atualizado com sucesso.", "success");
+        Swal.fire(
+          "Atualizado!",
+          "Tipo de veículo atualizado com sucesso.",
+          "success"
+        );
         // Atualiza a lista local com os novos dados
         const updatedData = tiposDeVeiculo.map((item) =>
           item.id === selectedItem.id ? { ...item, ...dados } : item
@@ -117,26 +132,42 @@ const handleChange = (e) =>{
       showCancelButton: true,
       confirmButtonText: "Sim, excluir",
       cancelButtonText: "Cancelar",
-      reverseButtons: true
+      reverseButtons: true,
     });
-  
+
     if (result.isConfirmed) {
       try {
         const response = await api.delete(`/deleteTiposDeVeiculo/${row.id}`);
-        
+
         if (response.status === 200) {
-          Swal.fire("Excluído!", "Tipo de veículo excluído com sucesso.", "success");
+          Swal.fire(
+            "Excluído!",
+            "Tipo de veículo excluído com sucesso.",
+            "success"
+          );
           await fetchData(); // Recarrega a lista após a exclusão
         } else {
           Swal.fire("Erro!", "Erro ao excluir tipo de veículo.", "error");
         }
       } catch (error) {
-        console.error("Erro ao excluir tipo de veículo:", error);
-        Swal.fire("Erro!", "Erro ao excluir tipo de veículo.", "error");
+        if (error.response) {
+          console.log("Detalhes do erro:", error.response);
+        }
+        if (error.response && error.response.status === 400) {
+          const errorMessage =
+            error.response.data?.message || "Erro ao excluir tipo de veículo.";
+          Swal.fire("Erro!", errorMessage, "error");
+        } else {
+          Swal.fire({
+            title: "Erro!",
+            text: "Erro ao excluir tipo de veiculo.",
+            icon: "error",
+            confirmButtonColor: "#d33",
+          });
+        }
       }
     }
   };
-
 
   const handleNavigate = () => {
     navigate("/cadastrar-tipo-de-veiculo");
@@ -157,8 +188,11 @@ const handleChange = (e) =>{
   const totalPages = Math.ceil(tiposDeVeiculo.length / itemsPerPage);
   // Dados da página atual
   const paginatedData = Array.isArray(tiposDeVeiculo)
-  ? tiposDeVeiculo.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage)
-  : [];
+    ? tiposDeVeiculo.slice(
+        currentPage * itemsPerPage,
+        (currentPage + 1) * itemsPerPage
+      )
+    : [];
   if (loading) {
     return <p>Carregando...</p>;
   }
@@ -178,80 +212,80 @@ const handleChange = (e) =>{
           onClick={handleNavigate}
         />
       </DivInfo>
-     {loading ? (
-      <p>Carregando...</p>
-     ): error ? (
-      <p>{error}</p>
-     ) :(
-       <Table
-       columns={columns}
-       data={paginatedData} // Dados da página atual
-       onEdit={handleEdit}
-       onDelete={handleDelete}
-       back={handleBackPage} // Função de voltar
-       next={handleNextPage} // Função de avançar
-       currentPage={currentPage}
-       totalPages={totalPages}
-       />
+      {loading ? (
+        <p>Carregando...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : (
+        <Table
+          columns={columns}
+          data={paginatedData} // Dados da página atual
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          back={handleBackPage} // Função de voltar
+          next={handleNextPage} // Função de avançar
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       )}
       {isOpen && (
         <ModalBackDro onClick={closeModal}>
           <ModalCadastroContainer onClick={(e) => e.stopPropagation()}>
             <ModalCadastroContent>
-            <form onSubmit={handleSave}>
-  <DivInputs>
-    <label htmlFor="ano">Ano *</label>
-    <InputField
-      id="ano"
-      name="ano"
-      type="text"
-      placeholder="Digite o ano do veículo"
-      value={dados.ano} // Controlado pelo estado
-      onChange={handleChange} // Atualiza o estado
-    />
-  </DivInputs>
+              <form onSubmit={handleSave}>
+                <DivInputs>
+                  <label htmlFor="ano">Ano *</label>
+                  <InputField
+                    id="ano"
+                    name="ano"
+                    type="text"
+                    placeholder="Digite o ano do veículo"
+                    value={dados.ano} // Controlado pelo estado
+                    onChange={handleChange} // Atualiza o estado
+                  />
+                </DivInputs>
 
-  <DivInputs>
-    <label htmlFor="placa">Placa *</label>
-    <InputField
-      id="placa"
-      name="placa"
-      type="text"
-      placeholder="Digite a placa do veículo"
-      value={dados.placa}
-      onChange={handleChange}
-    />
-  </DivInputs>
+                <DivInputs>
+                  <label htmlFor="placa">Placa *</label>
+                  <InputField
+                    id="placa"
+                    name="placa"
+                    type="text"
+                    placeholder="Digite a placa do veículo"
+                    value={dados.placa}
+                    onChange={handleChange}
+                  />
+                </DivInputs>
 
-  <DivInputs>
-    <label htmlFor="marca">Marca *</label>
-    <InputField
-      id="marca"
-      name="marca"
-      type="text"
-      placeholder="Digite a marca do veículo"
-      value={dados.marca}
-      onChange={handleChange}
-    />
-  </DivInputs>
+                <DivInputs>
+                  <label htmlFor="marca">Marca *</label>
+                  <InputField
+                    id="marca"
+                    name="marca"
+                    type="text"
+                    placeholder="Digite a marca do veículo"
+                    value={dados.marca}
+                    onChange={handleChange}
+                  />
+                </DivInputs>
 
-  <DivInputs>
-    <label htmlFor="modelo">Modelo *</label>
-    <InputField
-  id="modelo"
-  name="modelo" // Adiciona o atributo "name"
-  type="text"
-  placeholder="Digite o modelo do veículo"
-  value={dados.modelo}
-  onChange={handleChange}
-/>
-  </DivInputs>
+                <DivInputs>
+                  <label htmlFor="modelo">Modelo *</label>
+                  <InputField
+                    id="modelo"
+                    name="modelo" // Adiciona o atributo "name"
+                    type="text"
+                    placeholder="Digite o modelo do veículo"
+                    value={dados.modelo}
+                    onChange={handleChange}
+                  />
+                </DivInputs>
 
-  <button type="submit">Salvar</button>
-  <button type="button" onClick={closeModal}>
-    Cancelar
-  </button>
-</form>
+                <button type="submit">Salvar</button>
+                <button type="button" onClick={closeModal}>
+                  Cancelar
+                </button>
+              </form>
             </ModalCadastroContent>
           </ModalCadastroContainer>
         </ModalBackDro>

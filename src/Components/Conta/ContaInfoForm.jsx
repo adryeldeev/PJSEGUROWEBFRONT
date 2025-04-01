@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -9,25 +9,62 @@ import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Select from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
-
-const states = [
-  { value: 'alabama', label: 'Alabama' },
-  { value: 'new-york', label: 'Nova York' },
-  { value: 'san-francisco', label: 'São Francisco' },
-  { value: 'los-angeles', label: 'Los Angeles' },
-];
+import useApi from "../../Api/Api";
+import { useAuth } from "../../Context/AuthProvider";
 
 export function AccountDetailsForm() {
+  const api = useApi();
+  const auth = useAuth();
+  const [formData, setFormData] = useState({
+    primeiroNome: '',
+    email: ''
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        if (auth.user?.id) {
+          const response = await api.get(`user/${auth.user.id}`);
+          setFormData({
+            primeiroNome: response.data.username || '',
+            email: response.data.email || ''
+          });
+        }
+      } catch (error) {
+        console.error('Erro ao carregar os dados do usuário:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [auth.user?.id, api]);
+
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await api.put(`user/${auth.user.id}`, formData);
+      alert('Dados atualizados com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar os dados:', error);
+      alert('Erro ao atualizar os dados.');
+    }
+  };
+
+  if (loading) return <p>Carregando...</p>;
+
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader subheader="As informações podem ser editadas" title="Perfil" />
         <Divider />
@@ -36,43 +73,27 @@ export function AccountDetailsForm() {
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required>
                 <InputLabel htmlFor="primeiroNome">Primeiro nome</InputLabel>
-                <OutlinedInput id="primeiroNome" defaultValue="Sofia" label="Primeiro nome" name="primeiroNome" />
+                <OutlinedInput
+                  id="primeiroNome"
+                  value={formData.primeiroNome}
+                  onChange={handleChange}
+                  label="Primeiro nome"
+                  name="primeiroNome"
+                />
               </FormControl>
             </Grid>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth required>
-                <InputLabel htmlFor="ultimoNome">Último nome</InputLabel>
-                <OutlinedInput id="ultimoNome" defaultValue="Rivers" label="Último nome" name="ultimoNome" />
-              </FormControl>
-            </Grid>
+
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required>
                 <InputLabel htmlFor="email">Email</InputLabel>
-                <OutlinedInput id="email" defaultValue="sofia@devias.io" label="Email" name="email" />
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="telefone">Número de telefone</InputLabel>
-                <OutlinedInput id="telefone" label="Número de telefone" name="telefone" type="tel" />
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="estado">Estado</InputLabel>
-                <Select id="estado" defaultValue="new-york" label="Estado" name="estado" variant="outlined">
-                  {states.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="cidade">Cidade</InputLabel>
-                <OutlinedInput id="cidade" label="Cidade" name="cidade" />
+                <OutlinedInput
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  label="Email"
+                  name="email"
+                />
               </FormControl>
             </Grid>
           </Grid>

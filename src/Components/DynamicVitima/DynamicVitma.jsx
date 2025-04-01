@@ -16,9 +16,7 @@ const DynamicVitma = ({ onNavigate, onClick }) => {
           <Button onClick={toggleDropDown}>Ações</Button>
           {dropDownVisible && (
             <UlList>
-              <Li>
-                <BtnToggle onClick={onNavigate}>Encontrar Vítima</BtnToggle>
-              </Li>
+              
               <Li>
                 <BtnToggle onClick={onClick}>Criar Vítima</BtnToggle>
               </Li>
@@ -28,9 +26,7 @@ const DynamicVitma = ({ onNavigate, onClick }) => {
       </DivConteudo>
 
       <DivSpans>
-        <span>
-          Selecione uma vítima no menu: <strong>Ações > Encontrar Vítima</strong>
-        </span>
+      
         <span>
           Caso não encontre, crie uma nova vítima no menu:{" "}
           <strong>Ações > Criar Vítima</strong>

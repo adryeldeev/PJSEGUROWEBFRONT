@@ -136,18 +136,23 @@ const handleChange = (e) =>{
             });
 
             await fetchData();
-          } else {
+          }
+           else {
             throw new Error("Erro ao deletar banco.");
           }
         } catch (error) {
-          console.error("Erro ao excluir banco:", error);
-          Swal.fire({
-            title: "Erro!",
-            text: "Erro ao excluir banco.",
-            icon: "error",
-            confirmButtonColor: "#d33",
-          });
-        }
+          
+          if (error.response && error.response.status === 400) {
+              Swal.fire("Erro!", error.response.data.message || "Erro ao excluir banco.", "error");
+          } else {
+              Swal.fire({
+                  title: "Erro!",
+                  text: "Erro ao excluir banco.",
+                  icon: "error",
+                  confirmButtonColor: "#d33",
+              });
+          }
+      }
       }
     });
   }

@@ -145,15 +145,19 @@ const handleChange = (e) =>{
             confirmButtonText: "OK"
           });
         }
-      } catch (error) {
-        console.error("Erro ao excluir cliente:", error);
-        Swal.fire({
-          title: "Erro!",
-          text: "Erro ao excluir cliente.",
-          icon: "error",
-          confirmButtonText: "OK"
-        });
-      }
+     } catch (error) {
+               console.error("Erro ao excluir seguradora:", error);
+               if (error.response && error.response.status === 400) {
+                   Swal.fire("Erro!", error.response.data.message || "Erro ao excluir seguradora.", "error");
+               } else {
+                   Swal.fire({
+                       title: "Erro!",
+                       text: "Erro ao excluir seguradora.",
+                       icon: "error",
+                       confirmButtonColor: "#d33",
+                   });
+               }
+           }
     }
   };
 

@@ -15,13 +15,14 @@ import useApi from "../../Api/Api";
 const initialState = {
   faseProcesso: { nome: null },
   prioridade: { id: "", nome: null },
-
   seguradora: { id: "", nome: null },
   vitima: { endereco: "", email: "", telefone01: "" },
   tipoProcesso: { id: "", nome: null },
+  banco: { id: "", nome: null },
   seguradoras: [], // Estado para as seguradoras
   tiposDeProcessos: [],
-  prioridades: [], // Estado para as prioridades
+  prioridades: [],
+  bancos: [],
 };
 
 // Reducer para gerenciar o estado do formulário
@@ -31,7 +32,6 @@ const reducer = (state, action) => {
       return {
         ...state,
         ...action.payload,
-       
       };
     case "SET_FIELD":
       return { ...state, [action.field]: action.value };
@@ -49,7 +49,9 @@ const reducer = (state, action) => {
       return { ...state, tiposDeProcessos: action.payload || [] };
 
     case "SET_PRIORIDADES":
-      return { ...state, prioridades: action.payload }; // Atualiza as prioridades
+      return { ...state, prioridades: action.payload };
+    case "SET_BANCOS":
+      return { ...state, bancos: action.payload };
     default:
       return state;
   }
@@ -98,7 +100,7 @@ const Informacoes = () => {
     const fetchTipoProcesso = async () => {
       try {
         const response = await api.get("/tiposProcesso");
-        console.log("Resposta da API:", response.data); // Debug
+
         dispatch({
           type: "SET_TIPOSDEPROCESSO",
           payload: response.data || [],
@@ -109,8 +111,6 @@ const Informacoes = () => {
     };
     fetchTipoProcesso();
   }, []);
-
-  // Buscar fases do processo
 
   // Buscar prioridades
   useEffect(() => {
@@ -128,8 +128,24 @@ const Informacoes = () => {
     fetchPrioridades();
   }, []);
 
+  useEffect(() => {
+    const fetchBancos = async () => {
+      try {
+        const response = await api.get("/bancos");
+        dispatch({
+          type: "SET_BANCOS",
+          payload: response.data.bancos || [],
+        });
+      } catch (error) {
+        console.error("Erro ao buscar bancos:", error);
+      }
+    };
+    fetchBancos();
+  }, []);
+
   // Atualizar processo no backend
   const handleSave = async () => {
+    console.log("Banco antes de salvar:", state.banco);
     try {
       const payload = {
         tipoProcessoId: state.tipoProcesso?.id
@@ -144,34 +160,42 @@ const Informacoes = () => {
         seguradoraId: state.seguradora?.id
           ? parseInt(state.seguradora.id, 10)
           : undefined,
-
         vitimaId: state.vitima?.id,
         vitima: {
-          email: state.vitima?.email,
-          telefone01: state.vitima?.telefone01,
-          endereco: state.vitima?.endereco,
+          email: state.vitima?.email || "",
+          telefone01: state.vitima?.telefone01 || "",
+          endereco: state.vitima?.endereco || "",
         },
-        seguradora: {
-          id: state.seguradora?.id
-            ? parseInt(state.seguradora.id, 10)
-            : undefined,
-          nome: state.seguradora?.nome || "",
-        },
-        tipoProcesso: {
-          id: state.tipoProcesso?.id
-            ? parseInt(state.tipoProcesso.id, 10)
-            : undefined,
-          nome: state.tipoProcesso?.nome || "",
-        },
-        prioridade: {
-          id: state.prioridade?.id
-            ? parseInt(state.prioridade.id, 10)
-            : undefined,
-          nome: state.prioridade?.nome || "",
-        },
+        seguradora: state.seguradora?.id
+          ? {
+              id: parseInt(state.seguradora.id, 10),
+              nome: state.seguradora.nome || "",
+            }
+          : undefined,
+        tipoProcesso: state.tipoProcesso?.id
+          ? {
+              id: parseInt(state.tipoProcesso.id, 10),
+              nome: state.tipoProcesso.nome || "",
+            }
+          : undefined,
+        bancoId: state.banco?.id,
+        banco: state.banco?.id
+          ? { id: parseInt(state.banco.id, 10), nome: state.banco.nome || "" }
+          : undefined, // Corrigido
+        prioridade: state.prioridade?.id
+          ? {
+              id: parseInt(state.prioridade.id, 10),
+              nome: state.prioridade.nome || "",
+            }
+          : undefined,
       };
 
       console.log("Payload enviado para API:", payload);
+
+      // Verifique se o processoId está definido
+      if (!processoId) {
+        throw new Error("processoId não foi encontrado.");
+      }
 
       await api.put(`/updateProcessos/${processoId}`, payload);
 
@@ -203,13 +227,13 @@ const Informacoes = () => {
                 const selectedId = e.target.value;
                 const selectedPrioridade = state.prioridades.find(
                   (s) => s.id.toString() === selectedId
-                )
+                );
                 dispatch({
                   type: "SET_NESTED_FIELD",
                   field: "prioridade",
                   subField: "id",
                   value: e.target.value,
-                })
+                });
 
                 dispatch({
                   type: "SET_NESTED_FIELD",
@@ -218,7 +242,6 @@ const Informacoes = () => {
                   value: selectedPrioridade ? selectedPrioridade.nome : "",
                 });
               }}
-            
             >
               {state.prioridades.map((prioridade) => (
                 <option key={prioridade.id} value={prioridade.id}>
@@ -319,6 +342,43 @@ const Informacoes = () => {
             </select>
           ) : (
             <Value>{state.tipoProcesso?.nome || "Não informado"}</Value>
+          )}
+        </InfoBox>
+        <InfoBox>
+          <Label>Banco</Label>
+          {isEditing ? (
+            <select
+              value={state.banco?.id || ""}
+              onChange={(e) => {
+                const selectedId = e.target.value;
+                const selectedBanco = state.bancos?.find(
+                  (s) => s.id.toString() === selectedId
+                );
+
+                dispatch({
+                  type: "SET_NESTED_FIELD",
+                  field: "banco",
+                  subField: "id",
+                  value: selectedId,
+                });
+
+                dispatch({
+                  type: "SET_NESTED_FIELD",
+                  field: "banco",
+                  subField: "nome",
+                  value: selectedBanco ? selectedBanco.nome : "",
+                });
+              }}
+            >
+              <option value="">Selecione um banco</option>
+              {state.bancos?.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nome}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <Value>{state.banco?.nome || "Não informado"}</Value>
           )}
         </InfoBox>
 
