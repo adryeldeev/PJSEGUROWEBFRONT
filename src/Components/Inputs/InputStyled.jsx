@@ -13,5 +13,7 @@ export const InputFieldStyle = styled.input`
     color: #000;
     padding: 10px 40px 20px 20px;
     }
-    
+    @media (min-width: 768px){
+    width:100%;
+    }
     `;

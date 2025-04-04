@@ -33,6 +33,8 @@ import CheckList from './Pages/Check/Check';
 import Cronologia from './Pages/Cronologia/Cronologia';
 import Processo from './Pages/Processo/Processo';
 import EditarVitima from './Pages/EditarVitima/EditarVitima';
+import { RequestPasswordReset } from './Pages/RequestPasswordReset/RequestPasswordReset';
+import { ResetPassword } from './Pages/ResetPassword/ResetPassword';
 
 function App() {
   return (
@@ -44,6 +46,8 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/cadastrarUser" element={<CadastroUser />} />
+            <Route path="/forgot-password" element={<RequestPasswordReset />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route element={<PrivateRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route path="/" element={<Dashboard />} />

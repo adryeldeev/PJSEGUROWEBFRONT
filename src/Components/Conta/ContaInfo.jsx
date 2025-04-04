@@ -15,21 +15,16 @@ export function AccountInfo() {
   const auth = useAuth();
   const [user, setUser] = useState({
     username: "",
-    profileImage: "", // Manter o profileImage no estado
+    profileImage: "", 
   });
-
-  // Use a flag para garantir que os dados do usuário não sejam carregados repetidamente
-  const [userLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (auth.user?.id && !userLoaded) {
+      if (auth.user?.id) {
         try {
           const response = await api.get(`user/${auth.user.id}`);
-          console.log("Dados do usuário:", response.data.user.profileImage);
           if (response.data?.user) {
-            setUser(response.data.user); // Atualizar o usuário com a resposta da API
-            setUserLoaded(true); // Definir que os dados foram carregados
+            setUser(response.data.user);
           }
         } catch (error) {
           console.error("Erro ao carregar os dados do usuário:", error);
@@ -38,22 +33,34 @@ export function AccountInfo() {
     };
 
     fetchUserData();
-  }, [auth.user?.id, api, userLoaded]);  // Agora depende de userLoaded para evitar chamadas repetidas
+  }, [auth.user?.id, api]);
 
   const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+   const file = event.target.files[0];
+  if (!file) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file); // Nome deve ser "file"
+
+
     try {
-      const response = await api.post("/uploadProfileImage", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      let response;
+      if (!user.profileImage) {
+        // Se o usuário não tem imagem, faz upload inicial
+        response = await api.post("/uploadProfileImage", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+        // Se já tem imagem, faz atualização
+        response = await api.put(`/updateUser/${auth.user.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log('dados da imagem : ', response)
+      }
 
       setUser((prevUser) => ({
         ...prevUser,
-        profileImage: response.data.user.profileImage, // Atualizar a imagem no estado
+        profileImage: response.data.user.profileImage,
       }));
 
       alert("Imagem atualizada com sucesso!");
@@ -62,19 +69,15 @@ export function AccountInfo() {
       alert("Erro ao atualizar a imagem.");
     }
   };
-  const baseUrl = "http://localhost:8000"; // Ou a URL do seu servidor
-  const profileImagePath = baseUrl + user.profileImage;
+
+  const baseUrl = "http://localhost:8000";
+  const profileImagePath = user.profileImage ? baseUrl + user.profileImage : "";
+
   return (
     <Card>
       <CardContent>
         <Stack spacing={2} sx={{ alignItems: "center" }}>
-          <div>
-            {/* Usando o caminho da imagem retornado pela API */}
-            <Avatar
-  src={`http://localhost:8000${user.profileImage}`}  // Concatenando a URL base com o caminho da imagem
-  sx={{ height: "80px", width: "80px" }}
-/>
-          </div>
+          <Avatar src={profileImagePath} sx={{ height: "80px", width: "80px" }} />
           <Stack spacing={1} sx={{ textAlign: "center" }}>
             <Typography variant="h5">{user?.username || "Usuário"}</Typography>
           </Stack>
@@ -91,7 +94,7 @@ export function AccountInfo() {
         />
         <label htmlFor="upload-avatar" style={{ width: "100%" }}>
           <Button fullWidth variant="text" component="span">
-            Carregar imagem
+            {user.profileImage ? "Atualizar imagem" : "Carregar imagem"}
           </Button>
         </label>
       </CardActions>

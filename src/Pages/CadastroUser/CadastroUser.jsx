@@ -3,13 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { AiOutlineMail } from "react-icons/ai";
 import { TbLockPassword } from "react-icons/tb";
-import { MoveLeft } from 'lucide-react';
 import Logo from "../../Img/Logo.webp";
 import InputField from "../../Components/Inputs/Inputs";
-import { ButtonArrow, ContentCadastro, DivInput, FormCadastro, ImgLogo, InfoCadastro, TituloCadastro } from "./CadastroUserStyled";
+import {
+  ButtonArrow,
+  ContentCadastro,
+  DivInput,
+  FormCadastro,
+  ImgLogo,
+  InfoCadastro,
+  TituloCadastro,
+  LinkLogin
+} from "./CadastroUserStyled";
 import Button from "../../Components/Button/Button";
 import axios from "axios";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 const CadastroUser = () => {
   const navigate = useNavigate();
@@ -31,26 +39,25 @@ const CadastroUser = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!formData.username || !formData.email || !formData.password || formData.password !== formData.confirmPassword) {
       setError("Todos os campos são obrigatórios e as senhas devem ser iguais");
       return;
     }
-  
+
     setError("");
-  
+
     try {
       const response = await axios.post("http://localhost:8000/createUser", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
-       Swal.fire({
-                icon: "success",
-                title: "Sucesso!",
-                text: "Usúario cadastrado com sucesso!",
-              });
-  
+
+      Swal.fire({
+        icon: "success",
+        title: "Sucesso!",
+        text: "Usuário cadastrado com sucesso!",
+      });
+
       if (response.status === 201) {
         navigate("/login"); // Redireciona após sucesso
       } else {
@@ -61,60 +68,57 @@ const CadastroUser = () => {
       setError(err.response?.data?.message || "Erro ao cadastrar usuário");
     }
   };
-  const handleNavigate=()=>{
-    navigate('/login')
-  }
+
   return (
     <ContentCadastro>
-      <ButtonArrow onClick={handleNavigate}><MoveLeft /></ButtonArrow>
       <InfoCadastro>
-        <ImgLogo src={Logo} />
-        <TituloCadastro>Cadastra-se</TituloCadastro>
+        <ImgLogo src={Logo} alt="Logo" />
+        <TituloCadastro>Cadastre-se</TituloCadastro>
         <FormCadastro onSubmit={handleSubmit}>
-  <DivInput>
-    <InputField
-      type="text"
-      placeholder="Digite seu nome"
-      id="username"
-      value={formData.username}
-      onChange={handleChange}
-    />
-   <FaRegUser />
-  </DivInput>
-  <DivInput>
-    <InputField
-      type="email"
-      placeholder="Digite seu e-mail"
-      id="email"
-      value={formData.email}
-      onChange={handleChange}
-    />
-    <AiOutlineMail />
-  </DivInput>
-  <DivInput>
-    <InputField
-      type="password"
-      placeholder="Digite sua senha"
-      id="password"
-      value={formData.password}
-      onChange={handleChange}
-    />
-   <TbLockPassword />
-  </DivInput>
-  <DivInput>
-    <InputField
-      type="password"
-      placeholder="Confirme sua senha"
-      id="confirmPassword"
-      value={formData.confirmPassword}
-      onChange={handleChange}
-    />
-   <TbLockPassword />
-  </DivInput>
-  {error && <p style={{ color: "red" }}>{error}</p>}
-  <Button text='Cadastrar' type="submit"/>
-</FormCadastro>
-
+          <DivInput>
+            <FaRegUser />
+            <InputField
+              type="text"
+              placeholder="Digite seu nome"
+              id="username"
+              value={formData.username}
+              onChange={handleChange}
+            />
+          </DivInput>
+          <DivInput>
+            <AiOutlineMail />
+            <InputField
+              type="email"
+              placeholder="Digite seu e-mail"
+              id="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </DivInput>
+          <DivInput>
+            <TbLockPassword />
+            <InputField
+              type="password"
+              placeholder="Digite sua senha"
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </DivInput>
+          <DivInput>
+            <TbLockPassword />
+            <InputField
+              type="password"
+              placeholder="Confirme sua senha"
+              id="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+          </DivInput>
+          {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
+          <Button text="Cadastrar" type="submit" />
+        </FormCadastro>
+        <LinkLogin href="/login">Já tenho uma conta? Login</LinkLogin>
       </InfoCadastro>
     </ContentCadastro>
   );

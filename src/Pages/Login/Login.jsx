@@ -9,21 +9,21 @@ import {
   InputLogin,
   LinkPassword,
   TitleLogin,
-  IconWrapper
-} from './LoginStyled';
+  IconWrapper,
+} from "./LoginStyled";
 import { AiOutlineMail } from "react-icons/ai";
 import { TbLockPassword } from "react-icons/tb";
-import Logo from '../../Img/Logo.webp';
-import { useState } from 'react';
-import { useAuth } from '../../Context/AuthProvider';
-import { NavLink } from 'react-router-dom';
+import Logo from "../../Img/Logo.webp";
+import { useState } from "react";
+import { useAuth } from "../../Context/AuthProvider";
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   const [input, setInput] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const auth = useAuth();
 
   const handleInputChange = (e) => {
@@ -36,7 +36,7 @@ const Login = () => {
 
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     if (input.email && input.password) {
       try {
         await auth.loginAction({
@@ -47,7 +47,7 @@ const Login = () => {
         setError(error.message);
       }
     } else {
-      setError('Por favor, preencha ambos os campos');
+      setError("Por favor, preencha ambos os campos");
     }
   };
 
@@ -83,10 +83,17 @@ const Login = () => {
           </DivInputsLogin>
           <ButtonLogin type="submit">Entrar</ButtonLogin>
         </FormLogin>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <DivLinks>
-          <LinkPassword>Não é cadastrado? <NavLink to="/cadastrarUser" style={{ color: '#ffc107' }}>Cadastrar-se aqui</NavLink></LinkPassword>
-          <LinkPassword>Esqueceu a senha?</LinkPassword>
+          <LinkPassword>
+            Não é cadastrado?{" "}
+            <NavLink to="/cadastrarUser" style={{ color: "#ffc107" }}>
+              Cadastrar-se aqui
+            </NavLink>
+          </LinkPassword>
+          <LinkPassword>
+            <NavLink to="/forgot-password">Esqueceu a senha?</NavLink>
+          </LinkPassword>
         </DivLinks>
       </InfoContentLogin>
     </ContentLogin>

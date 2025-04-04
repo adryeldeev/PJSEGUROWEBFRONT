@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -18,21 +18,23 @@ export function AccountDetailsForm() {
   const api = useApi();
   const auth = useAuth();
   const [formData, setFormData] = useState({
-    primeiroNome: '',
+    username: '',
     email: ''
   });
   const [loading, setLoading] = useState(true);
-
+const dataLoadedRef = useRef(false);
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        if (auth.user?.id) {
+        if (auth.user?.id && !dataLoadedRef.current) {
           const response = await api.get(`user/${auth.user.id}`);
+          console.log('Dados usuario :' , response.data)
           setFormData({
-            primeiroNome: response.data.username || '',
-            email: response.data.email || ''
+            username: response.data.user.username || '',
+            email: response.data.user.email || ''
           });
         }
+        dataLoadedRef.current = true;
       } catch (error) {
         console.error('Erro ao carregar os dados do usuário:', error);
       } finally {
@@ -53,7 +55,7 @@ export function AccountDetailsForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await api.put(`user/${auth.user.id}`, formData);
+      await api.put(`updateUser/${auth.user.id}`, formData);
       alert('Dados atualizados com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar os dados:', error);
@@ -72,13 +74,13 @@ export function AccountDetailsForm() {
           <Grid container spacing={3}>
             <Grid item md={6} xs={12}>
               <FormControl fullWidth required>
-                <InputLabel htmlFor="primeiroNome">Primeiro nome</InputLabel>
+                <InputLabel htmlFor="username">Primeiro nome</InputLabel>
                 <OutlinedInput
-                  id="primeiroNome"
-                  value={formData.primeiroNome}
+                  id="username"
+                  value={formData.username}
                   onChange={handleChange}
                   label="Primeiro nome"
-                  name="primeiroNome"
+                  name="username"
                 />
               </FormControl>
             </Grid>

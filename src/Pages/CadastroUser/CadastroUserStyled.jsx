@@ -1,71 +1,91 @@
 import styled from "styled-components";
 
 export const ContentCadastro = styled.div`
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-`;
-export const InfoCadastro = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin:0 auto;
-  justify-content:center;
-  align-items:center;
-   max-width: 100%;
-`;
-
-export const ImgLogo = styled.img`
-  width: 100px;
-  height: 100px;
-
-  @media (min-width: 768px) {
-    width: 120px;
-    height: 120px;
-  }
-
-  @media (min-width: 1024px) {
-    width: 150px;
-    height: 150px;
-  }
-`;
-
-export const TituloCadastro = styled.h2`
-  text-align: center;
-`;
-
-export const FormCadastro = styled.form`
-position:relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-   max-width: 100%;
-  margin-top: 20px;
+  height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
+`;
 
-`
+export const InfoCadastro = styled.div`
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+`;
+
+export const ImgLogo = styled.img`
+  width: 120px;
+  height: 120px;
+  margin-bottom: 10px;
+
+  @media (min-width: 768px) {
+    width: 140px;
+    height: 140px;
+  }
+`;
+
+export const TituloCadastro = styled.h2`
+  color: #333;
+  margin-bottom: 20px;
+`;
+
+export const FormCadastro = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 export const DivInput = styled.div`
   position: relative;
   width: 100%;
-  max-width: 400px; /* Tamanho máximo para o input */
   margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #ddd;
 
   svg {
-    position: absolute;
-    left: 10px;
-    top: 40%;
-    transform: translateY(-50%);
-    color: #ccc;
-    pointer-events: none; /* Garante que o clique não atinge o ícone */
+    color: #999;
+    margin-right: 10px;
+    font-size: 18px;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
   }
 `;
 
 export const ButtonArrow = styled.button`
-border:none;
-outline:none;
-width:100px;
-cursor:pointer;
-`
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+`;
 
+export const LinkLogin = styled.a`
+  display: block;
+  margin-top: 15px;
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
 
-
+  &:hover {
+    text-decoration: underline;
+  }
+`;
