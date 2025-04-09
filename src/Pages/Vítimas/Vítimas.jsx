@@ -20,7 +20,6 @@ const Vítimas = () => {
         { header: "ID", accessor: "id" },
         { header: "CPF", accessor: "cpf" },
         { header: "Nome", accessor: "nome" },
-        { header: "Consedido", accessor: "concedido" },
         { header: "Activo", accessor: "activo" }
      
       ];

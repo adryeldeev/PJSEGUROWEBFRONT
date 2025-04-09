@@ -36,41 +36,46 @@ export function AccountInfo() {
   }, [auth.user?.id, api]);
 
   const handleImageUpload = async (event) => {
-   const file = event.target.files[0];
-  if (!file) return;
-
-  const formData = new FormData();
-  formData.append("file", file); // Nome deve ser "file"
-
-
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("file", file); // Nome deve ser "file"
+  
     try {
       let response;
-      if (!user.profileImage) {
-        // Se o usuário não tem imagem, faz upload inicial
-        response = await api.post("/uploadProfileImage", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+  
+      // Decide entre upload inicial ou atualização
+      const endpoint = user.profileImage
+        ? `/updateUser/${auth.user.id}`
+        : "/uploadProfileImage";
+  
+      const method = user.profileImage ? "put" : "post";
+  
+      response = await api[method](endpoint, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+  
+      
+  
+      // Atualiza o estado do usuário com base na estrutura correta da resposta
+      if (response.data?.imagePath) {
+        setUser((prevUser) => ({
+          ...prevUser,
+          profileImage: response.data.imagePath, // Atualiza com o caminho correto
+        }));
+        alert("Imagem atualizada com sucesso!");
       } else {
-        // Se já tem imagem, faz atualização
-        response = await api.put(`/updateUser/${auth.user.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        console.log('dados da imagem : ', response)
+        console.error("A resposta da API não contém os dados esperados:", response.data);
+        alert("Erro ao atualizar a imagem. Tente novamente.");
       }
-
-      setUser((prevUser) => ({
-        ...prevUser,
-        profileImage: response.data.user.profileImage,
-      }));
-
-      alert("Imagem atualizada com sucesso!");
     } catch (error) {
       console.error("Erro ao atualizar a imagem:", error);
-      alert("Erro ao atualizar a imagem.");
+      alert("Erro ao atualizar a imagem. Verifique sua conexão ou tente novamente.");
     }
   };
 
-  const baseUrl = "http://localhost:8000";
+  const baseUrl = "https://my-fist-project-production.up.railway.app/";
   const profileImagePath = user.profileImage ? baseUrl + user.profileImage : "";
 
   return (

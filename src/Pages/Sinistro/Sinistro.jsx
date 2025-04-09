@@ -108,7 +108,7 @@ const Sinistro = () => {
     try {
       const dadosComProcessoId = { ...state, processoId };
 
-      console.log("Enviando payload:", dadosComProcessoId);
+   
 
       if (processoId) {
         await api.put(`/sinistro/${processoId}`, dadosComProcessoId);

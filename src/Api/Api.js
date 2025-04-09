@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useAuth } from '../Context/AuthProvider.jsx';
 
-export const urlApi = 'http://localhost:8000/';
+export const urlApi = 'https://my-fist-project-production.up.railway.app'; // URL base da API
 
 const useApi = () => {
   const { token } = useAuth(); // Obtém o token do contexto

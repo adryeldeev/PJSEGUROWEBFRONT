@@ -9,6 +9,10 @@ import {
   BotaoNovo,
   ButtonsDiv,
   PageInfo,
+  Tr,
+  Td,
+  Th,
+  Thead,
   NavigationButton,
 } from "./ProcessoStyled";
 import { GrChapterNext } from "react-icons/gr";
@@ -125,43 +129,41 @@ const Processo = () => {
       </Filtros>
 
       <TabelaWrapper>
-        <Tabela>
-          <thead>
-            <tr>
-              <th>ASL</th>
-              <th>Sinistro</th>
-              <th>Vítima</th>
-              <th>Tipo</th>
-              <th>Fase</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.map((processo) => (
-              <tr key={processo.id}>
-                <td>-</td>
-                <td>{processo.sinistro?.[0]?.numero || "N/A"}</td>
-                <td>
-                  <NavLink to={`/processo/${processo.id}/informacoes`}>
-                    {processo.vitima?.nome || "Nome da vítima não disponível"}
-                  </NavLink>
-                </td>
-                <td>{processo.tipoProcesso.nome}</td>
-                <td>
-                  <StatusBadge status={processo.faseProcesso.nome}>
-                    {processo.faseProcesso.nome}
-                  </StatusBadge>
-                </td>
-                <td>
-                  <BotaoAcoes onClick={() => handleDelete(processo.id)}>
-                    Deletar
-                  </BotaoAcoes>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Tabela>
-      </TabelaWrapper>
+  <Tabela>
+    <Thead>
+      <Tr>
+        <Th>ASL</Th>
+        <Th>Sinistro</Th>
+        <Th>Vítima</Th>
+        <Th>Tipo</Th>
+        <Th>Fase</Th>
+        <Th>Ações</Th>
+      </Tr>
+    </Thead>
+    <tbody>
+      {paginatedData.map((processo) => (
+        <Tr key={processo.id}>
+          <Td data-label="ASL">-</Td>
+          <Td data-label="Sinistro">{processo.sinistro?.numero || "N/A"}</Td>
+          <Td data-label="Vítima">
+            <NavLink to={`/processo/${processo.id}/informacoes`}>
+              {processo.vitima?.nome || "Nome da vítima não disponível"}
+            </NavLink>
+          </Td>
+          <Td data-label="Tipo">{processo.tipoProcesso.nome}</Td>
+          <Td data-label="Fase">
+            <StatusBadge status={processo.faseProcesso.nome}>
+              {processo.faseProcesso.nome}
+            </StatusBadge>
+          </Td>
+          <Td data-label="Ações">
+            <BotaoAcoes onClick={() => handleDelete(processo.id)}>Deletar</BotaoAcoes>
+          </Td>
+        </Tr>
+      ))}
+    </tbody>
+  </Tabela>
+</TabelaWrapper>
 
       <ButtonsDiv>
         <NavigationButton

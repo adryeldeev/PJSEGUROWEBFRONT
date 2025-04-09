@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
 
   const loginAction = async (data) => {
     try {
-      const response = await axios.post("http://localhost:8000/login", data, {
+      const response = await axios.post("https://my-fist-project-production.up.railway.app/login", data, {
         headers: {
           "Content-Type": "application/json",
         },

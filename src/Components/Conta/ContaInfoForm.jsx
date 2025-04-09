@@ -28,7 +28,7 @@ const dataLoadedRef = useRef(false);
       try {
         if (auth.user?.id && !dataLoadedRef.current) {
           const response = await api.get(`user/${auth.user.id}`);
-          console.log('Dados usuario :' , response.data)
+         
           setFormData({
             username: response.data.user.username || '',
             email: response.data.user.email || ''

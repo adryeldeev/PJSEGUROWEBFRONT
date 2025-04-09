@@ -12,7 +12,7 @@ const Header = ({ toggleSidebar, isSidebarOpen, isDesktop }) => {
   const [error, setError] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const baseUrl = "http://localhost:8000"; // Ou a URL do seu servidor
+  const baseUrl = "https://my-fist-project-production.up.railway.app/"; // Ou a URL do seu servidor
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,7 +47,7 @@ const Header = ({ toggleSidebar, isSidebarOpen, isDesktop }) => {
       {/* Imagem de perfil */}
       <div style={{ position: "relative" }}>
         <ProfileImage
-          src={ data?.profileImage ? `${baseUrl}${data?.profileImage} ` : "/path/to/default/image"}
+          src={data?.profileImage ? `${baseUrl}${data.profileImage}` : "/path/to/default/image"}
           alt="Foto do usuário"
           onClick={() => setMenuOpen(!menuOpen)} // Abre o menu ao clicar
         />

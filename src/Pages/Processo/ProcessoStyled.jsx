@@ -6,6 +6,14 @@ export const Container = styled.div`
     border-radius: 8px;
     max-width: 1200px;
     margin: auto;
+   
+    
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
 `;
 
 export const Filtros = styled.div`
@@ -46,38 +54,88 @@ export const BotaoNovo = styled.button`
 
 // Contêiner para permitir rolagem horizontal em telas pequenas
 export const TabelaWrapper = styled.div`
-    overflow-x: auto;
+  overflow-x: auto;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 `;
 
 export const Tabela = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    table-layout:fixed;
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-        white-space: nowrap; // Evita quebras de texto na tabela
-    }
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
 
-    th {
-        background: #f4f4f4;
-    }
+  th {
+    background: #f4f4f4;
+  }
 
-    @media (max-width: 768px) {
-        th, td {
-            font-size: 12px;
-            padding: 8px;
-        }
-    }
+  @media (max-width: 768px) {
+    display: block; /* Exibe a tabela como bloco */
+  }
+`;
+export const Thead = styled.thead`
+  background-color: #f4f4f4;
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column; /* Exibe os cabeçalhos em coluna */
+    gap: 10px; /* Espaçamento entre os itens */
+  }
 `;
 
+export const Tr = styled.tr`
+  @media (max-width: 768px) {
+    display: block; /* Cada linha vira um bloco */
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+  }
+`;
+export const Th = styled.th`
+  padding: 8px;
+  min-width: 50px;
+  text-align: left;
 
+  @media (max-width: 768px) {
+    display: block; /* Cada cabeçalho vira um bloco */
+    text-align: left;
+  }
+`;
+export const Td = styled.td`
+  padding: 8px;
+  min-width: 50px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &::before {
+      content: attr(data-label); /* Exibe o rótulo da coluna */
+      font-weight: bold;
+      margin-right: 10px;
+    }
+  }
+`;
 export const BotaoAcoes = styled.button`
     background-color: #f44336;
     color: white;

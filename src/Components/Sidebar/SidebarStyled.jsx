@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
-// Estilizando o NavLink com styled-components
 export const SidebarContainer = styled.aside`
   position: ${({ isDesktop }) => (isDesktop ? "static" : "fixed")};
   top: ${({ isDesktop }) => (isDesktop ? "0" : "70px")};
@@ -28,10 +27,24 @@ export const StyledNavLink = styled(NavLink)`
 
   &.active {
     background-color: #ffc107;
-    color:#ffffff;
+    color: #ffffff;
   }
 
   &:hover {
     background-color: #2c3e50;
+  }
+`;
+
+export const NavItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  span {
+    font-size: 1rem;
+  }
+
+  svg {
+    font-size: 1.2rem;
   }
 `;

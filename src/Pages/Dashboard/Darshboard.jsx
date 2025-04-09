@@ -36,7 +36,7 @@ const Dashboard = () => {
         name: key,
         value: faseCount[key],
       }));
-      console.log("Dados do gráfico:", faseArray)
+      
       setFaseData(faseArray);
     }
   }, [processos]);

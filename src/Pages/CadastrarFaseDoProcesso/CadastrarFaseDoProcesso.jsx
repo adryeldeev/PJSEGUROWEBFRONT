@@ -42,6 +42,7 @@ const CadastrarFaseDoProcesso = () => {
     }
   };
 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
@@ -61,14 +62,14 @@ const CadastrarFaseDoProcesso = () => {
     try {
       const response = await api.post("/createProcesso", data);
       if (response.status === 200 || response.status === 201) {
-        Swal.frire({
+        Swal.fire({
           icon:'success',
           title:'Sucesso',
           text:'Nova fase do processo cadastrada com sucesso!'
         })
         navigate("/fase-do-processos");
       } else {
-        Swal.frire({
+        Swal.fire({
           icon:'error',
           title:'Erro',
           text:'Erro ao cadastrar fase do processo. Tente novamente mais tarde.'
