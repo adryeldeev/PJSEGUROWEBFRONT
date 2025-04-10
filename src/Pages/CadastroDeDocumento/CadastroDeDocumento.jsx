@@ -9,6 +9,7 @@ import {
   DivInputs,
   Form,
   InfoCadastro,
+  DivButton
 } from "./CadastroDeDocumentoStyled";
 import Swal from "sweetalert2";
 const CadastrarDocumento = () => {
@@ -71,15 +72,18 @@ const CadastrarDocumento = () => {
       <InfoCadastro>
         <Form onSubmit={handleSubmit}>
           <DivInputs>
+            <div>
+
             <label htmlFor="tipo">Tipo *</label>
             <InputField
               id="tipo"
               type="text"
               placeholder="Digite o tipo de documento"
               ref={tipoRef}
-            />
-          </DivInputs>
-          <DivInputs>
+              />
+              </div>
+            <div>
+
             <label htmlFor="descricao">Descrição *</label>
             <InputField
               id="descricao"
@@ -87,18 +91,22 @@ const CadastrarDocumento = () => {
               placeholder="Digite a descrição do documento"
               ref={descricaoRef}
             />
-          </DivInputs>
+            </div>
+         <div>
 
-          <DivInputs>
             <label htmlFor="upload">Upload Documento *</label>
             <InputField
               id="upload"
               name="file"
               type="file"
               onChange={handleFileChange}
-            />
+              />
+              </div>
           </DivInputs>
+          <DivButton>
+
           <ButtonPlus text="Salvar" Icon={IoIosCheckmarkCircleOutline} />
+          </DivButton>
         </Form>
       </InfoCadastro>
     </ContentCadastroDeDocumento>

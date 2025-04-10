@@ -8,6 +8,8 @@ import {
   DivInputs,
   Form,
   InfoCadastro,
+  DivButton,
+  DivToggle
 } from "./CadastrarPrioridadesStyled";
 import Toggle from "../../Components/Toggle/Toggle";
 import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
@@ -65,48 +67,53 @@ const CadastrarPrioridades = () => {
   return (
     <ContentCadastro>
       <InfoCadastro>
-        <Form>
-          <DivInputs>
-            <label htmlFor="nome">Nome *</label>
-            <InputField
-              id="nome"
-              type="text"
-              placeholder="Digite o nome da  prioridade"
-              ref={nomeRef}
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="corFundo">Cor de Fundo *</label>
-            <input
-              id="corFundo"
-              type="color"
-              value={corFundo}
-              onChange={(e) => setCorFundo(e.target.value)}
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="corFonte">Cor da Fonte *</label>
-            <input
-              id="corFonte"
-              type="color"
-              value={corFonte}
-              onChange={(e) => setCorFonte(e.target.value)}
-            />
-          </DivInputs>
-          <DivInputs>
-            <Toggle
-              id="toggle-1"
-              checked={isChecked}
-              label="Ativo"
-              onClick={handleToggle}
-            />
-          </DivInputs>
-          <ButtonPlus
-            text="Salvar"
-            Icon={IoIosCheckmarkCircleOutline}
-            onClick={handleSubmit}
-          />
-        </Form>
+      <Form>
+  <DivInputs>
+    <div>
+      <label htmlFor="nome">Nome *</label>
+      <InputField
+        id="nome"
+        type="text"
+        placeholder="Digite o nome da prioridade"
+        ref={nomeRef}
+      />
+    </div>
+    <div>
+      <label htmlFor="corFundo">Cor de Fundo *</label>
+      <input
+        id="corFundo"
+        type="color"
+        value={corFundo}
+        onChange={(e) => setCorFundo(e.target.value)}
+      />
+    </div>
+    <div>
+      <label htmlFor="corFonte">Cor da Fonte *</label>
+      <input
+        id="corFonte"
+        type="color"
+        value={corFonte}
+        onChange={(e) => setCorFonte(e.target.value)}
+      />
+    </div>
+    
+  </DivInputs>
+  <DivToggle>
+<Toggle
+  id="toggle-1"
+  checked={isChecked}
+  label="Ativo"
+  onClick={handleToggle}
+  />
+  </DivToggle>
+  <DivButton>
+    <ButtonPlus
+      text="Salvar"
+      Icon={IoIosCheckmarkCircleOutline}
+      onClick={handleSubmit}
+    />
+  </DivButton>
+</Form>
       </InfoCadastro>
     </ContentCadastro>
   );

@@ -19,11 +19,14 @@ export function AccountInfo() {
   });
 
   useEffect(() => {
+    let isMounted = true; // Para evitar atualizações no estado após o componente ser desmontado
+  
     const fetchUserData = async () => {
       if (auth.user?.id) {
         try {
           const response = await api.get(`user/${auth.user.id}`);
-          if (response.data?.user) {
+          console.log("Dados do usuário:", response.data.user);
+          if (response.data?.user && isMounted) {
             setUser(response.data.user);
           }
         } catch (error) {
@@ -31,9 +34,13 @@ export function AccountInfo() {
         }
       }
     };
-
+  
     fetchUserData();
-  }, [auth.user?.id, api]);
+  
+    return () => {
+      isMounted = false; // Limpa o efeito ao desmontar o componente
+    };
+  }, [auth.user?.id]);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -55,6 +62,7 @@ export function AccountInfo() {
       response = await api[method](endpoint, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      console.log("Resposta da API:", response.data);
   
       
   
@@ -64,6 +72,7 @@ export function AccountInfo() {
           ...prevUser,
           profileImage: response.data.imagePath, // Atualiza com o caminho correto
         }));
+
         alert("Imagem atualizada com sucesso!");
       } else {
         console.error("A resposta da API não contém os dados esperados:", response.data);
@@ -77,7 +86,7 @@ export function AccountInfo() {
 
   const baseUrl = "https://my-fist-project-production.up.railway.app/";
   const profileImagePath = user.profileImage ? baseUrl + user.profileImage : "";
-
+  console.log("Caminho da imagem:", profileImagePath);
   return (
     <Card>
       <CardContent>

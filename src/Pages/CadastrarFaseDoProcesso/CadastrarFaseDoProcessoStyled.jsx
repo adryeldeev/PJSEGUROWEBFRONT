@@ -2,36 +2,58 @@ import styled from 'styled-components';
 
 export const ContentCadastroFaseDoProcesso = styled.div`
   padding: 20px;
-  max-width: 600px;
+  max-width: 900px; /* Limita a largura máxima do container */
   margin: 0 auto;
 `;
 
 export const InfoCadastro = styled.div`
   margin-top: 20px;
 `;
+
 export const DivInputs = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Padrão para telas menores */
   gap: 20px;
-
-  label {
-    font-size: 16px;
-    font-weight: bold;
+  width:100%;
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 
-` 
+  @media (min-width: 768px) {
+    flex-direction: row; /* Em telas maiores, exibe os itens lado a lado */
+    justify-content: space-between; /* Distribui os itens horizontalmente */
+    gap: 5px;
+
+    div {
+      max-width: 100%; /* Limita a largura de cada item */
+    }
+  
+    input[type="text"],input[type="color"] {
+    width: 100%; /* Faz com que os inputs ocupem toda a largura disponível */
+    }
+  }
+`;
+
+export const DivToggles = styled.div`
+  display: flex;
+  flex-direction: column; /* Padrão para telas menores */
+  gap: 10px;
+
+  @media (min-width: 768px) {
+    flex-direction: row; /* Em telas maiores, exibe os toggles lado a lado */
+    gap: 20px;
+  }
+`;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 20px;
-
-  label {
-    font-size: 16px;
-    font-weight: bold;
-  }
-
+  
   button {
+    align-self: flex-end; /* Alinha o botão à direita */
     background-color: #007bff;
     color: white;
     border: none;
@@ -43,8 +65,8 @@ export const Form = styled.form`
       background-color: #0056b3;
     }
   }
+    @media (min-width: 768px){
+    gap:5px;
+    
+    }
 `;
-
-
-
-

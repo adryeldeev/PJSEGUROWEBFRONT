@@ -9,6 +9,8 @@ import {
   DivInputs,
   Form,
   InfoCadastro,
+  DivButton
+  
 } from "./CadastrarTiposDeVeiculosStyled";
 import Swal from "sweetalert2";
 const CadastrarTiposDeVeiculo = () => {
@@ -60,48 +62,57 @@ const CadastrarTiposDeVeiculo = () => {
       <InfoCadastro>
         <Form>
           <DivInputs>
+            <div>
+
             <label htmlFor="modelo">Modelo *</label>
             <InputField
               id="modelo"
               type="text"
               placeholder="Digite o modelo do veículo"
               ref={modeloRef}
-            />
-          </DivInputs>
-          <DivInputs>
+              />
+              </div>
+          
+              <div>
+
             <label htmlFor="nome">Marca *</label>
             <InputField
               id="marca"
               type="text"
               placeholder="Digite a marca do veículo"
               ref={marcaRef}
-            />
-          </DivInputs>
+              />
+              </div>
+            <div>
+
           
-          <DivInputs>
             <label htmlFor="placa">Placa *</label>
             <InputField
               id="placa"
               type="text"
               placeholder="Digite a placa do veículo"
               ref={placaRef}
-            />
-          </DivInputs>
-          <DivInputs>
+              />
+              </div>
+         
+          <div>
+
             <label htmlFor="nome">Ano *</label>
             <InputField
               id="ano"
               type="text"
               placeholder="Digite o ano do veículo"
               ref={placaRef}
-            />
+              />
+              </div>
           </DivInputs>
-
+          <DivButton>
           <ButtonPlus
             text="Salvar"
             Icon={IoIosCheckmarkCircleOutline}
             onClick={handleSubmit} // Envia os dados ao clicar
-          />
+            />
+            </DivButton>
         </Form>
       </InfoCadastro>
     </ContentCadastro>

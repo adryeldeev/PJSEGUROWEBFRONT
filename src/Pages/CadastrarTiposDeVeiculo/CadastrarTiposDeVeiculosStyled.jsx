@@ -1,76 +1,66 @@
 import styled from "styled-components";
 
 export const ContentCadastro = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-`;
-
-export const InfoCadastro = styled.div`
-  width: 100%;
-  @media (min-width: 768px) {
-  display:flex;
-     flex-direction: row;
-     justify-content:space-between;
-  }
-
-`;
-
-export const DivInputs = styled.div`
-  display: flex;
-  flex-wrap: wrap; /* Permite que os itens quebrem a linha quando necessário */
-  gap: 20px;
-  width: 100%;
-
-  div {
-    display: flex;
-    flex-direction: column; /* Mantém o label acima do input */
-    width: 100%; /* Padrão mobile: ocupa 100% */
-  }
-
-  label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-
-  input {
-    width: 100%;
-    padding: 10px;
-  }
-
+ padding: 20px;
+   max-width: 900px;
+   margin: 0 auto;
+ `;
  
-`;
-
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  gap: 20px;
-  width: 100%;
-  background: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-
-  button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
-     @media (min-width: 768px) {
-     width:100%;
-     flex-direction: row;
-     justify-content:space-between;
-  }
-
-`;
+ export const InfoCadastro = styled.div`
+   margin-top: 20px;
+ `;
+ 
+ export const DivInputs = styled.div`
+   display: flex;
+   flex-direction: column; /* Padrão para telas menores */
+   gap: 20px;
+   width:100%;
+   div {
+     display: flex;
+     flex-direction: column;
+     gap: 5px;
+   }
+ 
+   @media (min-width: 768px) {
+     flex-direction: row; /* Em telas maiores, exibe os itens lado a lado */
+     justify-content: space-between; /* Distribui os itens horizontalmente */
+     gap: 5px;
+ 
+     div {
+       max-width: 100%; /* Limita a largura de cada item */
+     }
+   
+     input[type="text"] {
+     width: 100%; /* Faz com que os inputs ocupem toda a largura disponível */
+     }
+   }
+ `;
+ export const DivButton = styled.div`
+   display: flex;
+   justify-content: flex-start; /* Alinha o botão à esquerda */
+   margin-top: 20px; /* Adiciona espaçamento acima do botão */
+ `;
+ 
+ export const Form = styled.form`
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   
+   button {
+     align-self: flex-end; /* Alinha o botão à direita */
+     background-color: #007bff;
+     color: white;
+     border: none;
+     padding: 10px 20px;
+     border-radius: 5px;
+     cursor: pointer;
+ 
+     &:hover {
+       background-color: #0056b3;
+     }
+   }
+     @media (min-width: 768px){
+     gap:5px;
+     
+     }
+ `;

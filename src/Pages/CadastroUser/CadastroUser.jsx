@@ -48,7 +48,7 @@ const CadastroUser = () => {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:8000/createUser", formData, {
+      const response = await axios.post("https://my-fist-project-production.up.railway.app/createUser", formData, {
         headers: { "Content-Type": "application/json" },
       });
 

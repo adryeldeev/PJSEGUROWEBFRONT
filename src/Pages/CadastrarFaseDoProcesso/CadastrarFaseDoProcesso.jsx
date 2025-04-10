@@ -10,6 +10,7 @@ import {
   DivInputs,
   Form,
   InfoCadastro,
+  DivToggles
 } from "./CadastrarFaseDoProcessoStyled";
 import Swal from 'sweetalert2'
 const CadastrarFaseDoProcesso = () => {
@@ -84,74 +85,67 @@ const CadastrarFaseDoProcesso = () => {
   return (
     <ContentCadastroFaseDoProcesso>
       <InfoCadastro>
-        <Form>
-          <DivInputs>
-            <label htmlFor="nome">Nome *</label>
-            <InputField
-              id="nome"
-              type="text"
-              placeholder="Digite o nome da  prioridade"
-              ref={nomeRef}
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="corFundo">Cor de Fundo *</label>
-            <input
-              id="corFundo"
-              type="color"
-              value={corFundo}
-              onChange={(e) => setCorFundo(e.target.value)}
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="corFonte">Cor da Fonte *</label>
-            <input
-              id="corFonte"
-              type="color"
-              value={corFonte}
-              onChange={(e) => setCorFonte(e.target.value)}
-            />
-          </DivInputs>
+      <Form>
+  <DivInputs>
+    <div>
+      <label htmlFor="nome">Nome *</label>
+      <InputField
+        id="nome"
+        type="text"
+        placeholder="Digite o nome da processo"
+        ref={nomeRef}
+      />
+    </div>
+    <div>
+      <label htmlFor="corFundo">Cor de Fundo *</label>
+      <input
+        id="corFundo"
+        type="color"
+        value={corFundo}
+        onChange={(e) => setCorFundo(e.target.value)}
+      />
+    </div>
+    <div>
+      <label htmlFor="corFonte">Cor da Fonte *</label>
+      <input
+        id="corFonte"
+        type="color"
+        value={corFonte}
+        onChange={(e) => setCorFonte(e.target.value)}
+      />
+    </div>
+  </DivInputs>
 
-          {/* Toggle Ativo */}
-          <DivInputs>
-            <Toggle
-              id="toggle-1"
-              type="checkbox"
-              checked={isAtivo} // Usando o estado de "Ativo"
-              label="Ativo"
-              onClick={() => handleToggle("ativo")} // Chamando a função para "Ativo"
-            />
-          </DivInputs>
+  <DivToggles>
+    <Toggle
+      id="toggle-1"
+      type="checkbox"
+      checked={isAtivo}
+      label="Ativo"
+      onClick={() => handleToggle("ativo")}
+    />
+    <Toggle
+      id="toggle-2"
+      type="checkbox"
+      checked={isPendencia}
+      label="Pendência"
+      onClick={() => handleToggle("pendencia")}
+    />
+    <Toggle
+      id="toggle-3"
+      type="checkbox"
+      checked={isMudaFase}
+      label="Muda Fase"
+      onClick={() => handleToggle("mudafase")}
+    />
+  </DivToggles>
 
-          {/* Toggle Pendência */}
-          <DivInputs>
-            <Toggle
-              id="toggle-2"
-              type="checkbox"
-              checked={isPendencia} // Usando o estado de "Pendência"
-              label="Pendência"
-              onClick={() => handleToggle("pendencia")} // Chamando a função para "Pendência"
-            />
-          </DivInputs>
-
-          {/* Toggle Muda Fase */}
-          <DivInputs>
-            <Toggle
-              id="toggle-3"
-              type="checkbox"
-              checked={isMudaFase} // Usando o estado de "Muda Fase"
-              label="Muda Fase"
-              onClick={() => handleToggle("mudafase")} // Chamando a função para "Muda Fase"
-            />
-          </DivInputs>
-
-          <ButtonPlus
-            text="Salvar"
-            Icon={IoIosCheckmarkCircleOutline}
-            onClick={handleSubmit}
-          />
-        </Form>
+  <ButtonPlus
+    text="Salvar"
+    Icon={IoIosCheckmarkCircleOutline}
+    onClick={handleSubmit}
+  />
+</Form>
       </InfoCadastro>
     </ContentCadastroFaseDoProcesso>
   );

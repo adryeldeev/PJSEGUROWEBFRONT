@@ -1,19 +1,23 @@
-import InputField from '../../Components/Inputs/Inputs';
-import ButtonPlus from '../../Components/ButtonPlus/ButtonPlus';
+import InputField from "../../Components/Inputs/Inputs";
+import ButtonPlus from "../../Components/ButtonPlus/ButtonPlus";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
-import { useRef } from 'react';
-import useApi from '../../Api/Api';
-import { useNavigate } from 'react-router-dom'; // Importa o hook para navegação
-import { ContentCadastroBanco, DivInputs, Form, InfoCadastro } from './CadastrarBancosStyled';
+import { useRef } from "react";
+import useApi from "../../Api/Api";
+import { useNavigate } from "react-router-dom"; // Importa o hook para navegação
+import {
+  ContentCadastroBanco,
+  DivInputs,
+  DivButton,
+  Form,
+  InfoCadastro,
+} from "./CadastrarBancosStyled";
 import Swal from "sweetalert2";
 const CadastrarBancos = () => {
   const api = useApi();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const nomeRef = useRef();
   const agenciaRef = useRef();
   const contaRef = useRef();
-
-;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,68 +27,71 @@ const CadastrarBancos = () => {
       conta: contaRef.current?.value.trim(),
     };
 
-    if (data.nome === "" || !data.agencia || !data.conta  ) {
-      alert('Preencha o nome do tipo de processo.');
+    if (data.nome === "" || !data.agencia || !data.conta) {
+      alert("Preencha o nome do tipo de processo.");
       return;
     }
 
     try {
-      const response = await api.post('/createBanco', data); 
-      if (response.status === 200 || response.status === 201) { 
-          Swal.fire({
-                  icon: "success",
-                  title: "Sucesso!",
-                  text: "Novo banco cadastrado com sucesso!",
-                });
-        navigate('/bancos'); 
+      const response = await api.post("/createBanco", data);
+      if (response.status === 200 || response.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Sucesso!",
+          text: "Novo banco cadastrado com sucesso!",
+        });
+        navigate("/bancos");
       } else {
-        alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+        alert("Erro ao cadastrar tipo de processo. Tente novamente.");
       }
     } catch (error) {
-      console.error('Erro ao enviar os dados:', error);
-      alert('Erro ao cadastrar tipo de processo. Tente novamente.');
+      console.error("Erro ao enviar os dados:", error);
+      alert("Erro ao cadastrar tipo de processo. Tente novamente.");
     }
   };
 
   return (
     <ContentCadastroBanco>
       <InfoCadastro>
-        <Form>
-          <DivInputs>
-            <label htmlFor="nome">Nome *</label>
-            <InputField
-              id="nome"
-              type="text"
-              placeholder="Digite o nome do banco"
-              ref={nomeRef} 
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="agencia">Agencia *</label>
-            <InputField
-              id="agencia"
-              type="text"
-              placeholder="Digite a agencia do banco"
-              ref={agenciaRef} 
-            />
-          </DivInputs>
-          <DivInputs>
-            <label htmlFor="conta">Conta *</label>
-            <InputField
-              id="conta"
-              type="text"
-              placeholder="Digite a conta do banco"
-              ref={contaRef} 
-            />
-          </DivInputs>
-          
-          
-          <ButtonPlus
-            text="Salvar"
-            Icon={IoIosCheckmarkCircleOutline}
-            onClick={handleSubmit} // Envia os dados ao clicar
-          />
-        </Form>
+      <Form>
+  <DivInputs>
+    <div>
+      <label htmlFor="nome">Nome *</label>
+      <InputField
+        id="nome"
+        type="text"
+        placeholder="Digite o nome do banco"
+        ref={nomeRef}
+      />
+    </div>
+    <div>
+      <label htmlFor="agencia">Agência *</label>
+      <InputField
+        id="agencia"
+        type="text"
+        placeholder="Digite a agência do banco"
+        ref={agenciaRef}
+      />
+    </div>
+    <div>
+      <label htmlFor="conta">Conta *</label>
+      <InputField
+        id="conta"
+        type="text"
+        placeholder="Digite a conta do banco"
+        ref={contaRef}
+      />
+    </div>
+  </DivInputs>
+
+  <DivButton>
+    <ButtonPlus
+      text="Salvar"
+      Icon={IoIosCheckmarkCircleOutline}
+      onClick={handleSubmit}
+    />
+  </DivButton>
+</Form>
       </InfoCadastro>
     </ContentCadastroBanco>
   );
