@@ -84,6 +84,7 @@ const CadastrarFaseDoProcesso = () => {
 
   return (
     <ContentCadastroFaseDoProcesso>
+      <h4>Cadastrar fase do processo</h4>
       <InfoCadastro>
       <Form>
   <DivInputs>

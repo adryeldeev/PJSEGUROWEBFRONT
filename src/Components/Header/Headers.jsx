@@ -12,7 +12,7 @@ const Header = ({ toggleSidebar, isSidebarOpen, isDesktop }) => {
   const [error, setError] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const baseUrl = "https://my-fist-project-production.up.railway.app/"; // Ou a URL do seu servidor
+  const baseUrl = "https://my-fist-project-production.up.railway.app"; // Ou a URL do seu servidor
 
   useEffect(() => {
     const fetchData = async () => {

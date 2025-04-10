@@ -25,7 +25,7 @@ export function AccountInfo() {
       if (auth.user?.id) {
         try {
           const response = await api.get(`user/${auth.user.id}`);
-          console.log("Dados do usuário:", response.data.user);
+         
           if (response.data?.user && isMounted) {
             setUser(response.data.user);
           }
@@ -62,15 +62,15 @@ export function AccountInfo() {
       response = await api[method](endpoint, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      console.log("Resposta da API:", response.data);
+     
   
       
   
       // Atualiza o estado do usuário com base na estrutura correta da resposta
-      if (response.data?.imagePath) {
+      if (response.data?.user?.profileImage) {
         setUser((prevUser) => ({
           ...prevUser,
-          profileImage: response.data.imagePath, // Atualiza com o caminho correto
+          profileImage: response.data.user.profileImage, // Atualiza com o caminho correto
         }));
 
         alert("Imagem atualizada com sucesso!");
@@ -84,7 +84,7 @@ export function AccountInfo() {
     }
   };
 
-  const baseUrl = "https://my-fist-project-production.up.railway.app/";
+  const baseUrl = "https://my-fist-project-production.up.railway.app";
   const profileImagePath = user.profileImage ? baseUrl + user.profileImage : "";
   console.log("Caminho da imagem:", profileImagePath);
   return (

@@ -69,6 +69,7 @@ const CadastrarDocumento = () => {
 
   return (
     <ContentCadastroDeDocumento>
+      <h4>Cadastrar documento</h4>
       <InfoCadastro>
         <Form onSubmit={handleSubmit}>
           <DivInputs>

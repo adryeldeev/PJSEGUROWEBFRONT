@@ -51,6 +51,7 @@ const CadastrarSeguradora = () => {
 
   return (
     <ContentCadastroSeguradora>
+      <h4>Cadastrar seguradora</h4>
       <InfoCadastro>
         <Form>
           <DivInputs>

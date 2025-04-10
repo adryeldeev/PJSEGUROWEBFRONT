@@ -52,6 +52,7 @@ const CadastrarBancos = () => {
 
   return (
     <ContentCadastroBanco>
+      <h4>Cadastrar banco</h4>
       <InfoCadastro>
       <Form>
   <DivInputs>

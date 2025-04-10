@@ -4,10 +4,16 @@ export const ContentCadastroSeguradora = styled.div`
   padding: 20px;
   max-width: 600px;
   margin: 0 auto;
+  h4{
+    margin-bottom: 40px; /* Adiciona espaçamento abaixo do título */
+    font-size: 20px; /* Tamanho da fonte do título */
+    font-weight: bold; /* Negrito */
+    color: #333; /* Cor do texto */
+  }
 `;
 
 export const InfoCadastro = styled.div`
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 export const DivInputs = styled.div`
   display: flex;

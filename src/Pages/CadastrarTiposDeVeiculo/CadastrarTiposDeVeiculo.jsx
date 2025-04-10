@@ -59,6 +59,7 @@ const CadastrarTiposDeVeiculo = () => {
 
   return (
     <ContentCadastro>
+      <h4>Cadastrar tipo de veículo</h4>
       <InfoCadastro>
         <Form>
           <DivInputs>
@@ -84,8 +85,6 @@ const CadastrarTiposDeVeiculo = () => {
               />
               </div>
             <div>
-
-          
             <label htmlFor="placa">Placa *</label>
             <InputField
               id="placa"

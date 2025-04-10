@@ -66,6 +66,7 @@ const CadastrarPrioridades = () => {
 
   return (
     <ContentCadastro>
+      <h4>Cadastrar Prioridade</h4>
       <InfoCadastro>
       <Form>
   <DivInputs>

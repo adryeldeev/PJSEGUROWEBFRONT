@@ -4,10 +4,17 @@ export const ContentCadastro = styled.div`
   padding: 20px;
   max-width: 900px;
   margin: 0 auto;
+   h4{
+    margin-bottom: 40px; /* Adiciona espaçamento abaixo do título */
+    font-size: 20px; /* Tamanho da fonte do título */
+    font-weight: bold; /* Negrito */
+    color: #333; /* Cor do texto */
+
+  }
 `;
 
 export const InfoCadastro = styled.div`
-  margin-top: 20px;
+  margin-top: 40px;
 `;
 export const DivInputs = styled.div`
   display: flex;
@@ -25,15 +32,15 @@ export const DivInputs = styled.div`
   @media (min-width: 768px) {
     flex-direction: row; /* Em telas maiores, exibe os itens lado a lado */
     justify-content: space-between; /* Distribui os itens horizontalmente */
-    gap: 15px;
+    gap: 5px;
 
     div {
       flex: 1; /* Faz com que os itens ocupem o mesmo espaço */
       max-width: 100%; /* Limita a largura de cada item */
     }
-      input[type="text"] {
+      input[type="text"], input[type="color"] {
     width: 100%; /* Faz com que os inputs ocupem toda a largura disponível */
-    height: 20px; /* Altura do seletor de cor */
+    height: 30px; /* Altura do seletor de cor */
     font-size: 13px;
     }
     
