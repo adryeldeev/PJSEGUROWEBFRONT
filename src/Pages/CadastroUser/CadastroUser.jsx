@@ -6,7 +6,7 @@ import { TbLockPassword } from "react-icons/tb";
 import Logo from "../../Img/Logo.webp";
 import InputField from "../../Components/Inputs/Inputs";
 import {
-  ButtonArrow,
+
   ContentCadastro,
   DivInput,
   FormCadastro,
@@ -63,10 +63,18 @@ const CadastroUser = () => {
       } else {
         throw new Error(response.data.message || "Erro ao cadastrar usuário");
       }
-    } catch (err) {
-      console.error("Cadastro falhou:", err);
-      setError(err.response?.data?.message || "Erro ao cadastrar usuário");
-    }
+    }  catch (err) {
+  console.error("Cadastro falhou:", err);
+  const errorMessage = err.response?.data?.message || "Erro ao cadastrar usuário";
+
+  Swal.fire({
+    icon: "error",
+    title: "Erro",
+    text: errorMessage,
+  });
+
+  setError(errorMessage); // opcional, se quiser mostrar no formulário também
+}
   };
 
   return (
