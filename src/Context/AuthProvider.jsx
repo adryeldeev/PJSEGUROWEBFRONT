@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
@@ -21,23 +21,24 @@ const AuthProvider = ({ children }) => {
           },
         }
       );
-
+  
       const res = response.data;
-
+  
       if (res.token) {
         setToken(res.token);
         localStorage.setItem("site", res.token);
-
-        setUser(res.userData); // Atualiza os dados do usuário
-        setError(""); // Limpa o erro após login bem-sucedido
-        navigate("/"); // Redireciona após login
+  
+        setUser(res.userData);
+        localStorage.setItem("user", JSON.stringify(res.userData)); // <--- ESSENCIAL
+  
+        setError("");
+        navigate("/");
       } else {
         throw new Error(res.message || "Login falhou");
       }
     } catch (err) {
       console.error("Login failed:", err.message);
-
-      // Verifica o código de status para mensagens específicas
+  
       if (err.response && err.response.status) {
         switch (err.response.status) {
           case 401:
@@ -54,11 +55,20 @@ const AuthProvider = ({ children }) => {
       }
     }
   };
-
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("site");
+  
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
+    }
+  }, []);
   const logOut = () => {
     setUser(null);
     setToken("");
     localStorage.removeItem("site");
+    localStorage.removeItem("user"); 
     navigate("/login");
   };
 
