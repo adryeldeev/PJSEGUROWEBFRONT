@@ -5,7 +5,8 @@ import { AiOutlineMail } from "react-icons/ai";
 import { TbLockPassword } from "react-icons/tb";
 import Logo from "../../Img/Logo.webp";
 import InputField from "../../Components/Inputs/Inputs";
-import {
+import { Link } from "react-router-dom";
+import{
 
   ContentCadastro,
   DivInput,
@@ -126,7 +127,7 @@ const CadastroUser = () => {
           {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
           <Button text="Cadastrar" type="submit" />
         </FormCadastro>
-        <LinkLogin href="/login">Já tenho uma conta? Login</LinkLogin>
+        <LinkLogin as={Link} to="/login">Já tenho uma conta? Login</LinkLogin>
       </InfoCadastro>
     </ContentCadastro>
   );
