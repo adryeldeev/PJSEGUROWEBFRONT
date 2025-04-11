@@ -12,7 +12,16 @@ export const SidebarContainer = styled.aside`
   transition: left 0.3s ease;
   z-index: 1000;
 `;
-
+export const SidebarOverlay = styled.div`
+  display: ${({ isOpen, isDesktop }) => (isOpen && !isDesktop ? "block" : "none")};
+  position: fixed;
+  top: 70px; /* altura do seu header */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999; /* abaixo do sidebar */
+`;
 export const SidebarHeader = styled.div`
   padding: 20px;
   font-size: 1.2rem;

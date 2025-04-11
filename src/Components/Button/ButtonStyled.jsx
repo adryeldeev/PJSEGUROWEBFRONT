@@ -5,7 +5,8 @@ export const ButtonField = styled.button`
     border: 1px solid #ccc;
   padding: 10px 20px;
   outline:none;
-  background-color: yellow;
+    background-color: #f5b301; /* amarelo escuro, levemente queimado */
+  color: #fff; 
 `
 
 

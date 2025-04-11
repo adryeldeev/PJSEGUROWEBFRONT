@@ -5,7 +5,7 @@ export const ContentCadastro = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 90vh;
   background-color: #f4f4f4;
   padding: 20px;
 `;

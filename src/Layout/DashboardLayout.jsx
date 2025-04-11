@@ -28,7 +28,7 @@ const DashboardLayout = () => {
   return (
     <div style={{ display: "flex", height: "100vh", position: "relative" }}>
       {/* Barra lateral */}
-      <Sidebar isOpen={isDesktop || isSidebarOpen} isDesktop={isDesktop} />
+      <Sidebar isOpen={isDesktop || isSidebarOpen} isDesktop={isDesktop}  onClose={() => setIsSidebarOpen(false)}/>
       <div
         style={{
           flex: 1,

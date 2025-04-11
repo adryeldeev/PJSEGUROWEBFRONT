@@ -105,7 +105,8 @@ export const ButtonLogin = styled.button`
   width: 100%;
   max-width: 400px;
   padding: 10px 20px;
-  background-color: yellow;
+  background-color: #f5b301; /* amarelo escuro, levemente queimado */
+  color: #fff;
   border: 1px solid #ccc;
   cursor: pointer;
   font-size: 16px;
@@ -114,7 +115,7 @@ export const ButtonLogin = styled.button`
   transition: background 0.3s;
 
   &:hover {
-    background-color: #ffcc00;
+     background-color: #d99e02; /* amarelo mais escuro */
   }
 `;
 
