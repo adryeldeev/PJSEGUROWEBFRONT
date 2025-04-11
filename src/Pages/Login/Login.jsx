@@ -23,8 +23,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
-  const auth = useAuth();
+  const { loginAction, error } = useAuth(); // Acessa o erro do contexto
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -36,19 +35,7 @@ const Login = () => {
 
   const handleSubmitEvent = async (e) => {
     e.preventDefault();
-    setError("");
-    if (input.email && input.password) {
-      try {
-        await auth.loginAction({
-          email: input.email,
-          password: input.password,
-        });
-      } catch (error) {
-        setError(error.message);
-      }
-    } else {
-      setError("Por favor, preencha ambos os campos");
-    }
+    await loginAction(input); // Chama a ação de login
   };
 
   return (
@@ -83,7 +70,7 @@ const Login = () => {
           </DivInputsLogin>
           <ButtonLogin type="submit">Entrar</ButtonLogin>
         </FormLogin>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>} {/* Exibe o erro */}
         <DivLinks>
           <LinkPassword>
             Não é cadastrado?{" "}

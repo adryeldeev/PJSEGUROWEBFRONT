@@ -6,7 +6,7 @@ export const ApiUrlContext = createContext('');  // Exporte o contexto aqui
 
 // Criando o provedor do contexto
 export const ApiUrlProvider = ({ children }) => {
-  const [apiUrl, setApiUrl] = useState(process.env.REACT_APP_API_URL || 'https://my-fist-project-production.up.railway.app');
+  const [apiUrl, setApiUrl] = useState(import.meta.env.VITE_API_URL || 'https://my-fist-project-production.up.railway.app');
 
   useEffect(() => {
     // Não é necessário fazer fetch do .env

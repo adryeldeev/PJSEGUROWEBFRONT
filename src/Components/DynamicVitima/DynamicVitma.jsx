@@ -29,7 +29,7 @@ const DynamicVitma = ({ onNavigate, onClick }) => {
       
         <span>
           Caso não encontre, crie uma nova vítima no menu:{" "}
-          <strong>Ações > Criar Vítima</strong>
+          <strong>Ações &gt; Criar Vítima</strong>
         </span>
       </DivSpans>
     </DivVitma>
