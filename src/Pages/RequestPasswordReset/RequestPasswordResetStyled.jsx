@@ -30,14 +30,16 @@ export const Button = styled.button`
   width: 100%;
   padding: 10px;
   border: none;
-  background-color:yellow;
-  color: white;
+  background-color: #f5b301; /* amarelo escuro, levemente queimado */
+  color: #fff;
+   font-size: 16px;
+
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 20px;
 transition: background 0.3s;
 
   &:hover {
-    background-color: #ffcc00;
+    background-color: #d99e02; /* amarelo mais escuro */
   }
 `
