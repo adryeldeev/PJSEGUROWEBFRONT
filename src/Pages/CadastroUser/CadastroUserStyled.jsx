@@ -1,13 +1,12 @@
 import styled from "styled-components";
 
 export const ContentCadastro = styled.div`
+ width: 100vw;
+  height: 100vh;
+  background-color: #f3f4f6; /* Cor de fundo clara */
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  height: 90vh;
-  background-color: #f4f4f4;
-  padding: 20px;
+  align-items: center;
 `;
 
 export const InfoCadastro = styled.div`
@@ -89,3 +88,19 @@ export const LinkLogin = styled.a`
     text-decoration: underline;
   }
 `;
+
+export const Text = styled.p`
+  color: #d99e02; /* Azul escuro */
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+
+  a {
+    color: #c68f01; /* Azul mais claro */
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }

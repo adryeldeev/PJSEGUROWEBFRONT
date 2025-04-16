@@ -1,9 +1,12 @@
 import styled from "styled-components";
 
 export const ContentLogin = styled.div`
-  width: 100%;
-  height: 100%;
-  background-color: #ccc;
+ width: 100vw;
+  height: 100vh;
+  background-color: #f3f4f6; /* Cor de fundo clara */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const InfoContentLogin = styled.div`
@@ -112,10 +115,17 @@ export const ButtonLogin = styled.button`
   font-size: 16px;
   font-weight: bold;
   border-radius: 4px;
+ 
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); 
   transition: background 0.3s;
 
   &:hover {
      background-color: #d99e02; /* amarelo mais escuro */
+     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
+  }
+     &:active {
+     background-color: #c68f01; /* amarelo ainda mais escuro */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); /* Sombra reduzida ao clicar */
   }
 `;
 
@@ -132,3 +142,20 @@ export const DivLinks = styled.div`
   margin-top: 10px;
   max-width: 100%;
 `;
+
+export const Text = styled.p`
+  color: #d99e02; /* Azul escuro */
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+
+  a {
+    color: #c68f01; /* Azul mais claro */
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`

@@ -10,6 +10,7 @@ import {
   LinkPassword,
   TitleLogin,
   IconWrapper,
+  Text
 } from "./LoginStyled";
 import { AiOutlineMail } from "react-icons/ai";
 import { TbLockPassword } from "react-icons/tb";
@@ -73,13 +74,10 @@ const Login = () => {
         {error && <p style={{ color: "red" }}>{error}</p>} {/* Exibe o erro */}
         <DivLinks>
           <LinkPassword>
-            Não é cadastrado?{" "}
-            <NavLink to="/cadastrarUser" style={{ color: "#ffc107" }}>
-              Cadastrar-se aqui
-            </NavLink>
+          <Text className="text">Não tem uma conta? <NavLink to="/cadastrarUser">Crie uma</NavLink></Text>
           </LinkPassword>
           <LinkPassword>
-            <NavLink to="/forgot-password">Esqueceu a senha?</NavLink>
+          <NavLink to="/forgot-password">Esqueceu a senha?</NavLink>
           </LinkPassword>
         </DivLinks>
       </InfoContentLogin>
