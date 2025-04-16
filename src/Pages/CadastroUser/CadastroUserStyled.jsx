@@ -78,18 +78,6 @@ export const ButtonArrow = styled.button`
 `;
 
 export const LinkLogin = styled.a`
-  display: block;
-  margin-top: 15px;
-  color: #007bff;
-  text-decoration: none;
-  font-size: 14px;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-export const Text = styled.p`
   color: #d99e02; /* Azul escuro */
   font-size: 14px;
   margin-top: 10px;
@@ -103,4 +91,5 @@ export const Text = styled.p`
     &:hover {
       text-decoration: underline;
     }
-  }
+`;
+
