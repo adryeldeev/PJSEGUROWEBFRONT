@@ -70,7 +70,7 @@ const Informacoes = () => {
       const fetchProcesso = async () => {
         try {
           const response = await api.get(`/processos/${processoId}`);
-          console.log("Dados do processo recebidos:", response.data);
+         
           dispatch({ type: "SET_PROCESSO", payload: response.data });
           dataLoadedRef.current = true; // Marca como carregado
         } catch (error) {

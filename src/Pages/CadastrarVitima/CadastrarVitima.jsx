@@ -279,7 +279,7 @@ const CadastrarVitima = () => {
             <label htmlFor="email">E-mail</label>
             <Input
               id="email"
-              type="text"
+              type="email"
               value={state.email}
               onChange={handleInputChange}
             />

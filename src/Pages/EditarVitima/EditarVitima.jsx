@@ -254,6 +254,7 @@ const EditarVitima = () => {
       <CampoInput
         label="E-mail"
         id="email"
+        type="email"
         value={state.email}
         onChange={handleInputChange}
         disabled={!dataLoaded}
