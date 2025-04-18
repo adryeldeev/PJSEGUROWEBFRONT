@@ -31,6 +31,7 @@ export const InfoContentLogin = styled.div`
 export const ImgLogo = styled.img`
   width: 100px;
   height: 100px;
+  margin-bottom: 20px;
 
   @media (min-width: 768px) {
     width: 120px;
@@ -46,6 +47,7 @@ export const ImgLogo = styled.img`
 export const TitleLogin = styled.h1`
   font-size: 20px;
   color: #333;
+  margin-bottom: 20px;
 
   @media (min-width: 768px) {
     font-size: 25px;
