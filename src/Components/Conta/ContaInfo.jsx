@@ -86,7 +86,7 @@ export function AccountInfo() {
 
   const baseUrl = "https://my-fist-project-production.up.railway.app";
   const profileImagePath = user.profileImage ? baseUrl + user.profileImage : "";
-  console.log("Caminho da imagem:", profileImagePath);
+ 
   return (
     <Card>
       <CardContent>

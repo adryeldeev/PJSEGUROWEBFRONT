@@ -41,6 +41,12 @@ const getFileIcon = (url) => {
   return icons[ext] || icons.default;
 };
 
+const formatDate = (date) => {
+  if (!date) return "N/A";
+  const parsedDate = new Date(date);
+  return isNaN(parsedDate) ? "Data inválida" : parsedDate.toLocaleDateString("pt-BR");
+};
+
 const Table = ({ columns, data, onEdit, onDelete, back, next, currentPage, totalPages }) => {
   const baseUrl = useContext(ApiUrlContext);
 
@@ -91,6 +97,8 @@ const Table = ({ columns, data, onEdit, onDelete, back, next, currentPage, total
                       )
                     ) : column.accessor === "faseProcesso" ? (
                       row.faseProcesso?.nome || "Sem fase"
+                    ) : column.accessor.toLowerCase().includes("data") ? (
+                      formatDate(row[column.accessor])
                     ) : (
                       row[column.accessor] || "N/A"
                     )}
