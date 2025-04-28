@@ -30,44 +30,36 @@ export const InfoBox = styled.div`
   flex: 1;
   text-align: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  
-  &.fase {
-    background-color: #d9534f;
-    color: white;
-  }
 
-  &.prioridade {
-    background-color: #a94442;
-    color: white;
-  }
-    select {
-    width: 100%;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
+&.fase {
+  background-color: #e67e22; /* Laranja claro */
+  color: #fff; /* Texto branco */
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
 
-    &:focus {
-      outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
+&.prioridade {
+  background-color: #d35400; /* Laranja escuro */
+  color: #fff; /* Texto branco */
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
 `;
 
 export const Label = styled.span`
   display: block;
   font-size: 14px;
   font-weight: bold;
-  color: #666;
+  color: #000; /* Cinza escuro */
 `;
+
 
 export const Value = styled.span`
   display: block;
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: #222; /* Preto suave */
   margin-top: 5px;
 `;
