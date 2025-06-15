@@ -92,13 +92,15 @@ const Cronologia = () => {
       });
       return;
     }
+const dateOnly = novoAndamento.data;
+const dateWithLocalTime = new Date(dateOnly + "T12:00:00"); // adiciona hora local
 
-    const andamentoData = {
-      observacoes: novoAndamento.observacoes,
-      faseProcessoId: Number(novoAndamento.faseProcessoId),
-      processoId: Number(processoId),
-      data: novoAndamento.data ? novoAndamento.data : new Date().toISOString().slice(0, 10),
-    };
+const andamentoData = {
+  observacoes: novoAndamento.observacoes,
+  faseProcessoId: Number(novoAndamento.faseProcessoId),
+  processoId: Number(processoId),
+  data: dateWithLocalTime.toISOString(), // evita conversão para o dia anterior
+};
 
     try {
       if (novoAndamento.id) {
