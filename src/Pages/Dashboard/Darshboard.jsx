@@ -45,7 +45,7 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         const response = await api.get("/processos");
-        const dados = response.data || [];
+        const dados = Array.isArray(response.data) ? response.data : [];
         setProcessos(dados);
       } catch (error) {
         console.error("Erro ao buscar processos", error);
@@ -84,7 +84,7 @@ const Dashboard = () => {
       else if (fase.toLowerCase().includes("análise") || fase.toLowerCase().includes("analise")) analise++;
       else if (fase.toLowerCase().includes("negado")) negados++;
 
-      if (criadoEm.isSame(now, "day")) hoje++;
+     if (criadoEm.isBetween(now.startOf("day"), now.endOf("day"), null, "[]")) hoje++;
       if (criadoEm.isAfter(inicioSemana)) semana++;
       if (criadoEm.isAfter(inicioMes)) mesAtual++;
       if (criadoEm.isBetween(inicioMesAnterior, fimMesAnterior, null, "[]")) mesAnterior++;
