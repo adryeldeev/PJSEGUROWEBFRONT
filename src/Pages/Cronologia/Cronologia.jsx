@@ -248,7 +248,7 @@ const andamentoData = {
                   </Typography>
                   <Typography variant="body2">{fase.observacoes}</Typography>
                   <Typography variant="body2">
-                     {fase.data.split("-").reverse().join("/")}
+                     {new Date(fase.data).toLocaleDateString("pt-BR")}
                   </Typography>
                 </TimelineContent>
               </TimelineItem>
